@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Scout",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "scout.main",
+            "cwd": "${workspaceFolder}",
+            "python": "${workspaceFolder}/scout/.venv/Scripts/python.exe",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}"
+            },
+            "console": "integratedTerminal"
+        }
+    ]
+}

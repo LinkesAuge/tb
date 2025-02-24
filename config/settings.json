@@ -1,0 +1,46 @@
+{
+    "overlay_settings": {
+        "active": false,
+        "rect_color": "#FFA500",
+        "rect_thickness": 2,
+        "rect_scale": 1.0,
+        "font_color": "#FFFFFF",
+        "font_size": 12,
+        "text_thickness": 1,
+        "cross_color": "#FFA500",
+        "cross_size": 20,
+        "cross_thickness": 2,
+        "cross_scale": 1.0
+    },
+    "pattern_matching_settings": {
+        "active": false,
+        "confidence": 0.8,
+        "target_frequency": 1.0,
+        "sound_enabled": true
+    },
+    "template_search_settings": {
+        "overlay_enabled": true,
+        "sound_enabled": true,
+        "duration": 30.0,
+        "update_frequency": 1.0,
+        "min_confidence": 0.8,
+        "use_all_templates": true,
+        "templates": []
+    },
+    "ocr_settings": {
+        "active": false,
+        "frequency": 1.0,
+        "region": {
+            "left": 0,
+            "top": 0,
+            "width": 0,
+            "height": 0,
+            "dpi_scale": 1.0
+        }
+    },
+    "debug_settings": {
+        "enabled": false,
+        "save_screenshots": false,
+        "save_templates": false
+    }
+}

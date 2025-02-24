@@ -1,0 +1,20 @@
+{
+    "Position_1": {
+        "name": "Position_1",
+        "x": 313,
+        "y": 657,
+        "description": null
+    },
+    "Position_2": {
+        "name": "Position_2",
+        "x": 2359,
+        "y": 746,
+        "description": null
+    },
+    "Position_3": {
+        "name": "Position_3",
+        "x": 1501,
+        "y": 593,
+        "description": null
+    }
+}

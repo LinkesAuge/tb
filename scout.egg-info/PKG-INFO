@@ -1,0 +1,12 @@
+Metadata-Version: 2.2
+Name: scout
+Version: 0.1.0
+Requires-Dist: PyQt6
+Requires-Dist: opencv-python
+Requires-Dist: numpy
+Requires-Dist: mss
+Requires-Dist: pywin32
+Requires-Dist: pyautogui
+Requires-Dist: pygame
+Requires-Dist: pytesseract
+Dynamic: requires-dist

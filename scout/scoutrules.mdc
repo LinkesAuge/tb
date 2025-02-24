@@ -1,0 +1,77 @@
+---
+description: 
+globs: 
+---
+Add a short "RULE USED" at the beginning of your comment anytime you did consider these rules
+
+# PROJECT OVERVIEW
+We develop an App for a browser game called "Total Battle" that can run in browsers like Chrome, Firefox, Internet Explorer etc. but can also run in a dedicated windows app (window name is "Total Battle). 
+The app is a tool to extract information from the game world (the user has a top down view of a map with cities, monsters, armies, points of interests etc.) and to control certain actions (like move the camera, mouse cursor, click on objects etc.).
+To achieve this we take screenshots of the current game state and analyse them with pattern matching and ocr / optical character recognition.
+
+We have two separate screenshot functionalities:
+Pattern Matching: Takes screenshots of the entire "Total Battle" window to find patterns
+Minimap Region: Takes a separate screenshot of just the selected region for minimap coordinates
+The minimap region selection should:
+Allow user to select a region
+Take a screenshot of just that region
+Save it to debug_screenshots
+Display it in the debug window
+NOT affect or be used by the pattern matching system
+The pattern matching should:
+Continue to capture the entire game window
+Be completely independent of the minimap region selection
+# TECH AND LIBRARIES STACK
+- Python as coding language
+- PyQt6 for GUI development
+- pynput, pydirectinput and pyautogui for any controlls like mouse or keyboard
+- WindwsAPI for window management
+- cv2 (OpenCV) for computer vision tasks like pattern matching
+- pytesseract (Tesseract 5.5) for OCR / optical character recognition
+- mss for taking screenshots
+- numpy for maths and data handling
+- uv for project dependency management and virtual environments
+
+# ERROR FIXING PROCESS
+Go through the problem step by step, utilize extensive logging and debugging techniques and think about different approaches to solve a bug
+
+# CURRENT FILE STRUCTURE
+All python files are in the "scouts" folder and should be kept there. Any new python files should be created in there. The only exception are unit tests which should be in a subfolder called "tests"
+Anything related to logging should go into "logs" subfolder
+For debugging screenshots we use the "debug_screenshots" subfolder
+Images are stored and saved in the "images" subfolder
+Sounds are stored and saved in the "sounds" subfolder
+We use the "config.ini" file for all our app configs
+We use the "pyproject.toml" for our project dependencies
+
+# GITHUB PUSH PROCESS
+1. stage changes:
+git add .
+2. Commit changes:
+git commit -m "Our commit message following our GitHub Guidelines"
+3. Push changes:
+git push origin main 
+
+# IMPORTANT
+You produce code like a senior python developer and you do not stop working until all of your tasks are completed.
+Be careful not to break existing code functional and always check for dependencies between files/classes.
+Use descriptive names for classes and functions.
+You should always consider whether you have all the necessary context, ask questions if you need additional information. 
+
+# OTHER CONTEXT
+We need to keep our project toml file "pyproject" updated when we add/remove/change dependencies
+
+# COMMENTS
+
+Make sure to always include detailed and easy to understand comments, explaining the function of any code block in a way even a coding layperson would understand.
+All classes and functions should have a very extensive and detailed description of what they do. Consider the context of the whole app and describe the function of the class in relation to that.
+Consider these rules for comments:
+1. Clarity of explanation
+2. Completeness of information
+3. Appropriate level of detail for the target audience
+4. Consistency with best practices in technical writing
+5. Brief description of the function/class
+6. Parameters and their types
+7. Return value and type
+8. Any exceptions that might be raised
+9. Usage examples if the function/class usage is not immediately obvious

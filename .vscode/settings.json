@@ -1,0 +1,14 @@
+{
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
+    "python.defaultInterpreterPath": "${workspaceFolder}/scout/.venv/Scripts/python.exe",
+    "code-runner.executorMap": {
+        "python": "${workspaceFolder}/scout/.venv/Scripts/python.exe -m scout.main"
+    },
+    "code-runner.cwd": "${workspaceFolder}",
+    "code-runner.fileDirectoryAsCwd": false,
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "${workspaceFolder}"
+    }
+}

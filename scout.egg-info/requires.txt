@@ -1,0 +1,8 @@
+PyQt6
+opencv-python
+numpy
+mss
+pywin32
+pyautogui
+pygame
+pytesseract

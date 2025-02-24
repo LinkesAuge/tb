@@ -1,0 +1,16 @@
+README.md
+setup.py
+scout/__init__.py
+scout/config_manager.py
+scout/gui.py
+scout/main.py
+scout/overlay.py
+scout/pattern_matcher.py
+scout/sound_manager.py
+scout/window_manager.py
+scout/world_scanner.py
+scout.egg-info/PKG-INFO
+scout.egg-info/SOURCES.txt
+scout.egg-info/dependency_links.txt
+scout.egg-info/requires.txt
+scout.egg-info/top_level.txt
