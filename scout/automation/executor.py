@@ -27,6 +27,8 @@ from scout.text_ocr import TextOCR
 from scout.actions import GameActions
 from scout.automation.gui.debug_tab import AutomationDebugTab
 from PyQt6.QtWidgets import QApplication
+import cv2
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -299,8 +301,16 @@ class SequenceExecutor(QObject):
                 return
             time.sleep(0.1)  # Check every 100ms
         
-    def _execute_template_search(self, action: AutomationAction) -> None:
-        """Execute a template search action."""
+    def _execute_template_search(self, action: AutomationAction) -> bool:
+        """
+        Execute a template search action.
+        
+        Args:
+            action: Template search action to execute
+            
+        Returns:
+            bool: True if execution successful, False otherwise
+        """
         params = action.params
         if not isinstance(params, TemplateSearchParams):
             raise ValueError("Invalid parameters for template search action")
@@ -318,91 +328,317 @@ class SequenceExecutor(QObject):
         original_overlay_active = overlay.active
         original_template_matching_active = overlay.template_matching_active
         
+        # Always use the overlay's template matcher for consistency with the UI
+        template_matcher = overlay.template_matcher
+        
+        # Store original settings
+        original_confidence = template_matcher.confidence
+        original_frequency = template_matcher.target_frequency
+        original_sound_enabled = template_matcher.sound_enabled
+        
+        match_search_started = False
+        
         try:
-            # Configure the template matcher in the overlay
-            template_matcher = overlay.template_matcher
-            original_confidence = template_matcher.confidence
-            original_frequency = template_matcher.target_frequency
-            original_sound_enabled = template_matcher.sound_enabled
-            
-            # Set parameters for this search
+            # Set parameters for this search on the overlay's template matcher
             template_matcher.confidence = params.min_confidence
+            self._log_debug(f"Setting confidence threshold to {params.min_confidence}")
             template_matcher.target_frequency = params.update_frequency
             template_matcher.sound_enabled = params.sound_enabled
             
-            # If overlay is not active, temporarily activate it
-            if params.overlay_enabled and not original_overlay_active:
-                self._log_debug("Temporarily activating overlay for template search")
-                overlay.active = True
+            # Reset sound cooldown to ensure first match plays a sound
+            if params.sound_enabled and hasattr(template_matcher, 'sound_manager'):
+                self._log_debug("Resetting sound cooldown to ensure first match plays a sound")
+                template_matcher.sound_manager.reset_cooldown()
             
-            # Start template matching using the overlay's built-in mechanism
-            self._log_debug("Starting template matching via overlay")
-            overlay.start_template_matching()
+            # VERIFY OVERLAY TIMER STATUS
+            if hasattr(overlay, 'draw_timer'):
+                self._log_debug(f"Draw timer status before starting: active={overlay.draw_timer.isActive()}, interval={overlay.draw_timer.interval()}")
             
-            # Wait for the specified duration
-            self._log_debug(f"Waiting for {params.duration} seconds")
+            # FORCE OVERLAY VISIBILITY AND TIMERS
+            self._log_debug("=== FORCING OVERLAY VISIBILITY AND TEMPLATE MATCHING ===")
+            overlay.active = True  # Force overlay to be visible for diagnosis
+            overlay.template_matching_active = True
             
-            # Break the wait into smaller chunks to check for stop keys
+            # If draw timer isn't active, start it with a short interval
+            if hasattr(overlay, 'draw_timer') and not overlay.draw_timer.isActive():
+                self._log_debug("Starting draw timer with 33ms interval")
+                overlay.draw_timer.setInterval(33)
+                overlay.draw_timer.start()
+            
+            # Use stored template names to filter what we're looking for
+            template_names = params.templates if not params.use_all_templates else None
+            self._log_debug(f"Looking for templates: {template_names if template_names else 'ALL TEMPLATES'}")
+            
+            # For debug logging
+            template_type = "specified templates" if template_names else "all templates"
+            self._log_debug(f"Will search for {template_type}")
+            for i, template in enumerate(template_names or []): 
+                self._log_debug(f"  Template {i+1}: {template}")
+            
+            # VERIFY TEMPLATES ARE LOADED
+            loaded_templates = list(template_matcher.templates.keys()) if hasattr(template_matcher, 'templates') else []
+            self._log_debug(f"Loaded templates: {loaded_templates}")
+            
+            # Clear existing matches before starting
+            overlay.cached_matches = []
+            overlay.match_counters = {}
+            
+            # DIRECT MATCHING: Take a screenshot and manually find matches
+            self._log_debug("Taking initial screenshot to manually search for matches")
+            initial_screenshot = self.context.window_manager.capture_screenshot()
+            if initial_screenshot is not None:
+                # Log screenshot dimensions
+                self._log_debug(f"Screenshot dimensions: {initial_screenshot.shape}")
+                
+                if template_names:
+                    # Manually search for specified templates
+                    self._log_debug(f"Manually searching for templates: {template_names}")
+                    match_tuples = []
+                    
+                    for template_name in template_names:
+                        if template_name in template_matcher.templates:
+                            self._log_debug(f"Searching for template: {template_name}")
+                            template = template_matcher.templates[template_name]
+                            
+                            # Log template dimensions
+                            self._log_debug(f"Template dimensions: {template.shape}")
+                            
+                            # Perform template matching directly
+                            result = cv2.matchTemplate(initial_screenshot, template, cv2.TM_CCOEFF_NORMED)
+                            locations = np.where(result >= params.min_confidence)
+                            
+                            if locations[0].size > 0:
+                                self._log_debug(f"Found {locations[0].size} matches for {template_name}")
+                                
+                                # Get template dimensions
+                                template_width = template.shape[1]
+                                template_height = template.shape[0]
+                                
+                                # Convert matches to the format expected by the overlay
+                                for y, x in zip(*locations):
+                                    confidence = float(result[y, x])
+                                    match_tuple = (
+                                        template_name,
+                                        int(x),
+                                        int(y),
+                                        template_width,
+                                        template_height,
+                                        confidence
+                                    )
+                                    match_tuples.append(match_tuple)
+                                    self._log_debug(f"Match: {template_name} at ({int(x)}, {int(y)}) with confidence {confidence:.2f}")
+                            else:
+                                self._log_debug(f"No matches found for template {template_name}")
+                        else:
+                            self._log_debug(f"Template {template_name} not found in template_matcher.templates")
+                    
+                    if match_tuples:
+                        self._log_debug(f"Manually found {len(match_tuples)} matches!")
+                        
+                        # Add matches to overlay's cache
+                        overlay.cached_matches = match_tuples.copy()
+                        self._log_debug(f"Updated overlay.cached_matches with {len(overlay.cached_matches)} matches")
+                        
+                        # FORCE A DIRECT DRAW for diagnosis
+                        self._log_debug("=== FORCING DIRECT DRAW ===")
+                        if hasattr(overlay, '_draw_overlay'):
+                            self._log_debug("Calling _draw_overlay directly")
+                            overlay._draw_overlay()
+                    else:
+                        self._log_debug("No matches found with direct template matching")
+                
+                # Fallback to regular template matching if direct matching found nothing
+                if not overlay.cached_matches:
+                    self._log_debug("Direct matching found no results, trying regular template matching")
+                    
+                    # Use find_matches method
+                    if template_names:
+                        self._log_debug(f"Searching for specific templates: {template_names}")
+                        initial_groups = template_matcher.find_matches(initial_screenshot, template_names)
+                    else:
+                        self._log_debug("Searching for all templates")
+                        initial_groups = template_matcher.find_matches(initial_screenshot)
+                    
+                    # Convert GroupedMatch objects to tuples
+                    match_tuples = []
+                    for group in initial_groups:
+                        match_tuple = (
+                            group.template_name,
+                            group.bounds[0],
+                            group.bounds[1],
+                            group.bounds[2],
+                            group.bounds[3],
+                            group.confidence
+                        )
+                        match_tuples.append(match_tuple)
+                        self._log_debug(f"Found match group: {group.template_name} at {group.bounds} with confidence {group.confidence:.2f}")
+                    
+                    if match_tuples:
+                        # Update overlay's cache
+                        overlay.cached_matches = match_tuples.copy()
+                        self._log_debug(f"Updated overlay cache with {len(overlay.cached_matches)} matches")
+                        
+                        # FORCE A DIRECT DRAW for diagnosis
+                        self._log_debug("=== FORCING DIRECT DRAW (after regular matching) ===")
+                        if hasattr(overlay, '_draw_overlay'):
+                            self._log_debug("Calling _draw_overlay directly")
+                            overlay._draw_overlay()
+                    else:
+                        self._log_debug("No matches found by template matcher")
+            
+            # Always start template matching process, regardless of overlay visibility
+            self._log_debug("Starting template matching process")
+            overlay.template_matching_active = True
+            
+            # Start the overlay's matching process
+            if hasattr(overlay, 'start_template_matching'):
+                overlay.start_template_matching()
+                match_search_started = True
+                self._log_debug("Template matching timers started")
+            
+            # Log overlay state after setup
+            self._log_debug(f"Overlay state: active={overlay.active}, template_matching_active={overlay.template_matching_active}")
+            self._log_debug(f"Cached matches count: {len(overlay.cached_matches)}")
+            
+            # VERIFY TIMER STATUS AGAIN
+            if hasattr(overlay, 'draw_timer'):
+                self._log_debug(f"Draw timer status after setup: active={overlay.draw_timer.isActive()}, interval={overlay.draw_timer.interval()}")
+            if hasattr(overlay, 'template_matching_timer'):
+                self._log_debug(f"Template matching timer status: active={overlay.template_matching_timer.isActive()}, interval={overlay.template_matching_timer.interval()}")
+            
+            # Initialize variables to track matches
+            match_count = len(overlay.cached_matches)
+            check_interval = 0.5  # Check for new matches every 0.5 seconds
+            last_check_time = time.time()
+            
+            # Wait for the specified duration, checking for matches periodically
+            self._log_debug(f"Running template matching for {params.duration} seconds")
             start_time = time.time()
+            
             while time.time() - start_time < params.duration:
                 # Check for stop keys
                 if is_stop_key_pressed():
                     self._log_debug("Template search interrupted by user (Escape/Q pressed)")
                     self.stop_execution()
-                    return
+                    return False
+                
+                # Periodically check for matches
+                current_time = time.time()
+                if current_time - last_check_time >= check_interval:
+                    last_check_time = current_time
                     
+                    # FORCE DIRECT DRAWING PERIODICALLY
+                    self._log_debug(f"=== PERIODIC CHECK (elapsed: {current_time - start_time:.1f}s) ===")
+                    if hasattr(overlay, '_draw_overlay'):
+                        self._log_debug("Forcing overlay draw during periodic check")
+                        overlay._draw_overlay()
+                    
+                    # Force a manual update of matches every check interval
+                    if hasattr(overlay, 'template_matcher'):
+                        screenshot = self.context.window_manager.capture_screenshot()
+                        if screenshot is not None:
+                            # Find matches directly
+                            if template_names:
+                                matches = []
+                                for template_name in template_names:
+                                    if template_name in template_matcher.templates:
+                                        template = template_matcher.templates[template_name]
+                                        result = cv2.matchTemplate(screenshot, template, cv2.TM_CCOEFF_NORMED)
+                                        locations = np.where(result >= params.min_confidence)
+                                        
+                                        if locations[0].size > 0:
+                                            template_width = template.shape[1]
+                                            template_height = template.shape[0]
+                                            
+                                            for y, x in zip(*locations):
+                                                confidence = float(result[y, x])
+                                                match = (
+                                                    template_name,
+                                                    int(x),
+                                                    int(y),
+                                                    template_width,
+                                                    template_height,
+                                                    confidence
+                                                )
+                                                matches.append(match)
+                                
+                                if matches:
+                                    # Update overlay's cached matches
+                                    overlay.cached_matches = matches
+                                    
+                                    # Play sound if enabled for first match detection
+                                    if len(matches) > 0 and params.sound_enabled and hasattr(template_matcher, 'sound_manager'):
+                                        template_matcher.sound_manager.play_if_ready()
+                                        
+                                    # Log matches found
+                                    self._log_debug(f"Update check found {len(matches)} matches")
+                                    for i, match in enumerate(matches[:3]):  # Log first 3 matches
+                                        self._log_debug(f"  Match {i+1}: {match[0]} at ({match[1]}, {match[2]}) with confidence {match[5]:.2f}")
+                    
+                    # Check how many matches we have in the overlay's cache
+                    if hasattr(overlay, 'cached_matches'):
+                        current_matches = len(overlay.cached_matches)
+                        if current_matches > 0:
+                            self._log_debug(f"Current match count: {current_matches}")
+                            # Log the first few matches for debugging
+                            for i, match in enumerate(overlay.cached_matches[:3]):
+                                name, x, y, w, h, conf = match
+                                self._log_debug(f"  Match {i+1}: {name} at ({x}, {y}) confidence: {conf:.2f}")
+                                
+                        if current_matches > match_count:
+                            self._log_debug(f"Found {current_matches} template matches (up from {match_count})")
+                            match_count = current_matches
+                            
+                            # Play sound if enabled for first match detection
+                            if match_count == 1 and params.sound_enabled and hasattr(template_matcher, 'sound_manager'):
+                                self._log_debug("Playing sound alert for first match detection")
+                                template_matcher.sound_manager.play_if_ready()
+                
+                # PERIODICALLY FORCE DIRECT DRAW EVEN BETWEEN CHECKS
+                if (current_time - start_time) % 2 < 0.1:  # Every ~2 seconds
+                    # Force direct draw again
+                    if hasattr(overlay, '_draw_overlay'):
+                        self._log_debug("Forcing additional draw call")
+                        overlay._draw_overlay()
+                
                 # Wait a short time
                 time.sleep(0.1)
             
-            # Check if we found any matches
-            if overlay.cached_matches:
-                match_count = len(overlay.cached_matches)
-                self._log_debug(f"Found {match_count} template matches")
-            else:
-                match_count = 0
-                self._log_debug("No template matches found")
-                
-            # Stop template matching
-            self._log_debug("Stopping template matching")
-            overlay.stop_template_matching()
-            
-            # Report the result
+            # Report the final result
             if match_count > 0:
+                self._log_debug(f"Template search completed with {match_count} matches found")
                 self.context.set_last_result(True, f"Found {match_count} matches")
             else:
+                self._log_debug("Template search completed with no matches found")
                 self.context.set_last_result(False, "No matches found")
-                
+            
+            return True
+            
         except Exception as e:
             error_msg = f"Error during template search: {str(e)}"
             self._log_debug(f"ERROR: {error_msg}")
-            
-            # Try to clean up
-            try:
-                overlay.stop_template_matching()
-            except Exception:
-                pass
-                
-            raise RuntimeError(error_msg)
+            self.context.set_last_result(False, error_msg)
+            return False
             
         finally:
-            # Always restore original settings
-            try:
-                # Restore template matcher settings
-                template_matcher.confidence = original_confidence
-                template_matcher.target_frequency = original_frequency
-                template_matcher.sound_enabled = original_sound_enabled
-                
-                # Restore overlay state if we changed it
-                if params.overlay_enabled and not original_overlay_active:
-                    overlay.active = original_overlay_active
-                    
-                # If template matching wasn't active before, make sure it's stopped
-                if not original_template_matching_active and overlay.template_matching_active:
-                    overlay.stop_template_matching()
-            except Exception as e:
-                self._log_debug(f"Error restoring overlay settings: {str(e)}")
-                
-        self._log_debug("Template search completed")
+            # Always clean up, even if there was an error
+            self._log_debug("Cleaning up after template search")
+            
+            # Restore template matcher settings
+            template_matcher.confidence = original_confidence
+            template_matcher.target_frequency = original_frequency
+            template_matcher.sound_enabled = original_sound_enabled
+            
+            # Stop template matching if we started it
+            if match_search_started and hasattr(overlay, 'stop_template_matching'):
+                self._log_debug("Stopping template matching")
+                overlay.stop_template_matching()
+            
+            # Restore overlay state to original
+            overlay.active = original_overlay_active
+            overlay.template_matching_active = original_template_matching_active
+            
+            self._log_debug("Template search cleanup completed")
         
     def _execute_ocr_wait(self, action: AutomationAction) -> None:
         """Execute an OCR wait action."""

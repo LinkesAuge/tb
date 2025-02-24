@@ -91,4 +91,15 @@ class SoundManager:
     def toggle(self) -> None:
         """Toggle sound on/off."""
         self.enabled = not self.enabled
-        logger.info(f"Sound {'enabled' if self.enabled else 'disabled'}") 
+        logger.info(f"Sound {'enabled' if self.enabled else 'disabled'}")
+        
+    def reset_cooldown(self) -> None:
+        """
+        Reset the cooldown timer to allow immediate sound play.
+        
+        This method is useful when starting a new detection session
+        and you want to ensure the first match will trigger a sound
+        regardless of when the last sound was played.
+        """
+        self.last_play_time = 0.0
+        logger.debug("Sound cooldown reset") 

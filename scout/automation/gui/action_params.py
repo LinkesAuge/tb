@@ -293,15 +293,18 @@ class TemplateSearchParamsWidget(BaseParamsWidget):
         self._load_templates()
         
         # Add a note about using the overlay directly
-        note_label = QLabel("This action uses the overlay's template matching feature.\n"
-                           "Make sure the overlay is configured correctly.")
+        note_label = QLabel("This action uses the template matching feature to find images on screen.")
         note_label.setStyleSheet("color: #555; font-style: italic;")
         layout.addWidget(note_label)
         
         # Overlay toggle
-        self.overlay_enabled = QCheckBox("Show Overlay")
-        self.overlay_enabled.setChecked(True)
+        self.overlay_enabled = QCheckBox("Show Overlay Window (visualize matches on screen)")
+        self.overlay_enabled.setChecked(True)  # Default to showing overlay
+        overlay_note = QLabel("Shows a transparent window over the game displaying matched templates.\n"
+                             "Disable if you only need sound alerts without visual feedback.")
+        overlay_note.setStyleSheet("color: #555; font-style: italic; font-size: 8pt;")
         layout.addWidget(self.overlay_enabled)
+        layout.addWidget(overlay_note)
         
         # Sound toggle
         self.sound_enabled = QCheckBox("Enable Sound Alerts")
@@ -430,13 +433,16 @@ class TemplateSearchParamsWidget(BaseParamsWidget):
         # Save settings before returning
         self._save_settings()
         
-        # Get selected templates
+        # Get selected templates - ensure we have a list even if 'use all' is checked
         if self.use_all_templates.isChecked():
             templates = [self.template_list.item(i).text() 
                        for i in range(self.template_list.count())]
         else:
             templates = [item.text() for item in self.template_list.selectedItems()]
-            
+            if not templates:  # If no templates selected, use all
+                templates = [self.template_list.item(i).text() 
+                           for i in range(self.template_list.count())]
+                
         return TemplateSearchParams(
             templates=templates,
             use_all_templates=self.use_all_templates.isChecked(),
