@@ -19,6 +19,7 @@ from scout.template_matcher import TemplateMatch, GroupedMatch, TemplateMatcher
 import logging
 from PyQt6.QtWidgets import QWidget
 from PyQt6.QtCore import QTimer
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +64,8 @@ class Overlay(QWidget):
         self.window_name = "TB Scout Overlay"
         self.active = overlay_settings.get("active", False)
         self.template_matching_active = False
+        self.window_hwnd = None  # Store window handle
+        self.window_created = False  # Flag to track if window has been created
         
         # Separate timers for template matching and drawing
         self.template_matching_timer = QTimer()
@@ -117,10 +120,23 @@ class Overlay(QWidget):
                     f"font_size={self.font_size}, "
                     f"rect_scale={self.rect_scale}")
 
+        # Create the overlay window now, but keep it hidden
+        logger.info("Creating overlay window at initialization")
+        self.create_overlay_window()
+        if not self.active:
+            self._hide_window()
+
     def create_overlay_window(self) -> None:
         """Create the overlay window with transparency."""
+        # Check if we already have a valid window
+        if self.window_hwnd and win32gui.IsWindow(self.window_hwnd):
+            logger.info(f"Window already exists with handle {self.window_hwnd} - updating position")
+            self._update_window_position()
+            return
+            
         logger.info("Creating overlay window")
         
+        # Get window position
         pos = self.window_manager.get_window_position()
         if not pos:
             logger.warning("Target window not found, cannot create overlay")
@@ -149,6 +165,11 @@ class Overlay(QWidget):
             if not hwnd:
                 logger.error("Failed to create overlay window")
                 return
+                
+            # Store the new window handle
+            self.window_hwnd = hwnd
+            self.window_created = True
+            logger.debug(f"Created window with handle: {hwnd}")
             
             # Set window styles for transparency
             style = win32gui.GetWindowLong(hwnd, win32con.GWL_STYLE)
@@ -176,25 +197,122 @@ class Overlay(QWidget):
                 win32con.LWA_COLORKEY
             )
             
+            # Initially hide the window if overlay is not active
+            if not self.active:
+                self._hide_window()
+            
             logger.debug("Overlay window created with transparency settings")
             
         except Exception as e:
             logger.error(f"Error creating overlay window: {e}")
             return
 
+    def _update_window_position(self) -> None:
+        """Update the overlay window position and size to match the game window."""
+        if not self.window_hwnd or not win32gui.IsWindow(self.window_hwnd):
+            logger.warning("Cannot update position - window handle is invalid")
+            return
+            
+        pos = self.window_manager.get_window_position()
+        if not pos:
+            logger.warning("Target window not found, cannot update overlay position")
+            return
+            
+        x, y, width, height = pos
+        
+        try:
+            # Update window position, size and ensure it's topmost
+            win32gui.SetWindowPos(
+                self.window_hwnd, win32con.HWND_TOPMOST,
+                x, y, width, height,
+                win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE
+            )
+            logger.debug(f"Updated window position to ({x}, {y}) with size {width}x{height}")
+        except Exception as e:
+            logger.error(f"Error updating window position: {e}")
+
+    def _hide_window(self) -> None:
+        """Hide the overlay window."""
+        if not self.window_created or not self.window_hwnd:
+            return
+            
+        if not win32gui.IsWindow(self.window_hwnd):
+            logger.warning("Invalid window handle in hide_window - marking as not created")
+            self.window_hwnd = None
+            self.window_created = False
+            return
+            
+        try:
+            win32gui.ShowWindow(self.window_hwnd, win32con.SW_HIDE)
+            logger.debug("Window hidden")
+        except Exception as e:
+            logger.error(f"Error hiding window: {e}")
+            # Even if hiding fails, we keep the handle since we might be able to use it later
+
+    def _show_window(self) -> None:
+        """Show the overlay window."""
+        if not self.window_created or not self.window_hwnd:
+            # Create window if it doesn't exist
+            self.create_overlay_window()
+            return
+            
+        if not win32gui.IsWindow(self.window_hwnd):
+            logger.warning("Invalid window handle - recreating window")
+            self.window_hwnd = None
+            self.window_created = False
+            self.create_overlay_window()
+            return
+            
+        try:
+            # Update position before showing
+            self._update_window_position()
+            
+            # Show window and make it topmost
+            win32gui.ShowWindow(self.window_hwnd, win32con.SW_SHOW)
+            win32gui.SetWindowPos(
+                self.window_hwnd, win32con.HWND_TOPMOST,
+                0, 0, 0, 0,  # Ignore position/size parameters
+                win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE
+            )
+            
+            logger.debug("Window shown and set as topmost")
+        except Exception as e:
+            logger.error(f"Error showing window: {e}")
+            # If we encounter an error, try recreating the window
+            self.window_hwnd = None
+            self.window_created = False
+            self.create_overlay_window()
+
     def start_template_matching(self) -> None:
         """Start template matching."""
         logger.info("Starting template matching")
+        
+        # If template matching is already active, just make sure window is shown
+        if self.template_matching_active:
+            logger.debug("Template matching is already active")
+            if self.active:
+                self._show_window()
+            return
+            
         self.template_matching_active = True
         
-        # Create overlay window if both overlay and template matching are now active
-        if self.active and self.template_matching_active:
-            self.create_overlay_window()
+        # Show overlay window if both overlay and template matching are active
+        if self.active:
+            self._show_window()
+            logger.debug("Showing overlay window for template matching")
+        else:
+            logger.debug(f"Not showing overlay window - active: {self.active}")
         
-        # Start both timers
-        self.update_timer_interval()  # This will start the template matching timer
-        self.draw_timer.start()  # Start the drawing timer
-        logger.debug("Template matching and draw timers started")
+        # Start both timers if not already running
+        if not self.template_matching_timer.isActive():
+            self.update_timer_interval()  # This will start the template matching timer
+            logger.debug("Template matching timer started")
+            
+        if not self.draw_timer.isActive():
+            self.draw_timer.start()  # Start the drawing timer
+            logger.debug("Draw timer started")
+            
+        logger.debug("Template matching started successfully")
 
     def update_timer_interval(self) -> None:
         """Update the template matching timer interval based on target frequency."""
@@ -222,13 +340,28 @@ class Overlay(QWidget):
     def _destroy_window_safely(self) -> None:
         """Safely destroy the overlay window if it exists."""
         try:
-            # Check if window exists before destroying
+            # First check if we have a stored handle
+            if self.window_hwnd and win32gui.IsWindow(self.window_hwnd):
+                logger.debug(f"Hiding window with stored handle: {self.window_hwnd}")
+                self._hide_window()
+                # Don't destroy window, just hide it
+                # cv2.destroyWindow(self.window_name)
+                # self.window_hwnd = None
+                # self.window_created = False
+                # logger.info("Overlay window destroyed (using stored handle)")
+                return
+                
+            # If not, try to find by name
             hwnd = win32gui.FindWindow(None, self.window_name)
             if hwnd:
-                cv2.destroyWindow(self.window_name)
-                logger.info("Overlay window destroyed")
+                logger.debug(f"Hiding window with found handle: {hwnd}")
+                self.window_hwnd = hwnd
+                self._hide_window()
+                # Don't destroy window, just hide it
+                # cv2.destroyWindow(self.window_name)
+                # logger.info("Overlay window destroyed (using found handle)")
         except Exception as e:
-            logger.debug(f"Window destruction skipped: {e}")
+            logger.debug(f"Window hide skipped: {e}")
 
     def _get_group_key(self, match: Tuple[str, int, int, int, int, float]) -> str:
         """Get the cache key for a match based on approximate position only (not template name)."""
@@ -375,70 +508,51 @@ class Overlay(QWidget):
         if not self.active or not self.template_matching_active:
             return
         
-        if not self.window_manager.find_window():
+        # Make sure we have a valid window to draw on
+        if not self.window_created or not self.window_hwnd or not win32gui.IsWindow(self.window_hwnd):
+            logger.debug("Window not valid for drawing - recreating")
+            self.window_hwnd = None
+            self.window_created = False
+            self.create_overlay_window()
+            if not self.window_hwnd:
+                logger.error("Failed to create overlay window for drawing")
+                return
+        
+        # Make sure window is shown
+        self._show_window()
+        
+        # Update window position to track game window
+        pos = self.window_manager.get_window_position()
+        if not pos:
             logger.warning("Target window not found during draw")
             return
         
-        pos = self.window_manager.get_window_position()
-        if not pos:
-            logger.warning("Could not get window position")
-            return
-        
         x, y, width, height = pos
-        # Ensure positive coordinates
+        
+        # Ensure position is updated
+        try:
+            win32gui.SetWindowPos(
+                self.window_hwnd, win32con.HWND_TOPMOST,
+                x, y, width, height,
+                win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE
+            )
+        except Exception as e:
+            logger.error(f"Error updating window position: {e}")
+            # Try to recreate window if this fails
+            self.window_hwnd = None
+            self.window_created = False
+            self.create_overlay_window()
+            return
+            
+        # Ensure positive coordinates for drawing
         if x < 0:
             width += x
             x = 0
         if y < 0:
             height += y
             y = 0
-            
-        window_title = win32gui.GetWindowText(self.window_manager.hwnd)
-        
-        # Handle browser-specific window adjustments
-        client_offset_x = 0
-        client_offset_y = 0
-        try:
-            # Check if running in a browser
-            if any(browser in window_title for browser in ["Chrome", "Firefox", "Edge", "Opera"]):
-                import ctypes
-                from ctypes.wintypes import RECT, POINT
-                
-                # Get client rect (actual content area)
-                rect = RECT()
-                if ctypes.windll.user32.GetClientRect(self.window_manager.hwnd, ctypes.byref(rect)):
-                    client_width = rect.right - rect.left
-                    client_height = rect.bottom - rect.top
-                    
-                    # Get client area position
-                    point = POINT(0, 0)
-                    if ctypes.windll.user32.ClientToScreen(self.window_manager.hwnd, ctypes.byref(point)):
-                        client_x, client_y = point.x, point.y
-                        
-                        # Calculate offset from window to client
-                        client_offset_x = client_x - x
-                        client_offset_y = client_y - y
-                        
-                        # Update coordinates to use client area
-                        x, y = client_x, client_y
-                        width, height = client_width, client_height
-                        
-                        logger.debug(f"Browser client area adjusted: pos=({x}, {y}), size={width}x{height}, offset=({client_offset_x}, {client_offset_y})")
-                
-        except Exception as e:
-            logger.warning(f"Failed to adjust for browser client area: {e}")
         
         try:
-            # Ensure window exists before drawing
-            hwnd = win32gui.FindWindow(None, self.window_name)
-            if not hwnd:
-                logger.debug("Creating overlay window as it doesn't exist")
-                self.create_overlay_window()
-                hwnd = win32gui.FindWindow(None, self.window_name)
-                if not hwnd:
-                    logger.error("Failed to create overlay window")
-                    return
-            
             # Create magenta background (will be transparent)
             overlay = np.zeros((height, width, 3), dtype=np.uint8)
             overlay[:] = (255, 0, 255)  # Set background to magenta
@@ -448,23 +562,6 @@ class Overlay(QWidget):
                 logger.debug(f"Drawing {len(self.cached_matches)} matches on overlay")
                 # Draw matches
                 for name, match_x, match_y, match_width, match_height, confidence in self.cached_matches:
-                    # Adjust match position by client offset
-                    match_x = match_x - client_offset_x
-                    match_y = match_y - client_offset_y
-                    
-                    # Adjust for negative window position
-                    if x < 0:
-                        match_x += abs(x)
-                    if y < 0:
-                        match_y += abs(y)
-                    
-                    logger.debug(f"Drawing match - Original bounds: ({match_x}, {match_y}, {match_width}, {match_height})")
-                    logger.debug(f"Client offset being applied: ({client_offset_x}, {client_offset_y})")
-                    
-                    # Skip if dimensions are invalid
-                    if match_width <= 0 or match_height <= 0:
-                        continue
-                    
                     # Calculate center point
                     center_x = match_x + match_width // 2
                     center_y = match_y + match_height // 2
@@ -532,17 +629,17 @@ class Overlay(QWidget):
             cv2.imshow(self.window_name, overlay)
             cv2.waitKey(1)
             
-            # Update window position and ensure topmost
+            # Make sure window is still topmost
             win32gui.SetWindowPos(
-                hwnd,
+                self.window_hwnd,
                 win32con.HWND_TOPMOST,
-                x, y, width, height,
-                win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE
+                0, 0, 0, 0,  # Ignore position/size - already set above
+                win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE
             )
             
             # Refresh transparency settings
             win32gui.SetLayeredWindowAttributes(
-                hwnd,
+                self.window_hwnd,
                 win32api.RGB(255, 0, 255),  # Magenta color key
                 0,  # Alpha (0 = fully transparent for non-magenta pixels)
                 win32con.LWA_COLORKEY
@@ -555,8 +652,13 @@ class Overlay(QWidget):
         """Stop template matching."""
         logger.info("Stopping template matching")
         self.template_matching_active = False
-        self.template_matching_timer.stop()
-        self.draw_timer.stop()
+        
+        # Stop timers
+        if self.template_matching_timer.isActive():
+            self.template_matching_timer.stop()
+        
+        if self.draw_timer.isActive():
+            self.draw_timer.stop()
         
         # Reset template matcher frequency
         self.template_matcher.update_frequency = 0.0
@@ -566,11 +668,11 @@ class Overlay(QWidget):
         self.cached_matches = []
         self.match_counters.clear()
         
-        # Safely destroy window when template matching stops
-        self._destroy_window_safely()
-        
-        # Clear any existing matches from display
-        self._draw_overlay()
+        # Hide window but never destroy it
+        if self.window_hwnd and win32gui.IsWindow(self.window_hwnd):
+            self._hide_window()
+            
+        logger.debug("Template matching stopped, window hidden")
 
     def toggle(self) -> None:
         """Toggle the overlay visibility."""
@@ -578,9 +680,10 @@ class Overlay(QWidget):
         self.active = not self.active
         logger.info(f"Overlay {'activated' if self.active else 'deactivated'}")
         
-        # Only destroy window if we're turning off
-        if not self.active:
-            self._destroy_window_safely()
-        # Only create window if we're turning on AND template matching is active
-        elif self.template_matching_active:
-            self.create_overlay_window() 
+        if self.active:
+            # Show window if template matching is also active
+            if self.template_matching_active:
+                self._show_window()
+        else:
+            # Hide window 
+            self._hide_window() 

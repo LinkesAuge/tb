@@ -307,3 +307,17 @@ class TemplateMatcher:
         """Stop continuous template matching."""
         logger.info("Stopping template matching")
         # This is handled by the overlay system 
+
+    def get_matches(self) -> List[Tuple[str, int, int, int, int, float]]:
+        """
+        Get the current matches in a standardized format.
+        
+        Returns:
+            List of tuples (template_name, x, y, width, height, confidence)
+        """
+        # If there's a current overlay instance and it has cached matches
+        if hasattr(self, 'overlay') and hasattr(self.overlay, 'cached_matches'):
+            return self.overlay.cached_matches
+            
+        # Otherwise return empty list
+        return [] 

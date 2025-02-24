@@ -8,14 +8,14 @@ This module handles the execution of automation sequences, including:
 - Debug logging
 """
 
-from typing import Dict, Optional, List, Callable
+from typing import Dict, Optional, List, Callable, Tuple, Any
 from dataclasses import dataclass
 import time
 import logging
 from PyQt6.QtCore import QObject, pyqtSignal
 import win32api
 import win32con
-from scout.automation.core import AutomationPosition, AutomationSequence
+from scout.automation.core import AutomationPosition, AutomationSequence, ExecutionContext
 from scout.automation.actions import (
     ActionType, AutomationAction, ActionParamsCommon,
     ClickParams, DragParams, TypeParams, WaitParams,
@@ -26,6 +26,7 @@ from scout.template_matcher import TemplateMatcher
 from scout.text_ocr import TextOCR
 from scout.actions import GameActions
 from scout.automation.gui.debug_tab import AutomationDebugTab
+from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)
 
@@ -35,19 +36,6 @@ def is_stop_key_pressed() -> bool:
         win32api.GetAsyncKeyState(win32con.VK_ESCAPE) & 0x8000 != 0 or  # Escape key
         win32api.GetAsyncKeyState(ord('Q')) & 0x8000 != 0  # Q key
     )
-
-@dataclass
-class ExecutionContext:
-    """Context for sequence execution."""
-    positions: Dict[str, AutomationPosition]
-    window_manager: WindowManager
-    template_matcher: TemplateMatcher
-    text_ocr: TextOCR
-    game_actions: GameActions
-    debug_tab: Optional[AutomationDebugTab] = None
-    simulation_mode: bool = False
-    step_delay: float = 0.5
-    loop_enabled: bool = False  # Added loop flag
 
 class SequenceExecutor(QObject):
     """
@@ -317,22 +305,45 @@ class SequenceExecutor(QObject):
         if not isinstance(params, TemplateSearchParams):
             raise ValueError("Invalid parameters for template search action")
             
-        self._log_debug(
-            f"Starting template search with {len(params.templates)} templates "
-            f"(Update freq: {params.update_frequency}/s, Duration: {params.duration}s)"
-        )
+        self._log_debug(f"Starting template search for {len(params.templates)} templates")
         
-        # Configure template matcher
-        self.context.template_matcher.confidence = params.min_confidence
-        self.context.template_matcher.target_frequency = params.update_frequency
-        self.context.template_matcher.sound_enabled = params.sound_enabled
+        # Get the overlay
+        overlay = self.context.overlay
+        if not overlay:
+            error_msg = "No overlay available for template search"
+            self._log_debug(f"ERROR: {error_msg}")
+            raise ValueError(error_msg)
+            
+        # Store original overlay state
+        original_overlay_active = overlay.active
+        original_template_matching_active = overlay.template_matching_active
         
-        # Start template matching if overlay is enabled
-        if params.overlay_enabled:
-            self.context.template_matcher.start_template_matching()
-        
-        start_time = time.time()
         try:
+            # Configure the template matcher in the overlay
+            template_matcher = overlay.template_matcher
+            original_confidence = template_matcher.confidence
+            original_frequency = template_matcher.target_frequency
+            original_sound_enabled = template_matcher.sound_enabled
+            
+            # Set parameters for this search
+            template_matcher.confidence = params.min_confidence
+            template_matcher.target_frequency = params.update_frequency
+            template_matcher.sound_enabled = params.sound_enabled
+            
+            # If overlay is not active, temporarily activate it
+            if params.overlay_enabled and not original_overlay_active:
+                self._log_debug("Temporarily activating overlay for template search")
+                overlay.active = True
+            
+            # Start template matching using the overlay's built-in mechanism
+            self._log_debug("Starting template matching via overlay")
+            overlay.start_template_matching()
+            
+            # Wait for the specified duration
+            self._log_debug(f"Waiting for {params.duration} seconds")
+            
+            # Break the wait into smaller chunks to check for stop keys
+            start_time = time.time()
             while time.time() - start_time < params.duration:
                 # Check for stop keys
                 if is_stop_key_pressed():
@@ -340,24 +351,58 @@ class SequenceExecutor(QObject):
                     self.stop_execution()
                     return
                     
-                # Take screenshot and check for templates
-                screenshot = self.context.window_manager.capture_screenshot()
-                if screenshot is None:
-                    continue
-                    
-                # Use existing template matcher to find matches
-                matches = self.context.template_matcher.find_all_templates(screenshot)
-                if matches:
-                    self._log_debug(f"Found {len(matches)} template matches")
-                    
-                time.sleep(1.0 / params.update_frequency)  # Control update rate
-                
-        finally:
-            # Always stop template matching when done
-            if params.overlay_enabled:
-                self.context.template_matcher.stop_template_matching()
+                # Wait a short time
+                time.sleep(0.1)
             
-            self._log_debug("Template search completed")
+            # Check if we found any matches
+            if overlay.cached_matches:
+                match_count = len(overlay.cached_matches)
+                self._log_debug(f"Found {match_count} template matches")
+            else:
+                match_count = 0
+                self._log_debug("No template matches found")
+                
+            # Stop template matching
+            self._log_debug("Stopping template matching")
+            overlay.stop_template_matching()
+            
+            # Report the result
+            if match_count > 0:
+                self.context.set_last_result(True, f"Found {match_count} matches")
+            else:
+                self.context.set_last_result(False, "No matches found")
+                
+        except Exception as e:
+            error_msg = f"Error during template search: {str(e)}"
+            self._log_debug(f"ERROR: {error_msg}")
+            
+            # Try to clean up
+            try:
+                overlay.stop_template_matching()
+            except Exception:
+                pass
+                
+            raise RuntimeError(error_msg)
+            
+        finally:
+            # Always restore original settings
+            try:
+                # Restore template matcher settings
+                template_matcher.confidence = original_confidence
+                template_matcher.target_frequency = original_frequency
+                template_matcher.sound_enabled = original_sound_enabled
+                
+                # Restore overlay state if we changed it
+                if params.overlay_enabled and not original_overlay_active:
+                    overlay.active = original_overlay_active
+                    
+                # If template matching wasn't active before, make sure it's stopped
+                if not original_template_matching_active and overlay.template_matching_active:
+                    overlay.stop_template_matching()
+            except Exception as e:
+                self._log_debug(f"Error restoring overlay settings: {str(e)}")
+                
+        self._log_debug("Template search completed")
         
     def _execute_ocr_wait(self, action: AutomationAction) -> None:
         """Execute an OCR wait action."""

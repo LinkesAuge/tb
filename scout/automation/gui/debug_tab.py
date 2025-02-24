@@ -9,14 +9,17 @@ It shows:
 - Debug logs
 """
 
-from typing import Dict, Optional
+from typing import Dict, Optional, TYPE_CHECKING, List, Any
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel, 
     QTextEdit, QPushButton, QTableWidget, QTableWidgetItem
 )
 from PyQt6.QtCore import Qt, pyqtSignal
 import logging
-from scout.automation.core import AutomationPosition, AutomationSequence
+
+# Use TYPE_CHECKING to avoid circular imports
+if TYPE_CHECKING:
+    from scout.automation.core import AutomationPosition, AutomationSequence
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +85,7 @@ class AutomationDebugTab(QWidget):
         self.resume_button.setEnabled(False)
         self.step_button.setEnabled(False)
         
-    def update_positions(self, positions: Dict[str, AutomationPosition]) -> None:
+    def update_positions(self, positions: Dict[str, 'AutomationPosition']) -> None:
         """
         Update the position table.
         

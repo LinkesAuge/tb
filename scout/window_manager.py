@@ -6,6 +6,8 @@ from ctypes.wintypes import RECT, POINT
 import numpy as np
 import cv2
 import mss
+import time
+import pywintypes
 
 logger = logging.getLogger(__name__)
 
@@ -45,91 +47,114 @@ class WindowManager:
     
     def find_window(self) -> bool:
         """
-        Find the game window by its title.
-        
-        Searches through all windows to find one matching our target title.
-        Handles partial matches and excludes our own application windows.
-        Updates the stored window handle if found.
+        Find the game window by title.
         
         Returns:
-            bool: True if the window was found, False otherwise
+            True if window found, False otherwise
         """
-        matching_windows = []  # List to store all matching windows
-        all_windows = []  # List to store all visible windows for debugging
-        
-        def enum_windows_callback(hwnd: int, _: Any) -> bool:
-            if not win32gui.IsWindowVisible(hwnd):
-                return True
-            
-            window_title = win32gui.GetWindowText(hwnd)
-            all_windows.append(window_title)  # Store all window titles for debugging
-            
-            # Skip our own application windows
-            if window_title == "Total Battle Scout" or window_title == "TB Scout Overlay":
-                logger.debug(f"Skipping our own window: {window_title}")
-                return True
-            
-            # Look for "Total Battle" anywhere in the window title
-            if self.window_title in window_title:
-                logger.debug(f"Found matching window: {window_title} (hwnd: {hwnd})")
-                matching_windows.append(window_title)  # Add to list of matches
-                self.hwnd = hwnd
-                return False
-            return True
-        
-        logger.debug(f"Starting window search for title containing: {self.window_title}")
+        if self.hwnd and win32gui.IsWindow(self.hwnd):
+            # Window already found, check if it's still valid
+            try:
+                if self.window_title in win32gui.GetWindowText(self.hwnd):
+                    return True
+            except Exception as e:
+                logger.debug(f"Error checking existing window: {e}")
+                self.hwnd = None  # Reset handle if error
+
+        # Need to find the window
+        self.windows = []
         self.hwnd = None
-        win32gui.EnumWindows(enum_windows_callback, None)
         
-        # Log all matching windows
-        if matching_windows:
+        def enum_windows_callback(hwnd, _):
+            try:
+                if not win32gui.IsWindowVisible(hwnd):
+                    return
+                
+                window_title = win32gui.GetWindowText(hwnd)
+                if not window_title:
+                    return
+                    
+                # Skip our own windows
+                if window_title.startswith("TB Scout"):
+                    logger.debug(f"Skipping our own window: {window_title}")
+                    return
+                    
+                # Found a potential match
+                if self.window_title.lower() in window_title.lower():
+                    logger.debug(f"Found matching window: {window_title} (hwnd: {hwnd})")
+                    self.windows.append((hwnd, window_title))
+                    
+                    # Use the first match as the active window
+                    if not self.hwnd:
+                        self.hwnd = hwnd
+            except Exception as e:
+                # Log and continue if there's an error with a specific window
+                logger.debug(f"Error processing window in callback: {e}")
+        
+        try:
+            logger.debug(f"Starting window search for title containing: {self.window_title}")
+            win32gui.EnumWindows(enum_windows_callback, None)
+            
+            if not self.windows:
+                logger.debug("No matching windows found")
+                return False
+                
+            # Log found windows
             logger.info("Found matching windows:")
-            for window in matching_windows:
-                logger.info(f"  • {window}")
-        else:
-            logger.warning(f"No window found matching '{self.window_title}'")
-            logger.debug("All visible windows:")
-            for window in all_windows:
-                logger.debug(f"  • {window}")
-        
-        return self.hwnd is not None
+            for _, title in self.windows:
+                logger.info(f"  • {title}")
+                
+            return self.hwnd is not None
+            
+        except Exception as e:
+            logger.error(f"Error enumerating windows: {e}")
+            
+            # Try an alternative approach if EnumWindows fails
+            try:
+                logger.debug("Trying alternative window finding approach")
+                # Look for known windows that might be Total Battle
+                possible_titles = ["Total Battle", "TB", "Battle"]
+                
+                for title in possible_titles:
+                    try:
+                        hwnd = win32gui.FindWindow(None, title)
+                        if hwnd:
+                            self.hwnd = hwnd
+                            self.windows = [(hwnd, title)]
+                            logger.info(f"Found window using alternative method: {title}")
+                            return True
+                    except Exception:
+                        continue
+                        
+                return False
+            except Exception as ex:
+                logger.error(f"Alternative window finding also failed: {ex}")
+                return False
     
     def get_window_position(self) -> Optional[Tuple[int, int, int, int]]:
         """
-        Get the window position and size.
+        Get the position and size of the game window.
         
         Returns:
-            Optional[Tuple[int, int, int, int]]: (x, y, width, height) if window found, None otherwise
+            Tuple of (x, y, width, height) or None if window not found
         """
         try:
-            if not self.find_window():  # Use find_window to get the correct hwnd
-                logger.warning(f"Window '{self.window_title}' not found")
+            if not self.find_window():
+                logger.warning("Window not found")
                 return None
                 
-            rect = win32gui.GetWindowRect(self.hwnd)  # Use stored hwnd
-            x = rect[0]
-            y = rect[1]
-            width = rect[2] - x
-            height = rect[3] - y
+            # Get window rectangle (includes frame, borders etc)
+            rect = win32gui.GetWindowRect(self.hwnd)
+            x, y, right, bottom = rect
+            width = right - x
+            height = bottom - y
             
-            # Ensure positive dimensions by adjusting coordinates
-            if x < 0:
-                width += x  # Reduce width by the negative offset
-                x = 0
-            if y < 0:
-                height += y  # Reduce height by the negative offset
-                y = 0
-                
-            # Ensure minimum dimensions
-            width = max(1, width)
-            height = max(1, height)
-            
-            logger.debug(f"Window found at ({x}, {y}) with size {width}x{height}")
-            return x, y, width, height
+            logger.debug(f"Window position: x={x}, y={y}, width={width}, height={height}")
+            return (x, y, width, height)
             
         except Exception as e:
-            logger.error(f"Error getting window position: {str(e)}", exc_info=True)
-            return None 
+            logger.error(f"Error getting window position: {e}", exc_info=True)
+            return None
 
     def get_client_rect(self) -> Optional[Tuple[int, int, int, int]]:
         """
@@ -233,48 +258,53 @@ class WindowManager:
         Capture a screenshot of the game window.
         
         Returns:
-            Optional[np.ndarray]: Screenshot as numpy array in BGR format, or None if failed
+            Screenshot as numpy array in BGR format (OpenCV), or None if failed
         """
         try:
-            logger.debug("Attempting to capture screenshot...")
-            
             if not self.find_window():
-                logger.warning("Window not found when capturing screenshot")
-                logger.debug(f"Looking for window with title containing: {self.window_title}")
                 return None
                 
-            logger.debug(f"Found window with handle: {self.hwnd}")
-            
-            # Get window position and size
-            if pos := self.get_window_position():
-                x, y, width, height = pos
-                logger.debug(f"Window position: x={x}, y={y}, width={width}, height={height}")
-                
-                # Take screenshot using mss
-                try:
-                    with mss.mss() as sct:
-                        monitor = {"top": y, "left": x, "width": width, "height": height}
-                        logger.debug(f"Attempting to capture with monitor settings: {monitor}")
-                        screenshot = np.array(sct.grab(monitor))
-                        
-                        if screenshot is None:
-                            logger.error("mss.grab returned None")
-                            return None
-                            
-                        logger.debug(f"Captured image shape before conversion: {screenshot.shape}")
-                        
-                        # Convert from BGRA to BGR
-                        screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGRA2BGR)
-                        logger.debug(f"Converted image shape: {screenshot.shape}")
-                        
-                        return screenshot
-                except Exception as mss_error:
-                    logger.error(f"Error during mss capture: {mss_error}", exc_info=True)
-                    return None
-            else:
-                logger.warning("Failed to get window position")
+            # Get the window position
+            window_pos = self.get_window_position()
+            if not window_pos:
                 return None
+                
+            x, y, width, height = window_pos
+            logger.debug(f"Window found at ({x}, {y}) with size {width}x{height}")
             
+            # Capture the screen
+            with mss.mss() as sct:
+                # Define capture region
+                monitor = {
+                    'left': x,
+                    'top': y,
+                    'width': width,
+                    'height': height
+                }
+                
+                logger.debug(f"Attempting to capture with monitor settings: {monitor}")
+                
+                # Grab screenshot using MSS
+                screenshot = np.array(sct.grab(monitor))
+                
+                # Convert from BGRA to BGR (drop alpha channel)
+                logger.debug(f"Captured image shape before conversion: {screenshot.shape}")
+                screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGRA2BGR)
+                logger.debug(f"Converted image shape: {screenshot.shape}")
+                
+                return screenshot
+                
+        except pywintypes.error as e:
+            # Special handling for common Windows API errors
+            logger.error(f"Error capturing screenshot: {e}")
+            
+            # If access denied (5), waiting could help
+            if e.winerror == 5:  # ERROR_ACCESS_DENIED
+                logger.debug("Access denied error - waiting and will retry on next call")
+                time.sleep(0.5)  # Wait a bit before next attempt
+                return None
+                
+            return None
         except Exception as e:
             logger.error(f"Error capturing screenshot: {e}", exc_info=True)
             return None 

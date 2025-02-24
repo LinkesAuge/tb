@@ -7,13 +7,17 @@ This module provides the core classes for the automation system:
 - AutomationSequence: Defines a sequence of actions to perform
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Any
 import json
 import logging
 from pathlib import Path
 from dataclasses import dataclass, asdict
 from scout.window_manager import WindowManager
 from scout.config_manager import ConfigManager
+from scout.template_matcher import TemplateMatcher
+from scout.text_ocr import TextOCR
+from scout.actions import GameActions
+from scout.automation.gui.debug_tab import AutomationDebugTab
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +72,48 @@ class AutomationSequence:
     def from_dict(cls, data: Dict) -> 'AutomationSequence':
         """Create sequence from dictionary."""
         return cls(**data)
+
+@dataclass
+class ExecutionContext:
+    """Context for sequence execution."""
+    positions: Dict[str, AutomationPosition]
+    window_manager: WindowManager
+    template_matcher: TemplateMatcher
+    text_ocr: TextOCR
+    game_actions: GameActions
+    overlay: Optional[Any] = None  # Add overlay parameter
+    debug_tab: Optional[AutomationDebugTab] = None
+    simulation_mode: bool = False
+    step_delay: float = 0.5
+    loop_enabled: bool = False  # Added loop flag
+
+    # Store the last result and message
+    last_result: bool = False
+    last_message: str = ""
+    
+    def set_last_result(self, result: bool, message: str) -> None:
+        """
+        Set the result of the last action.
+        
+        Args:
+            result: Whether the action succeeded
+            message: Message describing the result
+        """
+        self.last_result = result
+        self.last_message = message
+        
+        # Log to debug tab if available
+        if self.debug_tab and hasattr(self.debug_tab, 'add_log_message'):
+            self.debug_tab.add_log_message(f"Result: {message}")
+            
+    def get_last_result(self) -> Tuple[bool, str]:
+        """
+        Get the result of the last action.
+        
+        Returns:
+            Tuple of (success, message)
+        """
+        return (self.last_result, self.last_message)
 
 class AutomationManager:
     """

@@ -292,6 +292,12 @@ class TemplateSearchParamsWidget(BaseParamsWidget):
         # Load available templates
         self._load_templates()
         
+        # Add a note about using the overlay directly
+        note_label = QLabel("This action uses the overlay's template matching feature.\n"
+                           "Make sure the overlay is configured correctly.")
+        note_label.setStyleSheet("color: #555; font-style: italic;")
+        layout.addWidget(note_label)
+        
         # Overlay toggle
         self.overlay_enabled = QCheckBox("Show Overlay")
         self.overlay_enabled.setChecked(True)

@@ -26,6 +26,7 @@ from scout.automation.gui.position_marker import PositionMarker
 from scout.automation.gui.action_params import create_params_widget, BaseParamsWidget, DragParamsWidget
 from scout.automation.executor import SequenceExecutor, ExecutionContext
 from scout.config_manager import ConfigManager
+from PyQt6.QtWidgets import QApplication
 
 logger = logging.getLogger(__name__)
 
@@ -976,12 +977,60 @@ class AutomationTab(QWidget):
         """Handle sequence execution request."""
         # Create executor if needed
         if not self.executor:
+            # Get overlay from main controller
+            overlay = None
+            try:
+                app = QApplication.instance()
+                if app:
+                    # First look for the main window by title
+                    main_window = None
+                    for widget in app.topLevelWidgets():
+                        # Try to find by exact window title match
+                        if widget.windowTitle() == "Total Battle Scout":
+                            main_window = widget
+                            logger.info("Found main application window: Total Battle Scout")
+                            break
+                    
+                    # If we found the main window, try to get the overlay from there
+                    if main_window and hasattr(main_window, 'overlay'):
+                        overlay = main_window.overlay
+                        logger.info(f"Found overlay from main window (Class: {overlay.__class__.__name__})")
+                        
+                        # Ensure overlay is properly initialized
+                        if overlay and hasattr(overlay, 'window_created') and not overlay.window_created:
+                            logger.info("Initializing overlay window before automation")
+                            overlay.create_overlay_window()
+                        
+                        # Ensure the overlay's template matcher is synchronized with ours
+                        if hasattr(overlay, 'template_matcher') and hasattr(self, 'template_matcher'):
+                            if overlay.template_matcher != self.template_matcher:
+                                logger.info("Main overlay has a different template matcher than automation tab - synchronizing")
+                                # We won't replace it, but we'll make sure it's configured correctly
+                                overlay.template_matcher.confidence = self.template_matcher.confidence
+                                overlay.template_matcher.target_frequency = self.template_matcher.target_frequency
+                    
+                    # If we didn't find it, look for any widget with an overlay property as fallback
+                    if overlay is None:
+                        for widget in app.topLevelWidgets():
+                            if hasattr(widget, 'overlay'):
+                                logger.info(f"Found overlay in a top-level widget: {widget.windowTitle()}")
+                                overlay = widget.overlay
+                                break
+            
+                if overlay:
+                    logger.info(f"Successfully found overlay instance to use with automation (Class: {overlay.__class__.__name__})")
+                else:
+                    logger.warning("Could not find overlay - template search actions may not work correctly")
+            except Exception as e:
+                logger.warning(f"Error finding overlay: {e}")
+            
             context = ExecutionContext(
                 positions=self.position_list.positions,
                 window_manager=self.window_manager,
                 template_matcher=self.template_matcher,
                 text_ocr=self.text_ocr,
                 game_actions=self.game_actions,
+                overlay=overlay,  # Pass the overlay instance
                 debug_tab=self.debug_window.execution_tab,
                 simulation_mode=simulation,
                 step_delay=delay,
@@ -989,7 +1038,7 @@ class AutomationTab(QWidget):
             )
             self.executor = SequenceExecutor(context)
             
-            # Connect signals
+            # Connect signals with the correct names
             self.executor.step_completed.connect(self.sequence_builder._update_progress)
             self.executor.sequence_completed.connect(self.sequence_builder._on_sequence_completed)
             self.executor.execution_error.connect(self.sequence_builder._on_execution_error)
