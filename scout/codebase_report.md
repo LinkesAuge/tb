@@ -1,13 +1,11 @@
 
+## Project Overview
+
+TB Scout is a Python application designed for automating interactions with the "Total Battle" browser game. It works with both browser-based and standalone versions of the game. The application leverages computer vision and automation techniques to extract information from the game world and control in-game actions.
 ## Summary of Codebase Functionality
 
 The TB Scout codebase is modularly designed, with each component in the `scout` directory handling a specific aspect of the application. `main.py` orchestrates the application, while `window_manager.py`, `overlay.py`, `gui/overlay_controller.py`, `pattern_matcher.py`, `config_manager.py`, and `sound_manager.py` provide functionalities for window management, overlay visualization, user interface, pattern detection, configuration handling, and sound effects, respectively.  The `utils/` and `patterns/` directories offer supporting utilities and pattern images. This structure promotes maintainability, organization, and extensibility of the application.
 
-
-
-## Project Overview
-
-TB Scout is a Python application designed for automating interactions with the "Total Battle" browser game. It works with both browser-based and standalone versions of the game. The application leverages computer vision and automation techniques to extract information from the game world and control in-game actions.
 
 **Key Features:**
 

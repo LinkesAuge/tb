@@ -1,0 +1,103 @@
+---
+description: Detailed Instruction Checklist for Screen Capture Overhaul and Integration
+globs: 
+---
+/* Detailed Instruction Checklist for Screen Capture Overhaul and Integration
+Please write "instructions" at the beginning of your comment every time you reference this rule.
+
+# Screen Capture Overhaul & Integration Instruction Set
+
+Follow each item step by step and check them off as they are completed.
+
+---
+
+## 1. Module and Directory Setup
+
+- [ ] Create the directory structure for the new screen capture system under `scout/screen_capture/`:
+  - __init__.py
+  - capture_manager.py
+  - screen_list_model.py
+  - window_list_model.py
+  - capture_widget.py
+  - adapters.py (if needed)
+  - utils.py
+  - capture_tab.py
+
+> Notes: Ensure all new files are set up with appropriate module documentation.
+
+## 2. Port Screen Capture Code from PySide6 to PyQt6
+
+- [ ] Update import statements from PySide6 to PyQt6.
+- [ ] Convert all signal/slot mechanisms to work with PyQt6 (e.g., using pyqtSignal, pyqtSlot).
+- [ ] Adapt example code to follow new PyQt6 paradigms.
+
+## 3. Implement Core Screen and Window List Models
+
+- [ ] In `screen_list_model.py`, implement a QAbstractListModel that lists available screens from QGuiApplication.
+- [ ] In `window_list_model.py`, implement a QAbstractListModel for capturable windows using QWindowCapture.
+- [ ] Add proper logging and error handling.
+
+## 4. Develop the Capture Manager
+
+- [ ] In `capture_manager.py`, implement the CaptureManager class using Qt Multimedia classes:
+  - Define SourceType enum (Screen, Window).
+  - Set up QScreenCapture and QWindowCapture.
+  - Configure QMediaCaptureSession and error handling.
+  - Implement methods: set_screen(), set_window(), start_capture(), stop_capture(), take_screenshot(), get_last_frame().
+  - Use a QTimer for direct capture methods.
+- [ ] Integrate conversion functions (qimage_to_numpy, numpy_to_qimage) from `utils.py`.
+
+## 5. Build the UI Component for Screen Capture
+
+- [ ] Implement `capture_widget.py` (or capture_tab.py) to create a UI component for selecting capture sources and previewing captures.
+- [ ] Create selection panels for screens and windows, including refresh options.
+- [ ] Add control buttons for taking screenshots and toggling auto-capture.
+- [ ] Ensure images are converted to QPixmap and scaled appropriately in the preview.
+
+## 6. Integration with Existing Codebase
+
+- [ ] Update `window_manager.py` to integrate with the new CaptureManager:
+  - Add method capture_screenshot_qt() using the CaptureManager.
+  - Modify _initialize_capture_manager() to instantiate and start the CaptureManager.
+- [ ] Update `debug_window.py` to add a new tab that uses the CaptureTab component for preview and control.
+- [ ] Update `window_capture.py` to optionally use the CaptureManager if available.
+
+## 7. Integration with Main Application
+
+- [ ] Update `main.py`:
+  - Initialize the Qt Application and create the DebugWindow with the new CaptureTab integrated.
+  - Ensure that the GameActions, WindowManager, TextOCR, and Overlay components work with the new capture system.
+
+## 8. Testing and Quality Assurance
+
+- [ ] Write tests first for new functionality (using Pytest):
+  - Test the CaptureManager's methods including frame capture and screenshot saving.
+  - Test models for correct list population and error handling.
+  - Test integration in DebugWindow UI component.
+- [ ] Run Ruff for linting: `ruff check .`
+- [ ] Run Mypy for static type checking: `mypy scout`
+- [ ] Run tests: `pytest`
+- [ ] Ensure Coverage meets the required threshold.
+
+## 9. Continuous Integration and Pre-commit Hooks
+
+- [ ] Update GitHub Actions workflow to include tests for new screen capture functionality.
+- [ ] Ensure pre-commit hooks catch any style or type issues.
+
+## 10. Documentation and Memory Updates
+
+- [ ] Update `projectplan.mdc` to reflect the new screen capture workflow.
+- [ ] Update `memory.mdc` with notes on the new implementation details and module interactions.
+- [ ] Update `bugfixing.mdc` with any known issues and resolutions encountered during integration.
+
+---
+
+## Final Checklist
+
+- [ ] Code Review: Ensure detailed comments are present in each file explaining functionality.
+- [ ] Clean and minimal code duplication (DRY principles).
+- [ ] All UI components should have user-friendly error messages and status updates.
+- [ ] Confirm integration with the legacy system is seamless and fallback mechanisms work correctly.
+
+End of Instruction Checklist.
+*/ 

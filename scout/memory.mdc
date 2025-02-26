@@ -1,0 +1,10 @@
+---
+description: Your memory file, for any information, context, plans, status and everything else that is required
+globs: 
+---
+Please write "memory" at the beginning of your comment every time you reference this rule.
+Your memory file, for any information, context, plans, status and everything else that is required.
+It is important to keep this file updated and contains always the required information.
+Use it to store detailed description of your current stauts/progress, what needsto be done, what has been changed and all other relevant context to achieve your current tasks.
+
+Dont overwrite or change this section, only add or update anything after this line. 

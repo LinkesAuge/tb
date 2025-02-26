@@ -1,232 +1,169 @@
 ---
-description: General rules for the project
-globs: *.py
+description: General rules, overvierw, features, file strucutre, python classes, code context etc. for the project
+globs: 
 ---
----
-description: General rules for the project
-globs: *.py
----
----
-description: General guidance and coding for the project
-globs: *.py
----
-Scout Projekt for Total Battle game
+General rules, overvierw, features, file strucutre, python classes, code context etc. for the project
 
-# PROJECT OVERVIEW
-# TB Scout
+You have to make sure to always reference your memory.mdc file for more context and keep it updated at the end of your reply anytime you gives feedback, make changes, plan new features or fixes/update.
+Also reference the instructions.mdc file for project plans and keep it updated and check off any time that has been done.
 
-A Python application for automating interactions with the Total Battle browser game (which can be run in the browser or a dedicated windows app) through computer vision and automation.
+## Executive Summary
 
-We develop an App for a browser game called "Total Battle" that can run in browsers like Chrome, Firefox, Internet Explorer etc. but can also run in a dedicated windows app (window name is "Total Battle). 
-The app is a tool to extract information from the game world (the user has a top down view of a map with cities, monsters, armies, points of interests etc.) and to control certain actions (like move the camera, mouse cursor, click on objects etc.).
-To achieve this we take screenshots of the current game state and analyse them with pattern matching and ocr / optical character recognition.
+TB Scout is a Python application designed to automate interactions with the "Total Battle" game. It creates a transparent overlay on the game window to highlight detected elements and provides a GUI to control scanning and automation features. The application uses computer vision techniques to identify game elements and can perform automated actions based on detected patterns.
 
-# TECH AND LIBRARIES STACK
-- Python as coding language
-- PyQt6 for GUI development
-- pynput, pydirectinput and pyautogui for any controlls like mouse or keyboard
-- WindwsAPI for window management
-- cv2 (OpenCV) for computer vision tasks like pattern matching
-- pytesseract (Tesseract 5.5) for OCR / optical character recognition
-- mss for taking screenshots
-- numpy for maths and data handling
-- uv for project dependency management and virtual environments
+## What the App Does
 
-# ERROR FIXING PROCESS
-Go through the problem step by step, utilize extensive logging and debugging techniques and think about different approaches to solve a bug
+TB Scout is a sophisticated game automation tool that:
 
-# GITHUB PUSH PROCESS
-1. stage changes:
-git add .
-2. Commit changes:
-git commit -m "Our commit message following our GitHub Guidelines"
-3. Push changes:
-git push origin main 
+1. **Detects and tracks** the Total Battle game window (browser or standalone)
+2. **Creates a transparent overlay** to visualize detected game elements
+3. **Scans the game world** by identifying patterns and text using computer vision
+4. **Provides a control interface** for managing scanning and automation features
+5. **Automates game interactions** through mouse and keyboard control
+6. **Extracts text** from game elements using OCR
+7. **Provides debugging tools** for troubleshooting and development
 
-# IMPORTANT
-You produce code like a senior python developer and you do not stop working until all of your tasks are completed.
-Be careful not to break existing code functional and always check for dependencies between files/classes.
-Use descriptive names for classes and functions.
-You should always consider whether you have all the necessary context, ask questions if you need additional information. 
+## Code Structure and File Organization
 
-# OTHER CONTEXT
-We need to keep our project toml file "pyproject" updated when we add/remove/change dependencies
+The codebase follows a modular structure with clear separation of concerns:
 
-Project Summary:
- 
- 
-Documentation and Comments:
- 
-- Write meaningful comments and documentation only when necessary.
-- Don't use personal pronouns like "I" or "we" in comments or documentation.
-- Write documentation for all functions, classes, and modules.
-- Write meaningful docstrings that describe the intention and behavior of the function, class, or module, and explain assumptions.
-- Keep docstrings up to date and to the point.
- 
-Error Handling:
- 
-- Don't wrap code in try except blocks unless you're catching a specific exception.
- 
-Printing and Logging:
- 
-- Use a logger for all logging needs.
-
-
-## Features
-
-- Window detection and tracking for both standalone and browser versions
-- Screenshot capture and analysis
-- Pattern matching for game elements
-- OCR text extraction from game elements
-- Mouse and keyboard automation
-- Debug visualization and logging
-- Sound notifications
-
-## Requirements
-
-- Python 3.9 or higher
-- Tesseract OCR 5.5
-- Windows 10/11
-
-
-
-### Code Quality
-
-The project uses several tools to maintain code quality:
-
-- **Ruff**: For linting and code formatting
-- **MyPy**: For static type checking
-- **Pytest**: For testing
-- **Coverage.py**: For code coverage tracking
-- **Pre-commit**: For automated checks before commits
-
-Run linting:
-```bash
-ruff check .
+```
+scout/
+├── __init__.py                # Package initialization
+├── main.py                    # Application entry point
+├── overlay.py                 # Transparent overlay implementation
+├── gui.py                     # User interface controller
+├── template_matcher.py        # Pattern recognition engine
+├── text_ocr.py                # Optical character recognition
+├── actions.py                 # Game interaction automation
+├── config_manager.py          # Configuration handling
+├── sound_manager.py           # Sound notifications system
+├── window_manager.py          # Game window detection & capture
+└── debug_window.py            # Debugging visualization tools
 ```
 
-Run type checking:
-```bash
-mypy scout
-```
+## Core Components and Their Relationships
 
-### Continuous Integration
+### 1. Main Application (`main.py`)
 
-The project uses GitHub Actions for CI/CD:
+The entry point that orchestrates all components. It:
+- Initializes the Qt application
+- Sets up logging
+- Creates instances of all major components
+- Connects components through dependency injection
+- Starts the application event loop
 
-- Runs tests on Windows with Python 3.9, 3.10, and 3.11
-- Performs linting and type checking
-- Generates test coverage reports
-- Builds executable
+### 2. Window Manager (`window_manager.py`)
 
-## Contributing
+Handles detection and interaction with the game window:
+- Finds and tracks the Total Battle window
+- Captures screenshots of the game window using `mss`
+- Provides window position and size information
+- Used by most other components to locate and interact with the game
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and ensure all checks pass
-5. Submit a pull request
+### 3. Overlay (`overlay.py`)
 
-### Commit Message Format
+Creates a transparent window on top of the game:
+- Uses Qt to create a transparent, clickthrough window
+- Draws visual indicators for detected game elements
+- Positions itself to match the game window using WindowManager
+- Can be toggled on/off
 
-Use the following prefixes for commit messages:
+### 4. GUI Controller (`gui.py`)
 
-- `fix:` for bug fixes
-- `feat:` for new features
-- `perf:` for performance improvements
-- `ui:` for GUI/UI changes
-- `style:` for formatting changes
-- `log:` for logs/debugging related changes
-- `docs:` for documentation changes
-- `refactor:` for code refactoring
-- `test:` for adding missing tests
-- `other:` for any other changes
+Provides the user interface for controlling the application:
+- Creates control panels with buttons, checkboxes, etc.
+- Handles user interactions
+- Passes commands to other components
+- Contains multiple tabs for different functionality
 
-## License
+### 5. Template Matcher (`template_matcher.py`)
 
-MIT License - see LICENSE file for details
+Core computer vision engine:
+- Uses OpenCV to detect game elements in screenshots
+- Loads and matches pattern images against screenshots
+- Returns locations and confidence scores for matches
+- Configurable through template_settings
 
- 
-Naming Conventions:
- 
-- Start private class variables with an underscore.
-- Use UPPERER_SNAKE_CASE for constants.
-- Always write MongoDB and not Mongo.
- 
-Execution Flow:
- 
-- When writing code, always write the tests first.
-- Always run the tests to make sure the code works.
- 
-Clean Code:
- 
-- Write clean, readable, and maintainable code.
-- Keep functions small and focused.
-- Keep variables and functions names descriptive.
-- Keep comments and documentation meaningful.
- 
-Development Flow:
- 
-- Always write the tests first.
-- Always run the tests to make sure the code works.
-- When given a task, write code and run it until it works well.
- 
-Code Style:
- 
-- Always use single quotes for strings.
- 
-Rewrite, Improve, and Refactor:
- 
-- When refactoring or fixing code, make sure to keep the code clean and easy to understand without duplicating code.
-- Keep the code clean and easy to understand.
-- Keep the code DRY (Don't Repeat Yourself).
-- Keep the code clean and easy to understand.
-- After fixing an issue, mention the case in the docstring so future changes won't break it again.
- 
-Tests:
- 
-- Always write the tests first.
-- Always run the tests to make sure the code works.
-- Always keep the tests clean and up to date.
-- Always run the tests in the venv.
- 
-Debugging:
- 
-- If you are not sure what the solution is, add debug prints to the code and run the tests.
-- After fixing an issue remove the debug prints.
- 
-Async:
- 
-- Always use async unless the function is a simple function that doesn't need to be async.
- 
-Memory:
- 
-- When you need to remember something, update the .cursormemory.md file.
-- Refer to the .cursormemory.md file to view the memory.
-- Update the memory with project specifications, requirements, flow of the code, and other relevant information.
-- Add instructions for development like how to add new GraphQL mutations and queries to the memory.
- 
-Planning:
- 
-- Always plan the code before writing it.
-- Think about how the new code will fit into the existing codebase.
-- Think about how the new code will interact with the other parts of the codebase.
-- Think about how the new code will handle errors and edge cases.
-- Think about how the new code will be used by the frontend.
-- Think about how the new code will be used by the users.
-- Think about how the new code will be used by the developers.
+### 6. Text OCR (`text_ocr.py`)
 
-# COMMENTS
+Handles text recognition:
+- Uses pytesseract to extract text from game elements
+- Performs image preprocessing for better recognition
+- Provides methods for handling different text formats
 
-Make sure to always include detailed and easy to understand comments, explaining the function of any code block in a way even a coding layperson would understand.
-All classes and functions should have a very extensive and detailed description of what they do. Consider the context of the whole app and describe the function of the class in relation to that.
-Consider these rules for comments:
-1. Clarity of explanation
-2. Completeness of information
-3. Appropriate level of detail for the target audience
-4. Consistency with best practices in technical writing
-5. Brief description of the function/class
-6. Parameters and their types
-7. Return value and type
-8. Any exceptions that might be raised
-9. Usage examples if the function/class usage is not immediately obvious
+### 7. Game Actions (`actions.py`)
+
+Automates interactions with the game:
+- Controls mouse movement and clicks
+- Triggers keyboard inputs
+- Executes sequences of actions
+- Uses WindowManager to translate coordinates
+
+### 8. Config Manager (`config_manager.py`)
+
+Handles application configuration:
+- Loads and saves settings from files
+- Provides access to settings for other components
+- Contains default configurations
+
+### 9. Sound Manager (`sound_manager.py`)
+
+Handles audio notifications:
+- Plays sound effects for various events
+- Manages sound files
+- Provides volume control
+
+### 10. Debug Window (`debug_window.py`)
+
+Provides debugging visualization:
+- Shows processed images
+- Displays recognition results
+- Helps with development and troubleshooting
+
+## Component Relationships
+
+The application follows a clear dependency hierarchy:
+
+1. **WindowManager** is a core dependency used by most other components
+2. **Overlay** depends on WindowManager and TemplateMatcher
+3. **OverlayController** orchestrates Overlay, GameActions and TextOCR
+4. **TemplateMatcher** uses WindowManager for screenshots
+5. **TextOCR** uses WindowManager for screenshots and DebugWindow for visualization
+6. **GameActions** uses WindowManager for coordinate translation
+7. **ConfigManager** is used by Main to configure other components
+
+## Key Features in Detail
+
+### Window Detection and Tracking
+The application can find the Total Battle window either as a standalone application or within a browser. It keeps track of the window position and size, even if it moves or resizes.
+
+### Screenshot Capture and Analysis
+Currently using the `mss` library to capture screenshots of the game window. These screenshots are processed for pattern matching and text recognition.
+
+### Transparent Overlay
+A clickthrough transparent window that sits on top of the game, highlighting detected elements with colorful indicators without interfering with game interactions.
+
+### Pattern Matching
+Uses OpenCV template matching to find game elements (buildings, resources, enemies, etc.) on the screen by comparing them to pre-defined pattern images.
+
+### OCR Text Extraction
+Uses pytesseract to extract text from the game screen, allowing the app to read values, names, and other textual information.
+
+### Automation Controls
+Provides mouse and keyboard automation to interact with the game, allowing for automated scanning, resource collection, and other actions.
+
+### Debug Visualization
+Offers visualization tools to see what the application is detecting, useful for development and troubleshooting.
+
+### Configuration System
+Flexible settings system that allows customization of overlay appearance, pattern matching sensitivity, and other application behaviors.
+
+## Current Limitations
+
+1. The screen capture system uses `mss`, which could be replaced with a more native Qt-based solution for better integration
+2. The system is currently Windows-focused due to the use of win32api for window management
+
+## Conclusion
+
+TB Scout is a well-structured application that demonstrates effective separation of concerns and modular design. Each component has a clear responsibility and interfaces well with other parts of the system. The application successfully combines computer vision, GUI development, and automation to create a powerful tool for the Total Battle game.

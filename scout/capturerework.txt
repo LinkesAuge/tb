@@ -1,0 +1,1264 @@
+Modernizing Screen Capture in Scout Project
+Looking at the example code and your existing codebase, I can see you're interested in implementing a more modern Qt-based screen capture solution. Here's a structured plan to integrate this functionality while maintaining modularity and separation of concerns.
+
+Key Observations
+The example code uses PySide6 while your project uses PyQt6
+Your codebase already has screen capturing via WindowManager and WindowCapture classes using win32gui and mss
+The new approach offers a more robust UI for selecting capture sources and handling screenshots
+Implementation Plan
+1. Create a New Screen Capture Module
+scout/
+└── screen_capture/
+    ├── __init__.py
+    ├── capture_manager.py     # Core capture functionality
+    ├── screen_list_model.py   # Lists available screens
+    ├── window_list_model.py   # Lists available windows
+    ├── capture_widget.py      # UI for capture selection/preview
+    └── utils.py               # Helper functions
+	
+2. Convert PySide6 to PyQt6
+First, port the example code from PySide6 to PyQt6, adjusting import paths and signal/slot mechanisms:
+# scout/screen_capture/capture_manager.py
+from enum import Enum, auto
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtGui import QImage
+from PyQt6.QtMultimedia import (QScreenCapture, QMediaCaptureSession,
+                               QWindowCapture)
+
+class SourceType(Enum):
+    Screen = auto()
+    Window = auto()
+
+class CaptureManager(QObject):
+    frame_ready = pyqtSignal(QImage)
+    error_occurred = pyqtSignal(str)
+    
+    def __init__(self):
+        super().__init__()
+        # Initialize capture components here
+
+3. Implement Core Models
+Implement the screen and window list models:
+# scout/screen_capture/screen_list_model.py
+from PyQt6.QtCore import QAbstractListModel, Qt, pyqtSlot
+from PyQt6.QtGui import QGuiApplication
+
+class ScreenListModel(QAbstractListModel):
+    # Port from example code, adjusting for PyQt6
+	
+4. Create the Capture Widget
+Implement the UI component for screen selection and preview:
+# scout/screen_capture/capture_widget.py
+from PyQt6.QtWidgets import QWidget, QGridLayout, QLabel, QListView, QPushButton
+from PyQt6.QtMultimediaWidgets import QVideoWidget
+from PyQt6.QtCore import pyqtSignal, Qt
+
+class CaptureWidget(QWidget):
+    screenshot_taken = pyqtSignal(object, str)  # Image and path
+    
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        # Setup UI components based on example code
+		
+5. Integration with Existing Code
+Create adapter classes to integrate with your existing code:
+
+# scout/screen_capture/adapters.py
+import numpy as np
+from PyQt6.QtGui import QImage
+import cv2
+
+def qimage_to_numpy(qimage):
+    """Convert QImage to numpy array for use with OpenCV"""
+    # Implementation here
+	
+6. Update WindowManager
+Extend your WindowManager to use the new capture system:
+# scout/window_manager.py
+def capture_screenshot_qt(self) -> Optional[np.ndarray]:
+    """Capture screenshot using the Qt-based capture system"""
+    if not hasattr(self, '_capture_manager'):
+        from scout.screen_capture.capture_manager import CaptureManager, SourceType
+        self._capture_manager = CaptureManager()
+        # Configure for current window
+    
+    # Use capture manager to get screenshot and convert to numpy
+
+Implementation Steps
+Install required dependencies:
+pip install PyQt6-Qt6 PyQt6-QtMultimedia
+
+Port the models from PySide6 to PyQt6
+
+Implement CaptureManager with proper error handling
+
+Create the CaptureWidget UI component
+
+Build the integration layer for existing code
+
+Add to the main application with proper configuration options
+
+Test and refine the implementation
+
+
+Implementation Plan for Qt-based Screen Capture System
+Based on your feedback, I'll implement a complete replacement for your current capture system with a Qt-based solution. Let's go step by step with a clear implementation plan.
+
+Step 1: Create the Screen Capture Module Structure
+First, let's create the necessary folder and file structure:
+
+# scout/screen_capture/__init__.py
+"""
+Screen Capture Module
+
+Provides modern Qt-based screen and window capture functionality for the Scout application.
+"""
+
+Step 2: Implement Core Models
+Let's start with implementing the screen and window list models:
+
+# scout/screen_capture/screen_list_model.py
+"""
+Screen List Model
+
+Provides a Qt model for listing available screens/monitors for capture.
+"""
+from PyQt6.QtCore import QAbstractListModel, Qt, pyqtSlot
+from PyQt6.QtWidgets import QApplication
+import logging
+
+logger = logging.getLogger(__name__)
+
+class ScreenListModel(QAbstractListModel):
+    """
+    Model that lists all available screens/monitors in the system.
+    
+    This model automatically updates when screens are added or removed from
+    the system, making it ideal for dynamic multi-monitor setups.
+    """
+    
+    def __init__(self, parent=None):
+        """
+        Initialize the screen list model.
+        
+        Args:
+            parent: Parent Qt object
+        """
+        super().__init__(parent)
+        app = QApplication.instance()
+        app.screenAdded.connect(self.screens_changed)
+        app.screenRemoved.connect(self.screens_changed)
+        app.primaryScreenChanged.connect(self.screens_changed)
+        logger.debug("Initialized ScreenListModel with %d screens", 
+                     len(QApplication.screens()))
+
+    def rowCount(self, index):
+        """Return the number of available screens."""
+        return len(QApplication.screens())
+
+    def data(self, index, role):
+        """
+        Return data for the given index and role.
+        
+        Args:
+            index: Model index
+            role: Data role
+            
+        Returns:
+            Display data for the screen at the given index
+        """
+        screen_list = QApplication.screens()
+
+        if role == Qt.ItemDataRole.DisplayRole:
+            screen = screen_list[index.row()]
+            w = screen.size().width()
+            h = screen.size().height()
+            dpi = screen.logicalDotsPerInch()
+            return f'"{screen.name()}" {w}x{h}, {dpi}DPI'
+
+        return None
+
+    def screen(self, index):
+        """
+        Get the QScreen object for the given index.
+        
+        Args:
+            index: Model index
+            
+        Returns:
+            QScreen object at the given index
+        """
+        return QApplication.screens()[index.row()]
+
+    @pyqtSlot()
+    def screens_changed(self):
+        """Handle screen configuration changes."""
+        logger.debug("Screen configuration changed, updating model")
+        self.beginResetModel()
+        self.endResetModel()
+
+# scout/screen_capture/window_list_model.py
+"""
+Window List Model
+
+Provides a Qt model for listing available windows for capture.
+"""
+from PyQt6.QtCore import QAbstractListModel, Qt, pyqtSlot
+from PyQt6.QtMultimedia import QWindowCapture
+import logging
+
+logger = logging.getLogger(__name__)
+
+class WindowListModel(QAbstractListModel):
+    """
+    Model that lists all available capturable windows in the system.
+    
+    This model can be refreshed to show currently available windows,
+    which is useful as windows open and close during application usage.
+    """
+    
+    def __init__(self, parent=None):
+        """
+        Initialize the window list model.
+        
+        Args:
+            parent: Parent Qt object
+        """
+        super().__init__(parent)
+        self._window_list = QWindowCapture.capturableWindows()
+        logger.debug("Initialized WindowListModel with %d windows", 
+                     len(self._window_list))
+
+    def rowCount(self, index):
+        """Return the number of available windows."""
+        return len(self._window_list)
+
+    def data(self, index, role):
+        """
+        Return data for the given index and role.
+        
+        Args:
+            index: Model index
+            role: Data role
+            
+        Returns:
+            Display data for the window at the given index
+        """
+        if role == Qt.ItemDataRole.DisplayRole:
+            window = self._window_list[index.row()]
+            return window.description()
+        return None
+
+    def window(self, index):
+        """
+        Get the QCapturableWindow object for the given index.
+        
+        Args:
+            index: Model index
+            
+        Returns:
+            QCapturableWindow object at the given index
+        """
+        return self._window_list[index.row()]
+
+    @pyqtSlot()
+    def populate(self):
+        """Refresh the list of available windows."""
+        logger.debug("Refreshing window list")
+        self.beginResetModel()
+        self._window_list = QWindowCapture.capturableWindows()
+        self.endResetModel()
+        logger.debug("Window list updated with %d windows", len(self._window_list))
+
+		
+Step 3: Implement Utilities
+Let's create utility functions for working with the captured frames:
+
+# scout/screen_capture/utils.py
+"""
+Screen Capture Utilities
+
+Helper functions for working with captured images and frames.
+"""
+import numpy as np
+from PyQt6.QtGui import QImage
+import cv2
+import logging
+
+logger = logging.getLogger(__name__)
+
+def qimage_to_numpy(qimage):
+    """
+    Convert a QImage to a numpy array suitable for OpenCV processing.
+    
+    Args:
+        qimage: QImage to convert
+        
+    Returns:
+        numpy.ndarray: The converted image in BGR format
+    """
+    if qimage is None:
+        logger.warning("Attempted to convert None QImage to numpy array")
+        return None
+        
+    # Get the dimensions of the QImage
+    width = qimage.width()
+    height = qimage.height()
+    
+    # Check format and convert appropriately
+    if qimage.format() == QImage.Format.Format_RGB32:
+        # Copy the QImage to a numpy array
+        ptr = qimage.constBits()
+        arr = np.array(ptr).reshape(height, width, 4)
+        # Convert RGBA to BGR (what OpenCV uses)
+        return cv2.cvtColor(arr, cv2.COLOR_RGBA2BGR)
+    else:
+        # Convert to RGB32 first if it's in another format
+        qimage = qimage.convertToFormat(QImage.Format.Format_RGB32)
+        ptr = qimage.constBits()
+        arr = np.array(ptr).reshape(height, width, 4)
+        return cv2.cvtColor(arr, cv2.COLOR_RGBA2BGR)
+
+def numpy_to_qimage(numpy_img):
+    """
+    Convert a numpy array (OpenCV image) to QImage.
+    
+    Args:
+        numpy_img: numpy.ndarray in BGR format
+        
+    Returns:
+        QImage: The converted image
+    """
+    if numpy_img is None:
+        logger.warning("Attempted to convert None numpy array to QImage")
+        return None
+        
+    # Convert from BGR to RGB (QImage uses RGB)
+    rgb_img = cv2.cvtColor(numpy_img, cv2.COLOR_BGR2RGB)
+    
+    # Create QImage
+    height, width, channel = rgb_img.shape
+    bytesPerLine = channel * width
+    return QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format.Format_RGB888)
+	
+Step 4: Implement the Capture Manager
+Now, let's implement the core capture manager:
+
+# scout/screen_capture/capture_manager.py
+"""
+Capture Manager
+
+Core functionality for capturing screens and windows using Qt APIs.
+"""
+from enum import Enum, auto
+import os
+import time
+from PyQt6.QtCore import QObject, pyqtSignal, QTimer
+from PyQt6.QtGui import QImage, QGuiApplication
+from PyQt6.QtMultimedia import QScreenCapture, QWindowCapture, QMediaCaptureSession
+import logging
+import cv2
+import numpy as np
+
+from .utils import qimage_to_numpy, numpy_to_qimage
+
+logger = logging.getLogger(__name__)
+
+class SourceType(Enum):
+    """Types of capture sources available."""
+    Screen = auto()
+    Window = auto()
+
+class CaptureManager(QObject):
+    """
+    Manages screen/window capture using Qt's multimedia capabilities.
+    
+    This class provides a unified interface for capturing from either screens
+    or windows, and converts the captured frames to formats compatible with
+    OpenCV and other image processing tools used in the Scout application.
+    """
+    
+    # Signals
+    frame_captured = pyqtSignal(np.ndarray)  # Emitted when a new frame is captured (as numpy array)
+    error_occurred = pyqtSignal(str)         # Emitted when an error occurs
+    
+    def __init__(self, parent=None):
+        """
+        Initialize the capture manager.
+        
+        Args:
+            parent: Parent Qt object
+        """
+        super().__init__(parent)
+        
+        # Create screenshots directory if it doesn't exist
+        self._screenshots_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
+                                            'debug_screenshots')
+        os.makedirs(self._screenshots_dir, exist_ok=True)
+        
+        # Set up capture components
+        self._source_type = SourceType.Screen
+        self._screen_capture = QScreenCapture(self)
+        self._window_capture = QWindowCapture(self)
+        self._media_capture_session = QMediaCaptureSession(self)
+        
+        # Set up error handling
+        self._screen_capture.errorOccurred.connect(self._on_screen_capture_error)
+        self._window_capture.errorOccurred.connect(self._on_window_capture_error)
+        
+        # Set up capture session
+        self._media_capture_session.setScreenCapture(self._screen_capture)
+        self._media_capture_session.setWindowCapture(self._window_capture)
+        
+        # Initialize with primary screen by default
+        self.set_screen(QGuiApplication.primaryScreen())
+        self._screen_capture.start()
+        
+        # Variable to store the last captured frame
+        self._last_frame = None
+        
+        # Set up timer for direct capture
+        self._capture_timer = QTimer(self)
+        self._capture_timer.timeout.connect(self._take_direct_capture)
+        self._capture_active = False
+
+    def set_screen(self, screen):
+        """
+        Set the screen to capture from.
+        
+        Args:
+            screen: QScreen object to capture from
+        """
+        logger.debug(f"Setting capture screen: {screen.name() if screen else 'None'}")
+        self._screen_capture.setScreen(screen)
+        self._source_type = SourceType.Screen
+        self._update_active(self._capture_active)
+    
+    def set_window(self, window):
+        """
+        Set the window to capture from.
+        
+        Args:
+            window: QCapturableWindow object to capture from
+        """
+        logger.debug(f"Setting capture window: {window.description() if window.isValid() else 'Invalid'}")
+        self._window_capture.setWindow(window)
+        self._source_type = SourceType.Window
+        self._update_active(self._capture_active)
+        
+    def start_capture(self, interval_ms=100):
+        """
+        Start capturing frames at the specified interval.
+        
+        Args:
+            interval_ms: Time between captures in milliseconds
+        """
+        logger.debug(f"Starting capture with interval: {interval_ms}ms")
+        self._capture_active = True
+        self._update_active(True)
+        self._capture_timer.start(interval_ms)
+        
+    def stop_capture(self):
+        """Stop the capture process."""
+        logger.debug("Stopping capture")
+        self._capture_active = False
+        self._update_active(False)
+        self._capture_timer.stop()
+    
+    def take_screenshot(self, save_path=None):
+        """
+        Take a screenshot and optionally save it to disk.
+        
+        Args:
+            save_path: Path to save the screenshot to. If None, generates a timestamped filename.
+            
+        Returns:
+            tuple: (numpy.ndarray, str) - The screenshot as a numpy array and the path where it was saved
+        """
+        # Generate a timestamped filename if none provided
+        if save_path is None:
+            timestamp = time.strftime("%Y%m%d-%H%M%S")
+            save_path = os.path.join(self._screenshots_dir, f"screenshot-{timestamp}.png")
+        
+        # Take the screenshot
+        img = self._take_direct_capture()
+        
+        # Save the screenshot if we got an image
+        if img is not None:
+            try:
+                cv2.imwrite(save_path, img)
+                logger.info(f"Screenshot saved to: {save_path}")
+                return img, save_path
+            except Exception as e:
+                logger.error(f"Failed to save screenshot: {e}")
+                self.error_occurred.emit(f"Failed to save screenshot: {e}")
+                return img, None
+        else:
+            return None, None
+    
+    def get_last_frame(self):
+        """
+        Get the last captured frame.
+        
+        Returns:
+            numpy.ndarray: The last captured frame, or None if no frame has been captured
+        """
+        return self._last_frame
+    
+    def _update_active(self, active):
+        """
+        Update the active state of the selected capture source.
+        
+        Args:
+            active: Whether the capture should be active
+        """
+        if self._source_type == SourceType.Screen:
+            self._screen_capture.setActive(active)
+            self._window_capture.setActive(False)
+        else:
+            self._window_capture.setActive(active)
+            self._screen_capture.setActive(False)
+    
+    def _take_direct_capture(self):
+        """
+        Take a screenshot directly using QGuiApplication.
+        
+        This method uses Qt's native screen capturing capabilities rather than
+        the media capture session, which can be more reliable in some cases.
+        
+        Returns:
+            numpy.ndarray: The captured frame as a numpy array in BGR format
+        """
+        screen = QGuiApplication.primaryScreen()
+        
+        try:
+            if self._source_type == SourceType.Screen:
+                # Get the screen that's set for capture
+                target_screen = self._screen_capture.screen()
+                if target_screen:
+                    screen = target_screen
+                
+                # Grab the screen
+                pixmap = screen.grabWindow(0)
+            else:
+                # Get the window that's set for capture
+                window = self._window_capture.window()
+                if not window.isValid():
+                    self.error_occurred.emit("Invalid window for capture")
+                    return None
+                
+                # Grab the window
+                pixmap = screen.grabWindow(window.nativeId())
+            
+            # Convert to QImage
+            qimage = pixmap.toImage()
+            
+            # Convert to numpy array
+            numpy_img = qimage_to_numpy(qimage)
+            
+            # Store and emit
+            self._last_frame = numpy_img
+            self.frame_captured.emit(numpy_img)
+            
+            return numpy_img
+            
+        except Exception as e:
+            logger.error(f"Screenshot error: {e}")
+            self.error_occurred.emit(f"Screenshot error: {e}")
+            return None
+
+    def _on_screen_capture_error(self, error, error_string):
+        """Handle errors from QScreenCapture."""
+        error_msg = f"Screen capture error: {error_string}"
+        logger.error(error_msg)
+        self.error_occurred.emit(error_msg)
+        
+    def _on_window_capture_error(self, error, error_string):
+        """Handle errors from QWindowCapture."""
+        error_msg = f"Window capture error: {error_string}"
+        logger.error(error_msg)
+        self.error_occurred.emit(error_msg)
+		
+
+Step 5: Implement the Capture Tab UI
+Now, let's create the UI component for selecting and previewing capture sources:
+
+# scout/screen_capture/capture_tab.py
+"""
+Screen Capture Tab
+
+Provides a GUI for selecting and previewing capture sources.
+"""
+from PyQt6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QListView, QGroupBox,
+    QPushButton, QSplitter, QGridLayout, QMessageBox, QFileDialog, 
+    QCheckBox
+)
+from PyQt6.QtCore import Qt, pyqtSlot, QItemSelection, pyqtSignal
+from PyQt6.QtGui import QAction, QPixmap
+import logging
+import os
+import time
+
+from .screen_list_model import ScreenListModel
+from .window_list_model import WindowListModel
+from .capture_manager import CaptureManager, SourceType
+
+logger = logging.getLogger(__name__)
+
+class CaptureTab(QWidget):
+    """
+    Tab for selecting and previewing screen/window captures.
+    
+    This tab provides a user interface for:
+    - Selecting screens or windows to capture from
+    - Previewing the capture in real-time
+    - Taking and saving screenshots
+    - Managing automatic capture for other components
+    """
+    
+    # Signals
+    capture_source_changed = pyqtSignal(object)  # Emitted when the capture source changes
+    
+    def __init__(self, parent=None):
+        """
+        Initialize the capture tab.
+        
+        Args:
+            parent: Parent widget
+        """
+        super().__init__(parent)
+        
+        # Create the capture manager
+        self._capture_manager = CaptureManager(self)
+        self._capture_manager.error_occurred.connect(self._on_error)
+        self._capture_manager.frame_captured.connect(self._on_frame_captured)
+        
+        # Create layout
+        self._create_ui()
+        
+        # Start with default screen capture
+        self._capture_manager.start_capture(100)  # Capture every 100ms
+        
+    def _create_ui(self):
+        """Create the user interface components."""
+        # Main layout
+        layout = QVBoxLayout(self)
+        
+        # Create splitter for sources and preview
+        splitter = QSplitter(Qt.Orientation.Horizontal)
+        layout.addWidget(splitter)
+        
+        # === Sources Panel ===
+        sources_widget = QWidget()
+        sources_layout = QVBoxLayout(sources_widget)
+        
+        # Screen selection group
+        screen_group = QGroupBox("Screen Selection")
+        screen_layout = QVBoxLayout()
+        
+        # Screen list
+        self._screen_list_view = QListView()
+        self._screen_list_model = ScreenListModel(self)
+        self._screen_list_view.setModel(self._screen_list_model)
+        screen_layout.addWidget(self._screen_list_view)
+        
+        screen_group.setLayout(screen_layout)
+        sources_layout.addWidget(screen_group)
+        
+        # Window selection group
+        window_group = QGroupBox("Window Selection")
+        window_layout = QVBoxLayout()
+        
+        # Window list
+        self._window_list_view = QListView()
+        self._window_list_model = WindowListModel(self)
+        self._window_list_view.setModel(self._window_list_model)
+        window_layout.addWidget(self._window_list_view)
+        
+        # Refresh button
+        refresh_btn = QPushButton("Refresh Window List")
+        refresh_btn.clicked.connect(self._window_list_model.populate)
+        window_layout.addWidget(refresh_btn)
+        
+        window_group.setLayout(window_layout)
+        sources_layout.addWidget(window_group)
+        
+        # Control buttons
+        controls_group = QGroupBox("Capture Controls")
+        controls_layout = QVBoxLayout()
+        
+        # Auto-capture toggle
+        auto_capture_layout = QHBoxLayout()
+        auto_capture_layout.addWidget(QLabel("Auto Capture:"))
+        self._auto_capture_check = QCheckBox()
+        self._auto_capture_check.setChecked(True)
+        self._auto_capture_check.stateChanged.connect(self._toggle_auto_capture)
+        auto_capture_layout.addWidget(self._auto_capture_check)
+        controls_layout.addLayout(auto_capture_layout)
+        
+        # Screenshot button
+        screenshot_btn = QPushButton("Take Screenshot")
+        screenshot_btn.clicked.connect(self._take_screenshot)
+        controls_layout.addWidget(screenshot_btn)
+        
+        controls_group.setLayout(controls_layout)
+        sources_layout.addWidget(controls_group)
+        
+        # Add sources panel to splitter
+        splitter.addWidget(sources_widget)
+        
+        # === Preview Panel ===
+        preview_widget = QWidget()
+        preview_layout = QVBoxLayout(preview_widget)
+        
+        # Preview label
+        preview_layout.addWidget(QLabel("Capture Preview:"))
+        self._preview_label = QLabel()
+        self._preview_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self._preview_label.setMinimumSize(640, 480)
+        self._preview_label.setStyleSheet("background-color: #222; border: 1px solid #444;")
+        preview_layout.addWidget(self._preview_label)
+        
+        # Status message
+        self._status_label = QLabel()
+        preview_layout.addWidget(self._status_label)
+        
+        # Add preview panel to splitter
+        splitter.addWidget(preview_widget)
+        
+        # Set splitter sizes
+        splitter.setSizes([300, 700])
+        
+        # Connect selection signals
+        selection_model = self._screen_list_view.selectionModel()
+        selection_model.selectionChanged.connect(self._on_screen_selection_changed)
+        
+        selection_model = self._window_list_view.selectionModel()
+        selection_model.selectionChanged.connect(self._on_window_selection_changed)
+    
+    @pyqtSlot(QItemSelection)
+    def _on_screen_selection_changed(self, selection):
+        """Handle screen selection change."""
+        self._clear_status()
+        indexes = selection.indexes()
+        if indexes:
+            self._capture_manager.set_screen(self._screen_list_model.screen(indexes[0]))
+            self._window_list_view.selectionModel().clear()
+            self.capture_source_changed.emit(self._capture_manager)
+    
+    @pyqtSlot(QItemSelection)
+    def _on_window_selection_changed(self, selection):
+        """Handle window selection change."""
+        self._clear_status()
+        indexes = selection.indexes()
+        if indexes:
+            window = self._window_list_model.window(indexes[0])
+            if not window.isValid():
+                msg = "The window is no longer valid. Update the list of windows?"
+                answer = QMessageBox.question(self, "Invalid Window", msg)
+                if answer == QMessageBox.StandardButton.Yes:
+                    self._window_list_model.populate()
+                return
+                
+            self._capture_manager.set_window(window)
+            self._screen_list_view.selectionModel().clear()
+            self.capture_source_changed.emit(self._capture_manager)
+    
+    @pyqtSlot(object)
+    def _on_frame_captured(self, frame):
+        """Handle new captured frame."""
+        # Convert numpy image to QPixmap for display
+        height, width = frame.shape[:2]
+        bytesPerLine = 3 * width
+        
+        from PyQt6.QtGui import QImage
+        # Convert BGR to RGB (Qt expects RGB)
+        from .utils import numpy_to_qimage
+        qimg = numpy_to_qimage(frame)
+        
+        # Scale the image to fit the preview while maintaining aspect ratio
+        pixmap = QPixmap.fromImage(qimg)
+        pixmap = pixmap.scaled(self._preview_label.size(), 
+                            Qt.AspectRatioMode.KeepAspectRatio,
+                            Qt.TransformationMode.SmoothTransformation)
+        
+        # Update the preview
+        self._preview_label.setPixmap(pixmap)
+    
+    def _toggle_auto_capture(self, state):
+        """Toggle automatic capture on/off."""
+        if state == Qt.CheckState.Checked.value:
+            self._capture_manager.start_capture()
+            self._set_status("Auto capture enabled")
+        else:
+            self._capture_manager.stop_capture()
+            self._set_status("Auto capture disabled")
+    
+    def _take_screenshot(self):
+        """Take and save a screenshot."""
+        # Show file dialog to choose save location
+        default_dir = self._capture_manager._screenshots_dir
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        default_path = os.path.join(default_dir, f"screenshot-{timestamp}.png")
+        
+        file_name, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Screenshot",
+            default_path,
+            "Images (*.png *.jpg *.jpeg)"
+        )
+        
+        if not file_name:
+            return
+            
+        # Take the screenshot
+        _, save_path = self._capture_manager.take_screenshot(file_name)
+        
+        if save_path:
+            self._set_status(f"Screenshot saved to: {save_path}")
+        else:
+            self._set_status("Failed to save screenshot", error=True)
+    
+    def _on_error(self, error_msg):
+        """Handle errors from the capture manager."""
+        self._set_status(error_msg, error=True)
+    
+    def _set_status(self, msg, error=False):
+        """Set the status message."""
+        if error:
+            self._status_label.setStyleSheet("color: red;")
+        else:
+            self._status_label.setStyleSheet("")
+        self._status_label.setText(msg)
+    
+    def _clear_status(self):
+        """Clear the status message."""
+        self._status_label.setText("")
+        self._status_label.setStyleSheet("")
+        
+    def get_capture_manager(self):
+        """
+        Get the capture manager instance.
+        
+        Returns:
+            CaptureManager: The capture manager
+        """
+        return self._capture_manager
+		
+Step 6: Update WindowManager to Use the New Capture System
+Now, let's modify the existing WindowManager to use our new capture system:
+
+# update for scout/window_manager.py - Not creating a new file but showing changes
+from typing import Optional, Tuple, Dict
+import numpy as np
+import logging
+import cv2
+import time
+
+# Import our new capture manager
+from scout.screen_capture.capture_manager import CaptureManager
+
+logger = logging.getLogger(__name__)
+
+class WindowManager:
+    """
+    Manages game window tracking and screen capture functionality.
+    
+    This class detects and tracks the game window, captures screenshots,
+    and provides coordinate conversions between game and screen space.
+    
+    Note: This implementation has been updated to use the Qt-based capture system.
+    """
+    
+    def __init__(self, window_title: str):
+        """
+        Initialize the window manager.
+        
+        Args:
+            window_title: Title of the game window to track
+        """
+        self._window_title = window_title
+        self._window_handle = None
+        self._window_rect = (0, 0, 800, 600)  # x, y, width, height (default)
+        self._capture_manager = None  # Will be set up when needed
+        
+        # Try to find the window immediately
+        self._find_window()
+        logger.info(f"Window manager initialized for '{window_title}'")
+    
+    # [Keep other methods...]
+    
+    def capture_screenshot(self) -> Optional[np.ndarray]:
+        """
+        Capture a screenshot of the game window.
+        
+        Returns:
+            numpy.ndarray: The captured screenshot as a numpy array, or None if capture failed
+        """
+        if not self._initialize_capture_manager():
+            return None
+            
+        # Use the capture manager to get the current frame
+        frame = self._capture_manager.get_last_frame()
+        
+        if frame is None:
+            logger.warning("Failed to capture screenshot - no frame available")
+            return None
+            
+        return frame
+    
+    def _initialize_capture_manager(self) -> bool:
+        """
+        Initialize the capture manager if it doesn't exist.
+        
+        Returns:
+            bool: True if capture manager is ready, False otherwise
+        """
+        # Import here to avoid circular imports
+        if self._capture_manager is None:
+            try:
+                from scout.screen_capture.capture_manager import CaptureManager
+                from PyQt6.QtMultimedia import QWindowCapture
+                
+                self._capture_manager = CaptureManager()
+                self._capture_manager.start_capture(100)  # Capture every 100ms
+                
+                # Find our game window in the list of capturable windows
+                windows = QWindowCapture.capturableWindows()
+                target_window = None
+                
+                for window in windows:
+                    if self._window_title in window.description():
+                        target_window = window
+                        break
+                
+                if target_window:
+                    logger.info(f"Found target window for capture: {target_window.description()}")
+                    self._capture_manager.set_window(target_window)
+                else:
+                    # Fallback to screen capture
+                    logger.warning(f"Couldn't find window '{self._window_title}', using screen capture")
+                    from PyQt6.QtGui import QGuiApplication
+                    self._capture_manager.set_screen(QGuiApplication.primaryScreen())
+                    
+                return True
+                
+            except ImportError as e:
+                logger.error(f"Failed to initialize capture manager: {e}")
+                return False
+        
+        return True
+    
+    # [Additional methods here...]
+	
+	
+Step 7: Update Debug Window to Include Capture Tab
+Let's update the DebugWindow to include our new CaptureTab:
+
+# scout/debug_window.py - Update to include CaptureTab
+from PyQt6.QtWidgets import QTabWidget, QWidget, QVBoxLayout, QMainWindow, QLabel
+from PyQt6.QtGui import QPixmap
+import logging
+import numpy as np
+import cv2
+
+# Import our new CaptureTab
+from scout.screen_capture.capture_tab import CaptureTab
+
+logger = logging.getLogger(__name__)
+
+class DebugWindow(QMainWindow):
+    """
+    Debug window for displaying and controlling various aspects of the Scout application.
+    
+    This window provides tabs for:
+    - Image visualization and debugging
+    - OCR text processing results
+    - Screen/window capture control and preview
+    - Other debug information
+    """
+    
+    def __init__(self):
+        """Initialize the debug window with all required components."""
+        super().__init__()
+        
+        self.setWindowTitle("Scout Debug")
+        self.setGeometry(100, 100, 1200, 800)
+        
+        # Create tab widget
+        self.tab_widget = QTabWidget()
+        self.setCentralWidget(self.tab_widget)
+        
+        # Create image display tab
+        self.image_tab = QWidget()
+        image_layout = QVBoxLayout()
+        self.image_label = QLabel()
+        self.image_label.setScaledContents(True)
+        image_layout.addWidget(self.image_label)
+        self.image_tab.setLayout(image_layout)
+        self.tab_widget.addTab(self.image_tab, "Image Display")
+        
+        # Create text display tab
+        self.text_tab = QWidget()
+        text_layout = QVBoxLayout()
+        self.text_label = QLabel()
+        self.text_label.setWordWrap(True)
+        text_layout.addWidget(self.text_label)
+        self.text_tab.setLayout(text_layout)
+        self.tab_widget.addTab(self.text_tab, "Text OCR")
+        
+        # Create and add the capture tab
+        self.capture_tab = CaptureTab()
+        self.tab_widget.addTab(self.capture_tab, "Screen Capture")
+        self._capture_manager = self.capture_tab.get_capture_manager()
+        
+        logger.debug("Debug window initialized")
+    
+    def display_image(self, image: np.ndarray) -> None:
+        """
+        Display an image in the image tab.
+        
+        Args:
+            image: Image as numpy array (BGR format)
+        """
+        if image is None:
+            logger.warning("Attempted to display None image")
+            return
+            
+        try:
+            # Convert BGR to RGB for Qt
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgb_image.shape
+            
+            # Create QPixmap from numpy array
+            from PyQt6.QtGui import QImage
+            qimg = QImage(rgb_image.data, w, h, w * ch, QImage.Format.Format_RGB888)
+            pixmap = QPixmap.fromImage(qimg)
+            
+            # Scale to fit while preserving aspect ratio
+            self.image_label.setPixmap(pixmap)
+            
+            # Switch to image tab
+            self.tab_widget.setCurrentWidget(self.image_tab)
+            
+        except Exception as e:
+            logger.error(f"Error displaying image: {e}")
+    
+    def display_text(self, text: str) -> None:
+        """
+        Display text in the text tab.
+        
+        Args:
+            text: Text to display
+        """
+        self.text_label.setText(text)
+        self.tab_widget.setCurrentWidget(self.text_tab)
+    
+    def get_capture_manager(self):
+        """
+        Get the screen capture manager for use by other components.
+        
+        Returns:
+            CaptureManager: The capture manager instance
+        """
+        return self._capture_manager
+		
+		
+Step 8: Update WindowCapture Class
+Let's update the WindowCapture class to use our new capture system:
+
+# scout/window_capture.py - Update to use CaptureManager
+import numpy as np
+from typing import Optional, Tuple
+import logging
+import time
+
+logger = logging.getLogger(__name__)
+
+class WindowCapture:
+    """
+    Window capture utility for taking screenshots of game windows.
+    
+    This class has been updated to use the new Qt-based capture system.
+    """
+    
+    def __init__(self, window_manager=None, debug_window=None):
+        """
+        Initialize window capture.
+        
+        Args:
+            window_manager: WindowManager instance for tracking the game window
+            debug_window: DebugWindow instance for accessing the capture manager
+        """
+        self._window_manager = window_manager
+        self._debug_window = debug_window
+        self._capture_manager = None
+        
+        # Try to get capture manager from debug window if available
+        if self._debug_window:
+            self._capture_manager = self._debug_window.get_capture_manager()
+        
+        logger.debug("WindowCapture initialized")
+    
+    def capture(self) -> Optional[np.ndarray]:
+        """
+        Capture the current window.
+        
+        Returns:
+            numpy.ndarray: The captured image as a numpy array, or None if capture failed
+        """
+        start_time = time.time()
+        
+        # Try to use CaptureManager from Debug window first if available
+        if self._capture_manager:
+            frame = self._capture_manager.get_last_frame()
+            if frame is not None:
+                logger.debug(f"Captured frame via CaptureManager in {time.time() - start_time:.3f}s")
+                return frame
+        
+        # Fall back to WindowManager if CaptureManager not available or failed
+        if self._window_manager:
+            frame = self._window_manager.capture_screenshot()
+            if frame is not None:
+                logger.debug(f"Captured frame via WindowManager in {time.time() - start_time:.3f}s")
+                return frame
+        
+        logger.warning("Failed to capture screenshot - no capture method available")
+        return None
+		
+Step 9: Final Integration - Update main.py
+Let's update the main entry point to properly initialize our new capture system:
+
+# Update for main.py - updating the main() function
+
+def main() -> None:
+    """
+    Main application entry point that initializes and starts all components.
+    
+    This function:
+    1. Creates the Qt application instance
+    2. Loads configuration settings
+    3. Sets up the window manager to track the game window
+    4. Creates the overlay system for highlighting game elements
+    5. Initializes the GUI controller
+    6. Connects all necessary callbacks
+    7. Starts the application event loop
+    
+    The application runs until the user closes it or an unhandled error occurs.
+    All errors are logged for debugging purposes.
+    """
+    logger.info("Starting application")
+    
+    try:
+        app = QApplication(sys.argv)
+        
+        logger.info("Initializing components")
+        config_manager = ConfigManager()
+        
+        # Load settings
+        overlay_settings = config_manager.get_overlay_settings()
+        template_settings = config_manager.get_template_matching_settings()
+        
+        # Create debug window first (contains the capture manager)
+        debug_window = DebugWindow()
+        
+        # Initialize window manager with access to the capture manager
+        window_manager = WindowManager("Total Battle")
+        
+        # Create window capture with access to both window manager and debug window
+        window_capture = WindowCapture(
+            window_manager=window_manager,
+            debug_window=debug_window
+        )
+        
+        # Create game actions controller
+        game_actions = GameActions(window_manager)
+        
+        # Create text OCR with window capture
+        text_ocr = TextOCR(
+            debug_window=debug_window,
+            window_manager=window_manager
+        )
+        
+        # Create overlay with window manager and settings
+        overlay = Overlay(
+            window_manager=window_manager,
+            template_settings=template_settings,
+            overlay_settings=overlay_settings
+        )
+        
+        # Create controller
+        controller = OverlayController(
+            overlay=overlay,
+            overlay_settings=overlay_settings,
+            template_settings=template_settings,
+            game_actions=game_actions,
+            text_ocr=text_ocr,
+            debug_window=debug_window
+        )
+        
+        # Set up callbacks
+        controller.set_toggle_callback(overlay.toggle)
+        controller.set_quit_callback(app.quit)
+        
+        # Show the debug window
+        debug_window.show()
+        
+        # Show the controller window
+        controller.show()
+        
+        # Start the application
+        sys.exit(app.exec())
+        
+    except Exception as e:
+        logger.error(f"Application error: {e}", exc_info=True)
+        sys.exit(1)
+		
+Step 10: Create Package Init File
+Lastly, let's ensure our screen_capture package is properly initialized:
+# scout/screen_capture/__init__.py
+"""
+Screen Capture Module
+
+Provides modern Qt-based screen and window capture functionality for the Scout application.
+This module includes:
+
+- CaptureManager: Core functionality for capturing screens and windows
+- CaptureTab: UI component for selecting and controlling capture sources
+- Utilities for converting between Qt and OpenCV image formats
+"""
+
+from .capture_manager import CaptureManager, SourceType
+from .capture_tab import CaptureTab
+
+Summary
+This implementation completely replaces your existing screen capture system with a modern Qt-based approach, offering several benefits:
+
+Modern UI for selecting screens/windows to capture
+Native Qt methods for reliable capture
+Consistent capture with automatic refresh
+Better error handling with detailed feedback
+Screenshot capabilities built right in
+Modular design separating concerns between:
+Capture logic (CaptureManager)
+UI components (CaptureTab)
+Data models (ScreenListModel, WindowListModel)
+Conversion utilities (utils.py)
+The implementation integrates fully with your existing code by:
+
+Updating WindowManager to use the new capture system
+Adding a capture tab to DebugWindow
+Making the capture manager available to all components
+Preserving existing interfaces for backward compatibility
+To test this implementation, you'll need to:
+
+Ensure you have PyQt6 and PyQt6-QtMultimedia installed
+Create the module structure as outlined
+Implement each file as shown
+Run your application and check that the capture system works as expected
+This modular design allows for future enhancements like adding more capture sources, implementing video recording, or developing more sophisticated capture configurations.
+
+
+
+
