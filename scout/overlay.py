@@ -18,7 +18,7 @@ from scout.window_manager import WindowManager
 from scout.template_matcher import TemplateMatch, GroupedMatch, TemplateMatcher
 import logging
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, pyqtSignal
 import time
 
 logger = logging.getLogger(__name__)
@@ -46,6 +46,9 @@ class Overlay(QWidget):
     - Configurable visual elements
     """
     
+    # Signals
+    visibility_changed = pyqtSignal(bool)  # Emitted when overlay visibility changes
+    
     def __init__(self, window_manager: WindowManager, 
                  template_settings: Dict[str, Any], overlay_settings: Dict[str, Any]) -> None:
         """
@@ -66,6 +69,9 @@ class Overlay(QWidget):
         self.template_matching_active = False
         self.window_hwnd = None  # Store window handle
         self.window_created = False  # Flag to track if window has been created
+        
+        # Add opacity attribute (default 0.7 = 70%)
+        self.opacity = overlay_settings.get("opacity", 0.7)
         
         # Separate timers for template matching and drawing
         self.template_matching_timer = QTimer()
@@ -126,6 +132,9 @@ class Overlay(QWidget):
         if not self.active:
             self._hide_window()
 
+        # For settings UI
+        self.highlight_color_name = "Green"  # Default color name
+
     def create_overlay_window(self) -> None:
         """Create the overlay window with transparency."""
         # Check if we already have a valid window
@@ -137,12 +146,17 @@ class Overlay(QWidget):
         logger.info("Creating overlay window")
         
         # Get window position
-        pos = self.window_manager.get_window_position()
+        pos = self.window_manager.get_window_rect()
         if not pos:
             logger.warning("Target window not found, cannot create overlay")
             return
         
-        x, y, width, height = pos
+        # Unpack the tuple (left, top, right, bottom)
+        left, top, right, bottom = pos
+        width = right - left
+        height = bottom - top
+        x = left
+        y = top
         
         # Validate dimensions
         if width <= 0 or height <= 0:
@@ -233,11 +247,14 @@ class Overlay(QWidget):
             
         try:
             # Get current window size
-            pos = self.window_manager.get_window_position()
+            pos = self.window_manager.get_window_rect()
             if not pos:
                 return
                 
-            _, _, width, height = pos
+            # Unpack the tuple (left, top, right, bottom)
+            left, top, right, bottom = pos
+            width = right - left
+            height = bottom - top
             
             # Create empty magenta background (for transparency)
             overlay = np.zeros((height, width, 3), dtype=np.uint8)
@@ -263,12 +280,17 @@ class Overlay(QWidget):
             logger.warning("Cannot update position - window handle is invalid")
             return
             
-        pos = self.window_manager.get_window_position()
+        pos = self.window_manager.get_window_rect()
         if not pos:
             logger.warning("Target window not found, cannot update overlay position")
             return
             
-        x, y, width, height = pos
+        # Unpack the tuple (left, top, right, bottom)
+        left, top, right, bottom = pos
+        width = right - left
+        height = bottom - top
+        x = left
+        y = top
         
         try:
             # Update window position, size and ensure it's topmost
@@ -609,12 +631,17 @@ class Overlay(QWidget):
             self._show_window()
             
             # Update window position to track game window
-            pos = self.window_manager.get_window_position()
+            pos = self.window_manager.get_window_rect()
             if not pos:
                 logger.warning("Target window not found during draw")
                 return
             
-            x, y, width, height = pos
+            # Unpack the tuple (left, top, right, bottom)
+            left, top, right, bottom = pos
+            width = right - left
+            height = bottom - top
+            x = left
+            y = top
             
             # Ensure position is updated
             try:
@@ -823,4 +850,94 @@ class Overlay(QWidget):
                 self._show_window()
         else:
             # Hide window 
-            self._hide_window() 
+            self._hide_window()
+        
+        # Emit signal if state changed
+        if previous_state != self.active:
+            self.visibility_changed.emit(self.active)
+
+    def clear(self) -> None:
+        """
+        Clear all matches and reset the overlay.
+        """
+        logger.debug("Clearing overlay matches")
+        # Clear match cache
+        self.cached_matches = []
+        self.match_counters.clear()
+        
+        # Force redraw
+        if self.active and self.template_matching_active:
+            self._update_overlay()
+            
+        # Emit signal that visibility might have changed
+        self.visibility_changed.emit(False)
+
+    def set_visible(self, visible: bool) -> None:
+        """
+        Set the overlay visibility state.
+        
+        Args:
+            visible: Whether overlay should be visible
+        """
+        if self.active != visible:
+            self.active = visible
+            logger.info(f"Overlay {'activated' if self.active else 'deactivated'}")
+            
+            if self.active:
+                # Show window if template matching is also active
+                if self.template_matching_active:
+                    self._show_window()
+            else:
+                # Hide window
+                self._hide_window()
+                
+            # Emit signal for visibility change
+            self.visibility_changed.emit(self.active)
+
+    def set_opacity(self, opacity: float) -> None:
+        """
+        Set the overlay opacity.
+        
+        Args:
+            opacity: Opacity value between 0.0 and 1.0
+        """
+        self.opacity = max(0.0, min(1.0, opacity))
+        logger.debug(f"Overlay opacity set to {self.opacity}")
+        
+    def set_highlight_color(self, color_name: str) -> None:
+        """
+        Set the highlight color for the overlay.
+        
+        Args:
+            color_name: Color name (e.g., "Red", "Green", "Blue", etc.)
+        """
+        self.highlight_color_name = color_name
+        
+        # Map color name to BGR values for OpenCV
+        color_map = {
+            "Red": (0, 0, 255),    # BGR format
+            "Green": (0, 255, 0),
+            "Blue": (255, 0, 0),
+            "Yellow": (0, 255, 255),
+            "Cyan": (255, 255, 0),
+            "Magenta": (255, 0, 255),
+            "White": (255, 255, 255),
+            "Orange": (0, 165, 255),
+            "Purple": (128, 0, 128)
+        }
+        
+        # Set the rect_color to the mapped color or default to green
+        if color_name in color_map:
+            self.rect_color = color_map[color_name]
+            logger.debug(f"Highlight color set to {color_name}: {self.rect_color}")
+        else:
+            self.rect_color = (0, 255, 0)  # Default to green
+            logger.warning(f"Unknown color name '{color_name}', using green as default")
+        
+    def update_position(self) -> None:
+        """Update the position of the overlay window to match the target window."""
+        if self.window_created and self.window_hwnd and win32gui.IsWindow(self.window_hwnd):
+            self._update_window_position()
+        else:
+            # If window doesn't exist, try to create it
+            self.create_overlay_window()

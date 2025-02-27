@@ -1,0 +1,32 @@
+2025-02-27 00:20:06,736 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:20:06,751 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:20:06,751 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:20:06,751 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:20:06,823 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=132128, geometry=(-32000, -32000, -31763, -31961)
+2025-02-27 00:20:06,840 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:20:06,840 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 00:20:06,841 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 00:20:06,841 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 00:20:06,841 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 00:20:06,841 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 00:20:06,841 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 00:20:06,842 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:20:06,843 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:20:06,848 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 200, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 135, in main
+    overlay = Overlay(window_manager, template_settings, overlay_settings)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\overlay.py", line 86, in __init__
+    rect_color = overlay_settings["rect_color"]
+KeyError: 'rect_color'
+2025-02-27 00:20:06,849 - scout.error_handling - ERROR - 'rect_color'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 200, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 135, in main
+    overlay = Overlay(window_manager, template_settings, overlay_settings)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\overlay.py", line 86, in __init__
+    rect_color = overlay_settings["rect_color"]
+KeyError: 'rect_color'

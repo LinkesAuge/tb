@@ -51,14 +51,18 @@ class TemplateMatcher:
         
         Args:
             window_manager: WindowManager instance for capturing screenshots
-            confidence: Minimum confidence threshold for matches (0.0-1.0)
-            target_frequency: Target updates per second
+            confidence: Minimum match confidence value (0.0-1.0)
+            target_frequency: Target frequency for template matching (Hz)
             sound_enabled: Whether to play sounds on matches
         """
         self.window_manager = window_manager
-        self.confidence = confidence
+        self.confidence_threshold = confidence  # Store as confidence_threshold for consistency
         self.target_frequency = target_frequency
         self.sound_enabled = sound_enabled
+        
+        # Set default method name (for UI)
+        self.method_name = "TM_CCOEFF_NORMED"
+        self.method = cv2.TM_CCOEFF_NORMED
         
         # Create sound manager
         self.sound_manager = SoundManager()
@@ -187,10 +191,10 @@ class TemplateMatcher:
             template_height = template.shape[0]
             
             # Perform template matching
-            result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
+            result = cv2.matchTemplate(image, template, self.method)
             
             # Find matches above confidence threshold
-            locations = np.where(result >= self.confidence)
+            locations = np.where(result >= self.confidence_threshold)
             matches: List[TemplateMatch] = []
             
             for y, x in zip(*locations):
@@ -321,3 +325,41 @@ class TemplateMatcher:
             
         # Otherwise return empty list
         return [] 
+
+    def set_confidence_threshold(self, confidence: float) -> None:
+        """
+        Set the confidence threshold for template matching.
+        
+        Args:
+            confidence: Minimum match confidence value (0.0-1.0)
+        """
+        self.confidence_threshold = max(0.0, min(1.0, confidence))  # Clamp between 0 and 1
+        logger.debug(f"Set confidence threshold to {self.confidence_threshold}") 
+        
+    def set_method(self, method_name: str) -> None:
+        """
+        Set the template matching method to use.
+        
+        Args:
+            method_name: Method name (e.g., "TM_CCOEFF_NORMED", "TM_CCORR_NORMED", etc.)
+        """
+        # Store method name for reference
+        self.method_name = method_name
+        
+        # Map method name to OpenCV constants
+        method_map = {
+            "TM_CCOEFF_NORMED": cv2.TM_CCOEFF_NORMED,
+            "TM_CCORR_NORMED": cv2.TM_CCORR_NORMED,
+            "TM_SQDIFF_NORMED": cv2.TM_SQDIFF_NORMED,
+            "TM_CCOEFF": cv2.TM_CCOEFF,
+            "TM_CCORR": cv2.TM_CCORR,
+            "TM_SQDIFF": cv2.TM_SQDIFF
+        }
+        
+        # Set method to use for template matching
+        if method_name in method_map:
+            self.method = method_map[method_name]
+            logger.debug(f"Set template matching method to {method_name}")
+        else:
+            logger.warning(f"Unknown method name '{method_name}', using TM_CCOEFF_NORMED as default")
+            self.method = cv2.TM_CCOEFF_NORMED 

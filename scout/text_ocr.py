@@ -64,6 +64,9 @@ class TextOCR(QObject):
         self.region: Optional[Dict[str, int]] = None
         self.update_frequency = 0.5  # Default 0.5 updates/sec
         
+        # Set default language
+        self.language = "eng"  # Default to English
+        
         # Initialize coordinates
         self.current_coords = GameCoordinates()
         
@@ -72,6 +75,41 @@ class TextOCR(QObject):
         self.update_timer.timeout.connect(self._process_region)
         
         logger.debug("TextOCR initialized")
+    
+    @property
+    def frequency(self) -> float:
+        """Get the OCR update frequency."""
+        return self.update_frequency
+        
+    @frequency.setter
+    def frequency(self, value: float) -> None:
+        """Set the OCR update frequency."""
+        self.set_frequency(value)
+    
+    def set_frequency(self, value: float) -> None:
+        """
+        Set the OCR update frequency.
+        
+        Args:
+            value: The frequency in updates per second
+        """
+        self.update_frequency = max(0.1, min(10, value))  # Limit between 0.1 and 10 updates/sec
+        interval = int(1000 / self.update_frequency)  # Convert to milliseconds
+        
+        # If active, restart timer with new frequency
+        if self.active:
+            self.update_timer.setInterval(interval)
+        logger.debug(f"Update interval set to {interval}ms ({self.update_frequency} updates/sec)")
+    
+    def set_language(self, language: str) -> None:
+        """
+        Set the OCR language.
+        
+        Args:
+            language: The language code for Tesseract OCR (e.g., 'eng', 'deu')
+        """
+        self.language = language
+        logger.debug(f"OCR language set to {language}")
     
     def set_region(self, region: Dict[str, int]) -> None:
         """
@@ -86,20 +124,6 @@ class TextOCR(QObject):
         # If active, force an immediate capture
         if self.active:
             self._process_region()
-    
-    def set_frequency(self, frequency: float) -> None:
-        """
-        Set update frequency.
-        
-        Args:
-            frequency: Updates per second
-        """
-        self.update_frequency = frequency
-        interval = int(1000 / frequency)  # Convert to milliseconds
-        
-        if self.active:
-            self.update_timer.setInterval(interval)
-            logger.debug(f"Update interval set to {interval}ms ({frequency} updates/sec)")
     
     def start(self) -> None:
         """Start OCR processing."""

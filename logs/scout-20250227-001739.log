@@ -1,0 +1,42 @@
+2025-02-27 00:17:39,311 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:17:39,327 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:17:39,328 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:17:39,328 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:17:39,430 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=132128, geometry=(-32000, -32000, -31763, -31961)
+2025-02-27 00:17:39,561 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:17:39,561 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 00:17:39,561 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 00:17:39,561 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 00:17:39,576 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 00:17:39,576 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 00:17:39,576 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 00:17:39,576 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 122, in main
+    template_search = TemplateSearcher(template_matcher, window_manager)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\template_search.py", line 88, in __init__
+    self.templates_dir = Path(templates_dir)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 960, in __new__
+    self = cls._from_parts(args)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 594, in _from_parts
+    drv, root, parts = self._parse_args(args)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 578, in _parse_args
+    a = os.fspath(a)
+TypeError: expected str, bytes or os.PathLike object, not TemplateMatcher
+2025-02-27 00:17:39,579 - scout.error_handling - ERROR - expected str, bytes or os.PathLike object, not TemplateMatcher
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 122, in main
+    template_search = TemplateSearcher(template_matcher, window_manager)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\template_search.py", line 88, in __init__
+    self.templates_dir = Path(templates_dir)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 960, in __new__
+    self = cls._from_parts(args)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 594, in _from_parts
+    drv, root, parts = self._parse_args(args)
+  File "C:\Users\schrd\AppData\Roaming\uv\python\cpython-3.10.16-windows-x86_64-none\lib\pathlib.py", line 578, in _parse_args
+    a = os.fspath(a)
+TypeError: expected str, bytes or os.PathLike object, not TemplateMatcher

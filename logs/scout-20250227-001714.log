@@ -1,0 +1,22 @@
+2025-02-27 00:17:14,118 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:17:14,132 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:17:14,132 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:17:14,134 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:17:14,206 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 116, in main
+    capture_manager.set_window_interface(window_interface)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\screen_capture\capture_manager.py", line 120, in set_window_interface
+    self._current_window_geometry = QRect(rect.x(), rect.y(), rect.width(), rect.height())
+AttributeError: 'tuple' object has no attribute 'x'
+2025-02-27 00:17:14,208 - scout.error_handling - ERROR - 'tuple' object has no attribute 'x'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 116, in main
+    capture_manager.set_window_interface(window_interface)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\screen_capture\capture_manager.py", line 120, in set_window_interface
+    self._current_window_geometry = QRect(rect.x(), rect.y(), rect.width(), rect.height())
+AttributeError: 'tuple' object has no attribute 'x'

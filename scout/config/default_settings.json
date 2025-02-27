@@ -1,0 +1,96 @@
+{
+    "application": {
+        "name": "TB Scout",
+        "version": "1.0.0",
+        "debug_mode": false,
+        "log_level": "INFO",
+        "hotkeys": {
+            "toggle_overlay": "F10",
+            "capture_screenshot": "F11",
+            "start_stop_scan": "F12"
+        }
+    },
+    "window": {
+        "title_patterns": ["Total Battle", "TB"],
+        "auto_detect": true,
+        "capture_interval_ms": 500,
+        "window_check_interval_ms": 2000
+    },
+    "overlay": {
+        "enabled": true,
+        "opacity": 0.7,
+        "thickness": 2,
+        "colors": {
+            "border": [0, 255, 0],
+            "text": [255, 255, 255],
+            "background": [0, 0, 0, 128],
+            "highlight": [255, 0, 0],
+            "selection": [0, 0, 255]
+        },
+        "font": {
+            "face": "Arial",
+            "size": 12,
+            "bold": true
+        },
+        "show_fps": true,
+        "show_coordinates": true
+    },
+    "template_matching": {
+        "method": "cv2.TM_CCOEFF_NORMED",
+        "threshold": 0.8,
+        "scale_range": [0.8, 1.2],
+        "scale_steps": 5,
+        "max_results": 10,
+        "templates_dir": "patterns"
+    },
+    "ocr": {
+        "enabled": true,
+        "language": "eng",
+        "preprocessing": {
+            "resize_factor": 2.0,
+            "threshold_method": "adaptive",
+            "invert": false
+        },
+        "tesseract_path": ""
+    },
+    "automation": {
+        "enabled": true,
+        "default_delay_ms": 500,
+        "mouse_speed": 10,
+        "safety_checks": true,
+        "max_sequence_length": 50,
+        "sequences_dir": "sequences"
+    },
+    "sound": {
+        "enabled": true,
+        "volume": 0.5,
+        "sounds": {
+            "match_found": "match.wav",
+            "scan_complete": "complete.wav",
+            "error": "error.wav"
+        }
+    },
+    "screen_capture": {
+        "method": "mss",
+        "quality": 80,
+        "format": "png",
+        "screenshots_dir": "screenshots",
+        "auto_save": false
+    },
+    "ui": {
+        "theme": "dark",
+        "font_size": 10,
+        "show_tooltips": true,
+        "remember_window_position": true,
+        "remember_window_size": true,
+        "window_position": [100, 100],
+        "window_size": [800, 600],
+        "tabs": {
+            "capture": true,
+            "templates": true,
+            "automation": true,
+            "settings": true,
+            "debug": true
+        }
+    }
+}

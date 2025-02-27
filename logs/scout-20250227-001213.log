@@ -1,0 +1,20 @@
+2025-02-27 00:12:13,947 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:12:13,964 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:12:13,964 - scout.config_manager - INFO - No configuration file found - creating with default settings
+2025-02-27 00:12:13,964 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 00:12:13,964 - scout.config_manager - INFO - Default configuration created
+2025-02-27 00:12:13,965 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:12:13,965 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 107, in main
+    config = config_manager.get_config()
+AttributeError: 'ConfigManager' object has no attribute 'get_config'
+2025-02-27 00:12:13,966 - scout.error_handling - ERROR - 'ConfigManager' object has no attribute 'get_config'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 107, in main
+    config = config_manager.get_config()
+AttributeError: 'ConfigManager' object has no attribute 'get_config'

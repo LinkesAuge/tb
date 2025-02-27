@@ -1,0 +1,35 @@
+2025-02-27 00:21:20,144 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:21:20,159 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:21:20,160 - scout.config_manager - INFO - No configuration file found - creating with default settings
+2025-02-27 00:21:20,161 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 00:21:20,161 - scout.config_manager - INFO - Default configuration created
+2025-02-27 00:21:20,161 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:21:20,162 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:21:20,225 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=132128, geometry=(-32000, -32000, -31763, -31961)
+2025-02-27 00:21:20,242 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:21:20,242 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 00:21:20,242 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 00:21:20,242 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 00:21:20,242 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 00:21:20,242 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 00:21:20,243 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 00:21:20,243 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:21:20,244 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:21:20,244 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 207, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 142, in main
+    overlay = Overlay(window_manager, template_settings, overlay_settings)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\overlay.py", line 88, in __init__
+    cross_color = overlay_settings["cross_color"]
+KeyError: 'cross_color'
+2025-02-27 00:21:20,245 - scout.error_handling - ERROR - 'cross_color'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 207, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 142, in main
+    overlay = Overlay(window_manager, template_settings, overlay_settings)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\overlay.py", line 88, in __init__
+    cross_color = overlay_settings["cross_color"]
+KeyError: 'cross_color'

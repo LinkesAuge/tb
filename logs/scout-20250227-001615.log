@@ -1,0 +1,22 @@
+2025-02-27 00:16:15,841 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:16:15,858 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:16:15,859 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:16:15,860 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:16:15,935 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 116, in main
+    capture_manager.set_window_interface(window_interface)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\screen_capture\capture_manager.py", line 115, in set_window_interface
+    handle = window_interface.get_window_handle()
+AttributeError: 'WindowManager' object has no attribute 'get_window_handle'
+2025-02-27 00:16:15,936 - scout.error_handling - ERROR - 'WindowManager' object has no attribute 'get_window_handle'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 116, in main
+    capture_manager.set_window_interface(window_interface)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\screen_capture\capture_manager.py", line 115, in set_window_interface
+    handle = window_interface.get_window_handle()
+AttributeError: 'WindowManager' object has no attribute 'get_window_handle'

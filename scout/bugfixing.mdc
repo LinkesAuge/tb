@@ -1,0 +1,191 @@
+---
+description: 
+globs: 
+---
+# Bug Tracking and Fixes
+
+This file tracks all bug fixes, issues, errors, and other problems encountered during development, along with their resolutions.
+
+## 2025-02-27: Missing cross_color in overlay_settings
+
+**Issue**: Application crashes on startup with `KeyError: 'cross_color'` in overlay.py.
+
+**Details**:
+- Error occurs in the Overlay constructor in overlay.py, line 88
+- The overlay_settings dictionary passed from main.py doesn't contain the "cross_color" key
+- This causes the application to crash immediately on startup
+
+**Root Cause**:
+The main.py file was providing default values for rect_color and font_color if missing, but not for cross_color.
+
+**Solution**:
+Added a check in main.py to provide a default value for cross_color:
+```python
+if "cross_color" not in overlay_settings:
+    overlay_settings["cross_color"] = (255, 0, 0)  # Red
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- The error only appears when the application is launched without an existing configuration file
+- The config_manager.py includes cross_color in get_overlay_settings(), but that's not what's being used in main.py
+
+## 2025-02-27: Incorrect color format in overlay_settings
+
+**Issue**: After fixing the missing cross_color, application crashes with `AttributeError: 'tuple' object has no attribute 'blue'`.
+
+**Details**:
+- Error occurs in the Overlay constructor in overlay.py, line 91
+- The overlay_settings dictionary has tuple values for colors, but overlay.py expects QColor objects
+- The overlay tries to call rect_color.blue() but rect_color is a tuple, not a QColor
+
+**Root Cause**:
+In main.py, default values for colors are provided as tuples, but overlay.py expects QColor objects.
+
+**Solution**:
+Updated main.py to use QColor objects for the default color values:
+```python
+from PyQt6.QtGui import QColor
+overlay_settings["rect_color"] = QColor(255, 0, 0, 128)  # Semi-transparent red
+overlay_settings["font_color"] = QColor(255, 255, 255)  # White
+overlay_settings["cross_color"] = QColor(255, 0, 0)  # Red
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- This is a type mismatch between what main.py provides and what overlay.py expects
+- The get_overlay_settings() in config_manager.py does provide QColor objects as expected
+
+## 2025-02-27: QColor reference error in main.py
+
+**Issue**: After fixing the color format, application crashes with `UnboundLocalError: local variable 'QColor' referenced before assignment`.
+
+**Details**:
+- Error occurs in the main() function in main.py, line 138
+- The import for QColor is at the top of the file, but there are also conditional imports within the function
+- Python is trying to use the local QColor before it's defined
+
+**Root Cause**:
+The code was adding conditional imports within the function for QColor that were shadowing the module-level import.
+
+**Solution**:
+Removed the redundant conditional imports since QColor is already imported at the top of the file:
+```diff
+- if 'QColor' not in locals():
+-     from PyQt6.QtGui import QColor
+overlay_settings["font_color"] = QColor(255, 255, 255)
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- This demonstrates a classic Python variable scoping issue with imports
+- It's cleaner to have all imports at the top of the file rather than conditionally importing within functions
+
+## 2025-02-27: Missing required template settings
+
+**Issue**: Application crashes with `KeyError: 'confidence'` when creating the Overlay.
+
+**Details**:
+- Error occurs in the Overlay constructor in overlay.py, line 105
+- The TemplateMatcher inside Overlay expects template_settings to have certain keys: confidence, target_frequency, and sound_enabled
+- These keys are missing when launching with a fresh configuration
+
+**Root Cause**:
+The main.py file wasn't providing default values for template_settings, unlike what it does for overlay_settings.
+
+**Solution**:
+Added default values for the required template settings:
+```python
+# Add default values for required template settings if they're missing
+if "confidence" not in template_settings:
+    template_settings["confidence"] = 0.8  # Default confidence level
+if "target_frequency" not in template_settings:
+    template_settings["target_frequency"] = 1.0  # Default update frequency (1 Hz)
+if "sound_enabled" not in template_settings:
+    template_settings["sound_enabled"] = False  # Default sound setting
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- This is similar to the first bug (missing cross_color), where defaults weren't being provided
+- It's important to provide defaults for all required settings when they might be missing from configuration
+
+## 2025-02-27: Incorrect method name in Overlay
+
+**Issue**: Application crashes with `AttributeError: 'WindowManager' object has no attribute 'get_window_position'`.
+
+**Details**:
+- Error occurs in the create_overlay_window method in overlay.py, line 140
+- The Overlay is trying to call a method called get_window_position on the WindowManager object
+- This method doesn't exist in the WindowManager class
+
+**Root Cause**:
+The WindowManager class provides a get_window_rect method for retrieving window position and size, but the Overlay is trying to call get_window_position.
+
+**Solution**:
+Updated the overlay.py file to use the correct method name and handle the return value appropriately:
+```python
+# Before
+pos = self.window_manager.get_window_position()
+if not pos:
+    logger.warning("Target window not found, cannot create overlay")
+    return
+x, y, width, height = pos
+
+# After
+pos = self.window_manager.get_window_rect()
+if not pos:
+    logger.warning("Target window not found, cannot create overlay")
+    return
+# Convert QRect to x, y, width, height
+x = pos.x()
+y = pos.y()
+width = pos.width()
+height = pos.height()
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- This appears to be a naming mismatch between the expected interface and the actual implementation
+- Updated all instances of get_window_position to get_window_rect throughout the overlay.py file
+
+## 2025-02-27: Return type mismatch in get_window_rect
+
+**Issue**: Application crashes with `AttributeError: 'tuple' object has no attribute 'x'`.
+
+**Details**:
+- Error occurs in the create_overlay_window method in overlay.py, line 146
+- The overlay.py file expects get_window_rect to return a QRect object with x(), y(), width(), and height() methods
+- But get_window_rect actually returns a tuple of (left, top, right, bottom) coordinates
+
+**Root Cause**:
+There's a type mismatch between what overlay.py expects (QRect) and what get_window_rect returns (tuple).
+
+**Solution**:
+Updated the overlay.py file to handle the tuple returned by get_window_rect:
+```python
+# Before
+x = pos.x()
+y = pos.y()
+width = pos.width()
+height = pos.height()
+
+# After
+# Unpack the tuple (left, top, right, bottom)
+left, top, right, bottom = pos
+width = right - left
+height = bottom - top
+x = left
+y = top
+```
+
+**Status**: Fixed
+
+**Additional Notes**:
+- This is another type mismatch issue, similar to the color format issue
+- Updated all instances where overlay.py was trying to treat the return value of get_window_rect as a QRect

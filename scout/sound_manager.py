@@ -17,6 +17,7 @@ class SoundManager:
     - Controlling sound frequency with cooldowns
     - Enabling/disabling sound alerts
     - Managing sound resources
+    - Volume control
     
     The sound system helps users stay aware of detections without
     having to constantly watch the screen. It includes cooldown
@@ -46,10 +47,48 @@ class SoundManager:
         self.cooldown = cooldown
         self.last_play_time = 0.0
         self.enabled = True
+        self._volume = 0.5  # Default 50% volume
         self.sound: Optional[pygame.mixer.Sound] = None
         
         self.load_sound()
     
+    @property
+    def volume(self) -> float:
+        """Get the current volume (0.0 to 1.0)."""
+        return self._volume
+        
+    @volume.setter
+    def volume(self, value: float) -> None:
+        """
+        Set the volume level.
+        
+        Args:
+            value: Volume level from 0.0 (silent) to 1.0 (maximum)
+        """
+        self._volume = max(0.0, min(1.0, value))
+        if self.sound:
+            self.sound.set_volume(self._volume)
+        logger.debug(f"Sound volume set to {self._volume:.2f}")
+    
+    def set_volume(self, value: float) -> None:
+        """
+        Set the volume level.
+        
+        Args:
+            value: Volume level from 0.0 (silent) to 1.0 (maximum)
+        """
+        self.volume = value
+    
+    def set_enabled(self, enabled: bool) -> None:
+        """
+        Enable or disable sound alerts.
+        
+        Args:
+            enabled: True to enable sounds, False to disable
+        """
+        self.enabled = enabled
+        logger.debug(f"Sound alerts {'enabled' if enabled else 'disabled'}")
+        
     def load_sound(self) -> None:
         """
         Load the alert sound file from disk.
@@ -69,7 +108,9 @@ class SoundManager:
                 return
             
             self.sound = pygame.mixer.Sound(str(sound_files[0]))
-            logger.debug(f"Loaded sound: {sound_files[0]}")
+            # Set initial volume
+            self.sound.set_volume(self._volume)
+            logger.debug(f"Loaded sound: {sound_files[0]} with volume {self._volume:.2f}")
             
         except Exception as e:
             logger.error(f"Error loading sound: {str(e)}", exc_info=True)
@@ -87,6 +128,29 @@ class SoundManager:
                 logger.debug("Played alert sound")
             except Exception as e:
                 logger.error(f"Error playing sound: {str(e)}", exc_info=True)
+    
+    def play_sound(self, sound_name: str) -> None:
+        """
+        Play a specific sound file by name.
+        
+        Args:
+            sound_name: Name of the sound file without extension (e.g., "alert")
+        """
+        if not self.enabled:
+            return
+            
+        try:
+            sound_path = self.sounds_dir / f"{sound_name}.wav"
+            if not sound_path.exists():
+                logger.warning(f"Sound file not found: {sound_path}")
+                return
+                
+            sound = pygame.mixer.Sound(str(sound_path))
+            sound.set_volume(self._volume)
+            sound.play()
+            logger.debug(f"Played sound: {sound_name}")
+        except Exception as e:
+            logger.error(f"Error playing sound '{sound_name}': {str(e)}", exc_info=True)
     
     def toggle(self) -> None:
         """Toggle sound on/off."""

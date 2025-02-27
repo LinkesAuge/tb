@@ -53,6 +53,14 @@ class ConfigManager:
 
     def create_default_config(self) -> None:
         """Create a new configuration file with default settings."""
+        # General settings
+        self.config["General"] = {
+            "startup_option": "Show Main Window",
+            "minimize_to_tray": "false",
+            "auto_update": "true",
+            "language": "English"
+        }
+        
         # Overlay settings
         self.config["Overlay"] = {
             "active": "false",
@@ -425,4 +433,87 @@ class ConfigManager:
         """Save the configuration file."""
         with open(self.config_path, 'w') as f:
             config.write(f)
-        logger.debug("Configuration saved") 
+        logger.debug("Configuration saved")
+
+    def get_config(self) -> Dict[str, Any]:
+        """
+        Get the entire configuration as a dictionary.
+        
+        Returns:
+            Dict containing all configuration settings
+        """
+        settings = {}
+        
+        for section in self.config.sections():
+            settings[section] = dict(self.config[section])
+            
+        return settings
+        
+    def get(self, key: str, default: Any = None) -> Any:
+        """
+        Get a single configuration value.
+        
+        Args:
+            key: The configuration key
+            default: Default value if key is not found
+            
+        Returns:
+            The configuration value or default if not found
+        """
+        # Split key into section and option
+        if '.' in key:
+            section, option = key.split('.', 1)
+        else:
+            section = 'General'
+            option = key
+            
+        # Check if section and option exist
+        if section in self.config and option in self.config[section]:
+            value = self.config[section][option]
+            
+            # Try to convert to appropriate type
+            if value.lower() == 'true':
+                return True
+            elif value.lower() == 'false':
+                return False
+            elif value.isdigit():
+                return int(value)
+            elif self._is_float(value):
+                return float(value)
+            
+            return value
+        
+        return default
+        
+    def set(self, key: str, value: Any) -> None:
+        """
+        Set a configuration value.
+        
+        Args:
+            key: The configuration key
+            value: The value to set
+        """
+        # Split key into section and option
+        if '.' in key:
+            section, option = key.split('.', 1)
+        else:
+            section = 'General'
+            option = key
+            
+        # Ensure section exists
+        if section not in self.config:
+            self.config[section] = {}
+            
+        # Convert value to string for storage
+        self.config[section][option] = str(value)
+        
+        # Save changes
+        self.save_config()
+        
+    def _is_float(self, value: str) -> bool:
+        """Check if a string can be converted to a float."""
+        try:
+            float(value)
+            return True
+        except ValueError:
+            return False

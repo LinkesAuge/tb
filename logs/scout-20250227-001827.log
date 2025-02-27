@@ -1,0 +1,26 @@
+2025-02-27 00:18:27,856 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:18:27,873 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:18:27,874 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:18:27,875 - scout.window_manager - INFO - Found window: Total Battle (handle: 132128)
+2025-02-27 00:18:27,978 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=132128, geometry=(-32000, -32000, -31763, -31961)
+2025-02-27 00:18:27,995 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav
+2025-02-27 00:18:27,995 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 00:18:27,995 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 00:18:27,996 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 00:18:27,996 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 00:18:27,996 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 00:18:27,996 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 00:18:27,997 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 125, in main
+    text_ocr = TextOCR(window_manager)
+TypeError: TextOCR.__init__() missing 1 required positional argument: 'window_manager'
+2025-02-27 00:18:27,997 - scout.error_handling - ERROR - TextOCR.__init__() missing 1 required positional argument: 'window_manager'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 125, in main
+    text_ocr = TextOCR(window_manager)
+TypeError: TextOCR.__init__() missing 1 required positional argument: 'window_manager'

@@ -110,11 +110,25 @@ class DebugWindow(QWidget):
     # Add signal for window close
     window_closed = pyqtSignal()
     
-    def __init__(self) -> None:
-        """Initialize debug window."""
+    def __init__(self, window_manager=None, template_matcher=None, text_ocr=None, capture_manager=None) -> None:
+        """
+        Initialize debug window.
+        
+        Args:
+            window_manager: Optional WindowManager instance to capture window information
+            template_matcher: Optional TemplateMatcher instance for template visualization
+            text_ocr: Optional TextOCR instance for OCR visualization
+            capture_manager: Optional CaptureManager instance for screen capture
+        """
         super().__init__()
         self.setWindowTitle("Debug Viewer")
         self.setGeometry(100, 100, 900, 700)
+        
+        # Store dependencies
+        self.window_manager = window_manager
+        self.template_matcher = template_matcher
+        self.text_ocr = text_ocr
+        self.capture_manager = capture_manager
         
         # Load config
         self.config_manager = ConfigManager()

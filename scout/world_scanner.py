@@ -39,7 +39,7 @@ class WorldPosition:
     k: int  # World number
     description: Optional[str] = None
     
-class WorldScanner:
+class WorldScanner(QObject):
     """
     Automated system for exploring and scanning the game world.
     
@@ -60,8 +60,14 @@ class WorldScanner:
     - Integration with pattern matching for target detection
     """
     
+    # Add signals for scanning status
+    scanning_started = pyqtSignal()
+    scanning_stopped = pyqtSignal()
+    scan_results_updated = pyqtSignal(dict)
+    
     def __init__(self, window_manager: WindowManager):
         """Initialize the world scanner."""
+        super().__init__()  # Initialize QObject base class
         self.window_manager = window_manager
         self.config_manager = ConfigManager()
         self.current_pos = None
@@ -74,6 +80,10 @@ class WorldScanner:
         self.minimap_width = 0
         self.minimap_height = 0
         self.dpi_scale = 1.0
+        
+        # Add scanning state
+        self.is_scanning = False
+        self.scan_results = {}
         
         # Create debug window
         self.debug_window = DebugWindow()
@@ -325,6 +335,30 @@ class WorldScanner:
             attempts += 1
             
         return None
+
+    def start_scanning(self) -> None:
+        """Start the scanning process."""
+        if self.is_scanning:
+            return
+            
+        logger.info("Starting world scanning")
+        self.is_scanning = True
+        self.scanning_started.emit()
+        
+        # Logic for starting scanning would go here
+        # For now, this is just a stub to emit the signal
+        
+    def stop_scanning(self) -> None:
+        """Stop the scanning process."""
+        if not self.is_scanning:
+            return
+            
+        logger.info("Stopping world scanning")
+        self.is_scanning = False
+        self.scanning_stopped.emit()
+        
+        # Logic for stopping scanning would go here
+        # For now, this is just a stub to emit the signal
 
 def test_coordinate_reading():
     """Test function to check coordinate reading."""

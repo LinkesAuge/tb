@@ -1,0 +1,21 @@
+2025-02-27 00:14:32,093 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 00:14:32,108 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 00:14:32,108 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 00:14:32,108 - scout.error_handling - CRITICAL - Unhandled exception
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 111, in main
+    window_manager = WindowManager(window_title)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\window_manager.py", line 61, in __init__
+    self.find_window()
+TypeError: WindowManager.find_window() missing 1 required positional argument: 'title'
+2025-02-27 00:14:32,110 - scout.error_handling - ERROR - WindowManager.find_window() missing 1 required positional argument: 'title'
+Traceback (most recent call last):
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 193, in <module>
+    main()
+  File "d:\OneDrive\AI\Projekte\Scout\tb\scout\main.py", line 111, in main
+    window_manager = WindowManager(window_title)
+  File "D:\OneDrive\AI\Projekte\Scout\tb\scout\window_manager.py", line 61, in __init__
+    self.find_window()
+TypeError: WindowManager.find_window() missing 1 required positional argument: 'title'

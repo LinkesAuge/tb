@@ -1,310 +1,365 @@
-from typing import Optional, Tuple, List, Any
-import win32gui
+"""
+Window Manager Module
+
+This module provides functionality for detecting, tracking, and interacting with
+application windows, particularly the Total Battle game window. It integrates with
+the screen capture module to provide screenshots of the tracked window.
+"""
+
 import logging
-import ctypes
-from ctypes.wintypes import RECT, POINT
-import numpy as np
-import cv2
-import mss
 import time
-import pywintypes
+from typing import Optional, Tuple, Dict, List, Any, Union
+import os
+import numpy as np
+import win32gui
+import win32con
+import win32api
+import win32process
+from PyQt6.QtCore import QObject, pyqtSignal, QRect, QPoint, QSize, QTimer
+
+from scout.error_handling import handle_errors
+from scout.window_interface import WindowInterface, WindowInfo
+from scout.screen_capture.capture_manager import CaptureManager
 
 logger = logging.getLogger(__name__)
 
-class WindowManager:
+class WindowManager(QObject):
     """
-    Manages the tracking and interaction with the game window.
+    Manages detection, tracking, and interaction with application windows.
     
     This class is responsible for:
-    1. Finding the game window by its title
-    2. Tracking the window's position and size
-    3. Handling window state changes (moved, resized)
+    1. Finding the Total Battle game window
+    2. Tracking its position and size
+    3. Capturing screenshots of the window
     4. Providing window information to other components
     
-    The window manager is a critical component that enables:
-    - The overlay to stay aligned with the game window
-    - Screen capture for pattern matching
-    - Coordinate system calculations
-    
-    It uses the Windows API to interact with window properties and
-    maintains the connection between the game window and our application.
+    It implements the WindowInterface to provide a consistent API for window operations.
     """
     
-    def __init__(self, window_title: str) -> None:
+    # Signals
+    window_found = pyqtSignal(str, int)  # Window title, handle
+    window_lost = pyqtSignal()
+    window_moved = pyqtSignal(QRect)  # New window geometry
+    window_resized = pyqtSignal(QRect)  # New window geometry
+    mouse_moved = pyqtSignal(int, int)  # Mouse X, Y coordinates
+    
+    def __init__(self, window_title: str):
         """
-        Initialize the window manager for a specific game window.
-        
-        Sets up tracking for a window with the given title. The manager
-        will continuously try to find and maintain a connection to this
-        window throughout the application's lifetime.
+        Initialize the window manager.
         
         Args:
-            window_title: Title or partial title of the game window to track
+            window_title: Title of the window to track
         """
+        super().__init__()
         self.window_title = window_title
-        self.hwnd = None  # Windows handle to the game window
-        logger.debug(f"WindowManager initialized to track window: {window_title}")
+        self.handle = None
+        self.process_id = None
+        self.window_rect = None
+        self.client_rect = None
+        self.client_to_window_offset = (0, 0)
+        self.capture_manager = None
+        self.last_mouse_pos = (0, 0)
+        
+        # Try to find the window immediately
+        self.handle = self.find_window(self.window_title)
+        if self.handle:
+            logger.info(f"Found window: {self.window_title} (handle: {self.handle})")
+            self.window_found.emit(self.window_title, self.handle)
+            self._update_window_rects()
+            
+        # Setup timer for mouse position tracking
+        self._setup_mouse_tracking()
     
-    def find_window(self) -> bool:
+    def get_window_handle(self) -> Optional[int]:
         """
-        Find the game window by title.
+        Get the handle of the currently tracked window.
         
         Returns:
-            True if window found, False otherwise
+            Window handle if a window is being tracked, None otherwise
         """
-        if self.hwnd and win32gui.IsWindow(self.hwnd):
-            # Window already found, check if it's still valid
-            try:
-                if self.window_title in win32gui.GetWindowText(self.hwnd):
-                    return True
-            except Exception as e:
-                logger.debug(f"Error checking existing window: {e}")
-                self.hwnd = None  # Reset handle if error
+        return self.handle
 
-        # Need to find the window
-        self.windows = []
-        self.hwnd = None
-        
-        def enum_windows_callback(hwnd, _):
-            try:
-                if not win32gui.IsWindowVisible(hwnd):
-                    return
-                
-                window_title = win32gui.GetWindowText(hwnd)
-                if not window_title:
-                    return
-                    
-                # Skip our own windows
-                if window_title.startswith("TB Scout"):
-                    logger.debug(f"Skipping our own window: {window_title}")
-                    return
-                    
-                # Found a potential match
-                if self.window_title.lower() in window_title.lower():
-                    logger.debug(f"Found matching window: {window_title} (hwnd: {hwnd})")
-                    self.windows.append((hwnd, window_title))
-                    
-                    # Use the first match as the active window
-                    if not self.hwnd:
-                        self.hwnd = hwnd
-            except Exception as e:
-                # Log and continue if there's an error with a specific window
-                logger.debug(f"Error processing window in callback: {e}")
-        
-        try:
-            logger.debug(f"Starting window search for title containing: {self.window_title}")
-            win32gui.EnumWindows(enum_windows_callback, None)
-            
-            if not self.windows:
-                logger.debug("No matching windows found")
-                return False
-                
-            # Log found windows
-            logger.info("Found matching windows:")
-            for _, title in self.windows:
-                logger.info(f"  • {title}")
-                
-            return self.hwnd is not None
-            
-        except Exception as e:
-            logger.error(f"Error enumerating windows: {e}")
-            
-            # Try an alternative approach if EnumWindows fails
-            try:
-                logger.debug("Trying alternative window finding approach")
-                # Look for known windows that might be Total Battle
-                possible_titles = ["Total Battle", "TB", "Battle"]
-                
-                for title in possible_titles:
-                    try:
-                        hwnd = win32gui.FindWindow(None, title)
-                        if hwnd:
-                            self.hwnd = hwnd
-                            self.windows = [(hwnd, title)]
-                            logger.info(f"Found window using alternative method: {title}")
-                            return True
-                    except Exception:
-                        continue
-                        
-                return False
-            except Exception as ex:
-                logger.error(f"Alternative window finding also failed: {ex}")
-                return False
-    
-    def get_window_position(self) -> Optional[Tuple[int, int, int, int]]:
+    def is_valid(self) -> bool:
         """
-        Get the position and size of the game window.
+        Check if the window manager has a valid window.
         
         Returns:
-            Tuple of (x, y, width, height) or None if window not found
+            True if a window is being tracked, False otherwise
         """
+        return self.handle is not None
+
+    def is_window_found(self) -> bool:
+        """
+        Check if the window is currently found and being tracked.
+        
+        Returns:
+            True if window is found, False otherwise
+        """
+        if not self.handle:
+            return False
+            
+        return win32gui.IsWindow(self.handle)
+        
+    def get_window_title(self) -> Optional[str]:
+        """
+        Get the title of the currently tracked window.
+        
+        Returns:
+            Window title if a window is being tracked, None otherwise
+        """
+        if not self.handle or not win32gui.IsWindow(self.handle):
+            return None
+            
         try:
-            if not self.find_window():
-                logger.warning("Window not found")
-                return None
-                
-            # Get window rectangle (includes frame, borders etc)
-            rect = win32gui.GetWindowRect(self.hwnd)
-            x, y, right, bottom = rect
-            width = right - x
-            height = bottom - y
-            
-            logger.debug(f"Window position: x={x}, y={y}, width={width}, height={height}")
-            return (x, y, width, height)
-            
+            return win32gui.GetWindowText(self.handle)
         except Exception as e:
-            logger.error(f"Error getting window position: {e}", exc_info=True)
+            logger.error(f"Error getting window title: {e}")
             return None
 
-    def get_client_rect(self) -> Optional[Tuple[int, int, int, int]]:
+    def get_window_rect(self) -> Optional[QRect]:
         """
-        Get the client area rectangle of the window.
+        Get the rectangle of the currently tracked window.
         
         Returns:
-            Optional[Tuple[int, int, int, int]]: (left, top, right, bottom) of client area,
-            or None if window not found or error occurs
+            QRect representing the window's position and size, or None if no window is tracked
         """
-        try:
-            if not self.find_window():
-                logger.warning("Window not found when getting client rect")
-                return None
-                
-            # Get window rect
-            window_rect = win32gui.GetWindowRect(self.hwnd)
-            
-            # Get client rect
-            client_rect = RECT()
-            if not ctypes.windll.user32.GetClientRect(self.hwnd, ctypes.byref(client_rect)):
-                logger.error("Failed to get client rect")
-                return None
-                
-            # Get client area position
-            client_point = POINT(0, 0)
-            if not ctypes.windll.user32.ClientToScreen(self.hwnd, ctypes.byref(client_point)):
-                logger.error("Failed to convert client coordinates")
-                return None
-                
-            # Calculate client area in screen coordinates
-            client_left = client_point.x
-            client_top = client_point.y
-            client_right = client_left + (client_rect.right - client_rect.left)
-            client_bottom = client_top + (client_rect.bottom - client_rect.top)
-            
-            logger.debug(f"Client rect: ({client_left}, {client_top}, {client_right}, {client_bottom})")
-            return (client_left, client_top, client_right, client_bottom)
-            
-        except Exception as e:
-            logger.error(f"Error getting client rect: {e}")
-            return None 
-
-    def client_to_screen(self, x: int, y: int) -> Tuple[int, int]:
+        if not self.handle or not self.window_rect:
+            return None
+        
+        # Convert the window rect to a QRect
+        if isinstance(self.window_rect, QRect):
+            return self.window_rect
+        elif isinstance(self.window_rect, tuple) and len(self.window_rect) == 4:
+            # If it's a tuple (left, top, right, bottom), convert to QRect
+            left, top, right, bottom = self.window_rect
+            return QRect(left, top, right - left, bottom - top)
+        else:
+            logger.warning(f"Unexpected window rect format: {self.window_rect}")
+            return None
+    
+    def find_window(self, title: Optional[str] = None) -> Optional[int]:
         """
-        Convert client (window-relative) coordinates to screen coordinates.
+        Find a window by title.
         
         Args:
-            x: X coordinate relative to window client area
-            y: Y coordinate relative to window client area
-            
+            title: Title of the window to find, or None to use the stored window title
+        
         Returns:
-            Tuple[int, int]: Screen coordinates (x, y)
+            Window handle if found, None otherwise
         """
-        try:
-            if not self.find_window():
-                logger.warning("Window not found when converting coordinates")
-                return x, y
-                
-            # Get client area position
-            point = POINT(x, y)
-            if not ctypes.windll.user32.ClientToScreen(self.hwnd, ctypes.byref(point)):
-                logger.error("Failed to convert client coordinates")
-                return x, y
-                
-            return point.x, point.y
-            
-        except Exception as e:
-            logger.error(f"Error converting coordinates: {e}")
-            return x, y
-
-    def screen_to_client(self, screen_x: int, screen_y: int) -> Tuple[int, int]:
+        # Use the provided title or fall back to the stored window title
+        title = title if title is not None else self.window_title
+        
+        # Find all windows with the given title
+        results = []
+        
+        def enum_windows_callback(hwnd, results):
+            if win32gui.IsWindowVisible(hwnd):
+                window_title = win32gui.GetWindowText(hwnd)
+                if title in window_title:
+                    results.append(hwnd)
+            return True
+        
+        win32gui.EnumWindows(enum_windows_callback, results)
+        
+        if results:
+            self.handle = results[0]
+            self.window_title = title
+            self._update_window_rects()
+            self.window_found.emit(title, self.handle)
+            logger.info(f"Found window: {title} (handle: {self.handle})")
+            return self.handle
+        else:
+            logger.warning(f"Window not found: {title}")
+            return None
+    
+    def get_window_rect(self, handle: Optional[int] = None) -> Tuple[int, int, int, int]:
         """
-        Convert screen coordinates to client (window-relative) coordinates.
+        Get the rectangle (position and size) of a window.
         
         Args:
-            screen_x: X coordinate on screen
-            screen_y: Y coordinate on screen
+            handle: Window handle, or None to use the currently selected window
             
         Returns:
-            Tuple[int, int]: Client coordinates (x, y)
+            Tuple of (left, top, right, bottom) coordinates
         """
-        try:
-            if not self.find_window():
-                logger.warning("Window not found when converting coordinates")
-                return screen_x, screen_y
-                
-            # Get client area position
-            point = POINT(screen_x, screen_y)
-            if not ctypes.windll.user32.ScreenToClient(self.hwnd, ctypes.byref(point)):
-                logger.error("Failed to convert screen coordinates")
-                return screen_x, screen_y
-                
-            return point.x, point.y
+        hwnd = handle if handle is not None else self.handle
+        if hwnd:
+            try:
+                return win32gui.GetWindowRect(hwnd)
+            except Exception as e:
+                logger.error(f"Error getting window rect: {e}")
+        
+        return (0, 0, 0, 0)
+    
+    def get_client_rect(self, handle: Optional[int] = None) -> Tuple[int, int, int, int]:
+        """
+        Get the client rectangle (position and size) of a window.
+        
+        Args:
+            handle: Window handle, or None to use the currently selected window
             
-        except Exception as e:
-            logger.error(f"Error converting coordinates: {e}")
-            return screen_x, screen_y
-
+        Returns:
+            Tuple of (left, top, right, bottom) coordinates
+        """
+        hwnd = handle if handle is not None else self.handle
+        if hwnd:
+            try:
+                rect = win32gui.GetClientRect(hwnd)
+                left, top = win32gui.ClientToScreen(hwnd, (0, 0))
+                return (left, top, left + rect[2], top + rect[3])
+            except Exception as e:
+                logger.error(f"Error getting client rect: {e}")
+        
+        return (0, 0, 0, 0)
+    
     def capture_screenshot(self) -> Optional[np.ndarray]:
         """
-        Capture a screenshot of the game window.
+        Capture a screenshot of the window.
         
         Returns:
-            Screenshot as numpy array in BGR format (OpenCV), or None if failed
+            NumPy array containing the screenshot image, or None if failed
         """
+        if self.capture_manager is None:
+            from scout.screen_capture.capture_manager import CaptureManager
+            self.capture_manager = CaptureManager()
+        
+        if self.handle:
+            try:
+                # Use the capture manager to get the screenshot
+                return self.capture_manager.capture_window(self.handle)
+            except Exception as e:
+                logger.error(f"Error capturing screenshot: {e}")
+        
+        return None
+    
+    def list_windows(self) -> List[WindowInfo]:
+        """
+        List all visible windows in the system.
+        
+        Returns:
+            List of WindowInfo objects
+        """
+        windows = []
+        
+        def enum_windows_callback(hwnd, windows):
+            if win32gui.IsWindowVisible(hwnd):
+                title = win32gui.GetWindowText(hwnd)
+                if title:  # Only include windows with titles
+                    class_name = win32gui.GetClassName(hwnd)
+                    rect = win32gui.GetWindowRect(hwnd)
+                    position = (rect[0], rect[1])
+                    size = (rect[2] - rect[0], rect[3] - rect[1])
+                    
+                    # Get process ID
+                    try:
+                        _, process_id = win32process.GetWindowThreadProcessId(hwnd)
+                        process_name = ""
+                    except:
+                        process_id = 0
+                        process_name = ""
+                    
+                    window_info = WindowInfo(
+                        handle=hwnd,
+                        title=title,
+                        class_name=class_name,
+                        position=position,
+                        size=size,
+                        process_id=process_id,
+                        process_name=process_name
+                    )
+                    windows.append(window_info)
+            return True
+        
+        win32gui.EnumWindows(enum_windows_callback, windows)
+        return windows
+    
+    def set_foreground(self, handle: Optional[int] = None) -> bool:
+        """
+        Bring a window to the foreground.
+        
+        Args:
+            handle: Window handle, or None to use the currently selected window
+            
+        Returns:
+            True if successful, False otherwise
+        """
+        hwnd = handle if handle is not None else self.handle
+        if hwnd:
+            try:
+                win32gui.SetForegroundWindow(hwnd)
+                return True
+            except Exception as e:
+                logger.error(f"Error setting foreground window: {e}")
+        
+        return False
+    
+    def update_window_position(self) -> bool:
+        """
+        Update the stored window position and size.
+        
+        Returns:
+            True if the window was found and updated, False otherwise
+        """
+        if self.handle:
+            old_rect = QRect(self.window_rect)
+            self._update_window_rects()
+            
+            # Check if the window has moved or been resized
+            if old_rect != self.window_rect:
+                if old_rect.size() != self.window_rect.size():
+                    self.window_resized.emit(self.window_rect)
+                else:
+                    self.window_moved.emit(self.window_rect)
+            
+            return True
+        else:
+            # Try to find the window again
+            return self.find_window(self.window_title) is not None
+    
+    def _update_window_rects(self) -> None:
+        """Update the stored window and client rectangles."""
+        if self.handle:
+            try:
+                # Get window rect
+                left, top, right, bottom = win32gui.GetWindowRect(self.handle)
+                self.window_rect = QRect(left, top, right - left, bottom - top)
+                
+                # Get client rect
+                client_rect = win32gui.GetClientRect(self.handle)
+                client_left, client_top = win32gui.ClientToScreen(self.handle, (0, 0))
+                client_width, client_height = client_rect[2], client_rect[3]
+                self.client_rect = QRect(client_left, client_top, client_width, client_height)
+            except Exception as e:
+                logger.error(f"Error updating window rects: {e}")
+
+    def _setup_mouse_tracking(self) -> None:
+        """Set up timer to track mouse position."""
+        self.mouse_timer = QTimer()
+        self.mouse_timer.timeout.connect(self._check_mouse_position)
+        self.mouse_timer.start(50)  # Check every 50ms
+    
+    def _check_mouse_position(self) -> None:
+        """Check current mouse position and emit signal if changed."""
+        if not self.handle:
+            return
+            
         try:
-            if not self.find_window():
-                return None
-                
-            # Get the window position
-            window_pos = self.get_window_position()
-            if not window_pos:
-                return None
-                
-            x, y, width, height = window_pos
-            logger.debug(f"Window found at ({x}, {y}) with size {width}x{height}")
+            # Get current mouse position (screen coordinates)
+            mouse_pos = win32gui.GetCursorPos()
             
-            # Capture the screen
-            with mss.mss() as sct:
-                # Define capture region
-                monitor = {
-                    'left': x,
-                    'top': y,
-                    'width': width,
-                    'height': height
-                }
+            # Only emit if position changed
+            if mouse_pos != self.last_mouse_pos:
+                self.last_mouse_pos = mouse_pos
                 
-                logger.debug(f"Attempting to capture with monitor settings: {monitor}")
-                
-                # Grab screenshot using MSS
-                screenshot = np.array(sct.grab(monitor))
-                
-                # Convert from BGRA to BGR (drop alpha channel)
-                logger.debug(f"Captured image shape before conversion: {screenshot.shape}")
-                screenshot = cv2.cvtColor(screenshot, cv2.COLOR_BGRA2BGR)
-                logger.debug(f"Converted image shape: {screenshot.shape}")
-                
-                return screenshot
-                
-        except pywintypes.error as e:
-            # Special handling for common Windows API errors
-            logger.error(f"Error capturing screenshot: {e}")
-            
-            # If access denied (5), waiting could help
-            if e.winerror == 5:  # ERROR_ACCESS_DENIED
-                logger.debug("Access denied error - waiting and will retry on next call")
-                time.sleep(0.5)  # Wait a bit before next attempt
-                return None
-                
-            return None
+                # Adjust to window-relative coordinates
+                if self.window_rect:
+                    x, y = mouse_pos
+                    client_x = x - self.window_rect.left() - self.client_to_window_offset[0]
+                    client_y = y - self.window_rect.top() - self.client_to_window_offset[1]
+                    
+                    # Only emit if mouse is within client area
+                    if 0 <= client_x < self.client_rect.width() and 0 <= client_y < self.client_rect.height():
+                        self.mouse_moved.emit(client_x, client_y)
         except Exception as e:
-            logger.error(f"Error capturing screenshot: {e}", exc_info=True)
-            return None 
+            logger.error(f"Error tracking mouse position: {e}")
