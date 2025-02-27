@@ -1,0 +1,24 @@
+2025-02-27 02:46:52,038 - template_fix - INFO - ==================================================
+2025-02-27 02:46:52,038 - template_fix - INFO - SCOUT TEMPLATE PATH FIXER
+2025-02-27 02:46:52,038 - template_fix - INFO - ==================================================
+2025-02-27 02:46:52,039 - template_fix - INFO - Current working directory: D:\OneDrive\AI\Projekte\Scout\tb
+2025-02-27 02:46:52,039 - template_fix - INFO - Found 2 template files in source directory:
+2025-02-27 02:46:52,039 - template_fix - INFO -   - Crypt.png
+2025-02-27 02:46:52,039 - template_fix - INFO -   - crypt_small.png
+2025-02-27 02:46:52,040 - template_fix - INFO - Created directory: D:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 02:46:52,042 - template_fix - INFO - Copied Crypt.png to D:\OneDrive\AI\Projekte\Scout\tb\templates\Crypt.png
+2025-02-27 02:46:52,042 - template_fix - INFO - Copied crypt_small.png to D:\OneDrive\AI\Projekte\Scout\tb\templates\crypt_small.png
+2025-02-27 02:46:52,042 - template_fix - INFO - Successfully copied templates to D:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 02:46:52,044 - template_fix - ERROR - Error copying templates to D:\OneDrive\AI\Projekte\Scout\tb\scout\templates: WindowsPath('D:/OneDrive/AI/Projekte/Scout/tb/scout/templates/Crypt.png') and WindowsPath('D:/OneDrive/AI/Projekte/Scout/tb/scout/templates/Crypt.png') are the same file
+2025-02-27 02:46:52,044 - template_fix - INFO - Created directory: C:\Users\schrd\.scout\templates
+2025-02-27 02:46:52,045 - template_fix - INFO - Copied Crypt.png to C:\Users\schrd\.scout\templates\Crypt.png
+2025-02-27 02:46:52,046 - template_fix - INFO - Copied crypt_small.png to C:\Users\schrd\.scout\templates\crypt_small.png
+2025-02-27 02:46:52,046 - template_fix - INFO - Successfully copied templates to C:\Users\schrd\.scout\templates
+2025-02-27 02:46:52,046 - template_fix - ERROR - Error copying templates to D:\OneDrive\AI\Projekte\Scout\tb\scout\templates: WindowsPath('D:/OneDrive/AI/Projekte/Scout/tb/scout/templates/Crypt.png') and WindowsPath('D:/OneDrive/AI/Projekte/Scout/tb/scout/templates/Crypt.png') are the same file
+2025-02-27 02:46:52,047 - template_fix - INFO - Copied Crypt.png to D:\OneDrive\AI\Projekte\Scout\tb\templates\Crypt.png
+2025-02-27 02:46:52,048 - template_fix - INFO - Copied crypt_small.png to D:\OneDrive\AI\Projekte\Scout\tb\templates\crypt_small.png
+2025-02-27 02:46:52,048 - template_fix - INFO - Successfully copied templates to D:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 02:46:52,048 - template_fix - INFO - ==================================================
+2025-02-27 02:46:52,048 - template_fix - INFO - Template fix completed. Copied 6 files to 5 locations.
+2025-02-27 02:46:52,048 - template_fix - INFO - ==================================================
+2025-02-27 02:46:52,048 - template_fix - INFO - Template path fix was successful! Try running the application again.

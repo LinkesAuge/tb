@@ -167,9 +167,30 @@ class CaptureManager(QObject):
         if window_handle is None:
             self.error_occurred.emit("Cannot set window: Window handle is None")
             return
-            
+        
         self._current_window_handle = window_handle
-        self._current_window_geometry = geometry
+        
+        # Convert geometry to QRect if it's not None
+        if geometry:
+            # Handle different rect types
+            if hasattr(geometry, 'x') and hasattr(geometry, 'y') and hasattr(geometry, 'width') and hasattr(geometry, 'height'):
+                # It's already a QRect-like object
+                self._current_window_geometry = QRect(geometry.x(), geometry.y(), geometry.width(), geometry.height())
+                logger.debug(f"Using QRect geometry: {self._current_window_geometry}")
+            elif isinstance(geometry, tuple) and len(geometry) == 4:
+                # It's a tuple (left, top, right, bottom)
+                left, top, right, bottom = geometry
+                width = right - left
+                height = bottom - top
+                self._current_window_geometry = QRect(left, top, width, height)
+                logger.debug(f"Converted tuple to QRect: {self._current_window_geometry}")
+            else:
+                logger.warning(f"Unexpected window geometry format: {geometry}")
+                self._current_window_geometry = None
+        else:
+            self._current_window_geometry = None
+            logger.warning("No geometry provided for window capture")
+        
         self._source_type = SourceType.WINDOW
         
         # Take an initial capture
@@ -226,6 +247,35 @@ class CaptureManager(QObject):
         except Exception as e:
             logger.error(f"Error capturing screenshot: {str(e)}")
             self.error_occurred.emit(f"Failed to capture screenshot: {str(e)}")
+            return None
+            
+    def capture_window(self, window_handle: Optional[int] = None) -> Optional[np.ndarray]:
+        """
+        Capture a single screenshot from the specified window.
+        
+        Args:
+            window_handle: Optional handle to the window to capture. If None, uses the current window.
+        
+        Returns:
+            The captured frame as a numpy array, or None if capture failed
+        """
+        try:
+            # If a window handle is provided, temporarily set it as the current window
+            original_handle = self._current_window_handle
+            if window_handle is not None:
+                self._current_window_handle = window_handle
+            
+            # Perform the window capture
+            self._capture_window()
+            
+            # Restore the original window handle if needed
+            if window_handle is not None and original_handle != window_handle:
+                self._current_window_handle = original_handle
+                
+            return self._last_frame
+        except Exception as e:
+            logger.error(f"Error capturing window: {str(e)}")
+            self.error_occurred.emit(f"Failed to capture window: {str(e)}")
             return None
             
     def take_screenshot(self) -> Optional[np.ndarray]:
@@ -315,39 +365,111 @@ class CaptureManager(QObject):
     def _capture_window(self) -> None:
         """Capture the current window."""
         try:
+            logger.debug(f"Capture window called - window_interface: {self._window_interface is not None}, window_handle: {self._current_window_handle}, window_geometry: {self._current_window_geometry is not None}")
+            
             # If we have a window interface, use it for capture
             if self._window_interface and self._window_interface.is_valid():
+                logger.debug("Using window interface for capture")
                 frame = self._window_interface.capture_screenshot()
                 if frame is not None:
+                    logger.debug(f"Successfully captured frame via window interface: {frame.shape}")
                     self._last_frame = frame
                     self.frame_captured.emit(self._last_frame)
                     return
+                else:
+                    logger.warning("Window interface's capture_screenshot returned None")
+            else:
+                logger.debug("No valid window interface available, falling back to direct capture")
             
             # If we have a window handle but no geometry, try to get it from the window
             if self._current_window_geometry is None and self._current_window_handle is not None:
-                # This would need to be implemented based on your window management system
+                logger.warning(f"Window handle ({self._current_window_handle}) available but geometry is missing")
                 self.error_occurred.emit("Window geometry not available")
                 return
                 
             # Capture window using Qt
             if self._current_window_handle is not None and self._current_window_geometry is not None:
+                logger.debug(f"Capturing window with handle {self._current_window_handle} and geometry: {self._current_window_geometry}")
                 app = QApplication.instance()
                 screen = app.primaryScreen()
+                
+                # Get DPI scaling factor to correct window dimensions
+                dpi_scaling = screen.devicePixelRatio()
+                logger.debug(f"Screen DPI scaling factor: {dpi_scaling}")
+                
+                # Extract width and height from geometry, handling different geometry types
+                if hasattr(self._current_window_geometry, 'width') and hasattr(self._current_window_geometry, 'height'):
+                    # It's a QRect object
+                    width = self._current_window_geometry.width()
+                    height = self._current_window_geometry.height()
+                    logger.debug(f"Using QRect geometry dimensions: {width}x{height}")
+                elif isinstance(self._current_window_geometry, tuple) and len(self._current_window_geometry) == 4:
+                    # It's a tuple (left, top, right, bottom)
+                    left, top, right, bottom = self._current_window_geometry
+                    width = right - left
+                    height = bottom - top
+                    logger.debug(f"Using tuple geometry dimensions: {width}x{height}")
+                elif isinstance(self._current_window_geometry, QRect):
+                    # It's a QRect but for some reason width() method is not available
+                    width = self._current_window_geometry.width()
+                    height = self._current_window_geometry.height()
+                    logger.debug(f"Using QRect geometry dimensions: {width}x{height}")
+                else:
+                    logger.error(f"Unsupported window geometry type: {type(self._current_window_geometry)}")
+                    self.error_occurred.emit("Unsupported window geometry type")
+                    return
+                    
+                if width <= 0 or height <= 0:
+                    logger.error(f"Invalid window dimensions: {width}x{height}, cannot capture")
+                    self.error_occurred.emit(f"Invalid window dimensions: {width}x{height}")
+                    return
+                
+                # Adjust capture dimensions based on DPI scaling to get the correct size from the beginning
+                capture_width = width
+                capture_height = height
+                    
+                # For DPI scaling of 1.5 (which produces 5810x3182 from 3873x2121)
+                # we need to adjust the dimensions before capture
+                if dpi_scaling > 1.0:
+                    # Calculate the adjusted dimensions to account for DPI scaling
+                    # This prevents capturing at the wrong size
+                    capture_width = int(width / dpi_scaling)
+                    capture_height = int(height / dpi_scaling)
+                    logger.debug(f"Adjusted capture dimensions for DPI scaling: {capture_width}x{capture_height}")
                 
                 pixmap = screen.grabWindow(
                     self._current_window_handle,
                     0, 0,
-                    self._current_window_geometry.width(),
-                    self._current_window_geometry.height()
+                    capture_width,
+                    capture_height
                 )
                 
                 # Convert to numpy array
                 image = pixmap.toImage()
-                self._last_frame = qimage_to_numpy(image)
+                frame = qimage_to_numpy(image)
+                
+                # Check if we still need to resize (as a fallback)
+                if frame.shape[1] != width or frame.shape[0] != height:
+                    logger.warning(f"Dimensions still don't match after DPI adjustment: got {frame.shape[1]}x{frame.shape[0]}, expected {width}x{height}")
+                    try:
+                        import cv2
+                        frame = cv2.resize(frame, (width, height), interpolation=cv2.INTER_AREA)
+                        logger.debug(f"Resized captured image to match expected dimensions: {width}x{height}")
+                    except ImportError:
+                        logger.warning("OpenCV not available for resizing, using original dimensions")
+                    except Exception as e:
+                        logger.error(f"Error resizing image: {e}")
+                else:
+                    logger.debug(f"Captured image dimensions match expected: {width}x{height}")
+                
+                self._last_frame = frame
+                logger.debug(f"Successfully captured window: {self._last_frame.shape}")
                 
                 # Emit signal
                 self.frame_captured.emit(self._last_frame)
             else:
+                logger.warning("Cannot capture window: No window handle or geometry available")
                 self.error_occurred.emit("Cannot capture window: No window handle or geometry")
         except Exception as e:
+            logger.error(f"Window capture error: {str(e)}", exc_info=True)
             self.error_occurred.emit(f"Window capture error: {str(e)}")

@@ -2,7 +2,7 @@ from pathlib import Path
 from configparser import ConfigParser
 import logging
 from PyQt6.QtGui import QColor
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 import os
 
 logger = logging.getLogger(__name__)
@@ -140,6 +140,15 @@ class ConfigManager:
         with open(self.config_path, 'w') as f:
             self.config.write(f)
         logger.debug("Configuration saved")
+
+    def save(self) -> None:
+        """
+        Save the current configuration to file.
+        
+        This method is an alias for save_config() for compatibility with
+        code that expects a save method.
+        """
+        self.save_config()
 
     def get_ocr_settings(self) -> Dict[str, Any]:
         """Get current OCR settings."""
@@ -517,3 +526,29 @@ class ConfigManager:
             return True
         except ValueError:
             return False
+
+    def save_last_window_title(self, window_title: str) -> None:
+        """
+        Save the title of the last selected window.
+        
+        Args:
+            window_title: Title of the window to save
+        """
+        if not self.config.has_section("Window"):
+            self.config.add_section("Window")
+            
+        self.config["Window"]["last_window_title"] = window_title
+        self.save_config()
+        logger.info(f"Saved last window title: {window_title}")
+        
+    def get_last_window_title(self) -> Optional[str]:
+        """
+        Get the title of the last selected window.
+        
+        Returns:
+            Last window title or None if not set
+        """
+        if not self.config.has_section("Window"):
+            return None
+            
+        return self.config.get("Window", "last_window_title", fallback=None)

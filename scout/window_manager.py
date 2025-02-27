@@ -59,6 +59,14 @@ class WindowManager(QObject):
         self.client_to_window_offset = (0, 0)
         self.capture_manager = None
         self.last_mouse_pos = (0, 0)
+        self.config_manager = None  # Will be set later from main.py
+        
+        # Get the last window title from config if available
+        if hasattr(self, 'config_manager') and self.config_manager:
+            saved_title = self.config_manager.get_last_window_title()
+            if saved_title:
+                logger.info(f"Using saved window title from config: {saved_title}")
+                self.window_title = saved_title
         
         # Try to find the window immediately
         self.handle = self.find_window(self.window_title)
@@ -67,8 +75,41 @@ class WindowManager(QObject):
             self.window_found.emit(self.window_title, self.handle)
             self._update_window_rects()
             
+            # Save the window title to config
+            if hasattr(self, 'config_manager') and self.config_manager:
+                self.config_manager.save_last_window_title(self.window_title)
+            
         # Setup timer for mouse position tracking
         self._setup_mouse_tracking()
+    
+    def set_config_manager(self, config_manager):
+        """
+        Set the configuration manager.
+        
+        Args:
+            config_manager: Configuration manager instance
+        """
+        self.config_manager = config_manager
+        logger.info(f"Config manager set in window manager: {self.config_manager is not None}")
+        
+        # Try to load saved window title if we don't have a window yet
+        if self.config_manager:
+            saved_title = self.config_manager.get_last_window_title()
+            logger.info(f"Loaded saved window title from config: {saved_title}")
+            
+            if saved_title:
+                # Even if we have a handle, update the title and try to find the window again
+                # in case the prior handle was stale or for a different game version
+                self.window_title = saved_title
+                logger.info(f"Using saved window title: {saved_title}")
+                
+                # Try to find window with this title
+                found_handle = self.find_window(self.window_title)
+                if found_handle:
+                    self.handle = found_handle
+                    logger.info(f"Found window using saved title: {self.window_title} (handle: {self.handle})")
+                    self.window_found.emit(self.window_title, self.handle)
+                    self._update_window_rects()
     
     def get_window_handle(self) -> Optional[int]:
         """
@@ -157,17 +198,26 @@ class WindowManager(QObject):
             if win32gui.IsWindowVisible(hwnd):
                 window_title = win32gui.GetWindowText(hwnd)
                 if title in window_title:
-                    results.append(hwnd)
+                    results.append((hwnd, window_title))
             return True
         
         win32gui.EnumWindows(enum_windows_callback, results)
         
         if results:
-            self.handle = results[0]
-            self.window_title = title
+            # Sort by exact match first
+            results.sort(key=lambda x: x[1] == title, reverse=True)
+            self.handle = results[0][0]
+            # Save the full window title for better matching next time
+            self.window_title = results[0][1]
             self._update_window_rects()
-            self.window_found.emit(title, self.handle)
-            logger.info(f"Found window: {title} (handle: {self.handle})")
+            self.window_found.emit(self.window_title, self.handle)
+            logger.info(f"Found window: '{self.window_title}' (handle: {self.handle})")
+            
+            # Save the window title to config
+            if self.config_manager:
+                logger.info(f"Saving window title to config: {self.window_title}")
+                self.config_manager.save_last_window_title(self.window_title)
+                
             return self.handle
         else:
             logger.warning(f"Window not found: {title}")
@@ -221,15 +271,48 @@ class WindowManager(QObject):
             NumPy array containing the screenshot image, or None if failed
         """
         if self.capture_manager is None:
+            logger.debug("Creating new CaptureManager instance")
             from scout.screen_capture.capture_manager import CaptureManager
             self.capture_manager = CaptureManager()
         
         if self.handle:
-            try:
-                # Use the capture manager to get the screenshot
-                return self.capture_manager.capture_window(self.handle)
-            except Exception as e:
-                logger.error(f"Error capturing screenshot: {e}")
+            logger.debug(f"Attempting to capture window with handle: {self.handle}")
+            
+            # Get window dimensions for logging and capture
+            rect = self.get_window_rect()
+            if rect:
+                left, top, right, bottom = rect
+                width = right - left
+                height = bottom - top
+                logger.debug(f"Window dimensions: ({left}, {top}, {right}, {bottom}) -> {width}x{height}")
+                
+                try:
+                    # Explicitly set window and geometry before capture
+                    self.capture_manager.set_window(self.handle, rect)
+                    
+                    # Now use the capture manager to get the screenshot
+                    result = self.capture_manager.capture_window(self.handle)
+                    if result is not None:
+                        logger.debug(f"Screenshot captured successfully: {result.shape}")
+                        
+                        # Check if the image dimensions are abnormally different from window size
+                        # This can happen with high-DPI displays
+                        if result.shape[0] != height or result.shape[1] != width:
+                            logger.warning(f"Captured image dimensions ({result.shape[1]}x{result.shape[0]}) differ from window size ({width}x{height})")
+                            
+                            # This warning is helpful for debugging but we don't need to resize here since
+                            # the resize happens in the CaptureManager._capture_window method now
+                            
+                        return result
+                    else:
+                        logger.warning("capture_window returned None")
+                    return result
+                except Exception as e:
+                    logger.error(f"Error capturing screenshot: {e}")
+            else:
+                logger.warning("Could not get window dimensions")
+        else:
+            logger.warning("Cannot capture screenshot: No window handle available")
         
         return None
     

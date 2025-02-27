@@ -13,6 +13,7 @@ import traceback
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Union, List, Callable, Any
+from logging.handlers import RotatingFileHandler
 
 # Default log format
 DEFAULT_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -20,7 +21,7 @@ DEFAULT_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 DEBUG_LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"
 
 # Default log levels
-DEFAULT_CONSOLE_LEVEL = logging.INFO
+DEFAULT_CONSOLE_LEVEL = logging.DEBUG
 DEFAULT_FILE_LEVEL = logging.DEBUG
 
 # Global logger registry to avoid duplicate loggers
@@ -76,7 +77,11 @@ def setup_logging(console_level: int = DEFAULT_CONSOLE_LEVEL,
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         log_file = log_dir_path / f"scout-{timestamp}.log"
         
-        file_handler = logging.FileHandler(log_file, encoding='utf-8')
+        file_handler = RotatingFileHandler(
+            log_file,
+            maxBytes=10 * 1024 * 1024,  # 10 MB max size
+            backupCount=5  # Keep up to 5 old log files
+        )
         file_handler.setLevel(file_level)
         file_handler.setFormatter(formatter)
         root_logger.addHandler(file_handler)
@@ -149,7 +154,11 @@ def get_logger(name: str,
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         log_file = log_dir_path / f"{name.replace('.', '_')}-{timestamp}.log"
         
-        file_handler = logging.FileHandler(log_file, encoding='utf-8')
+        file_handler = RotatingFileHandler(
+            log_file,
+            maxBytes=10 * 1024 * 1024,  # 10 MB max size
+            backupCount=5  # Keep up to 5 old log files
+        )
         file_handler.setLevel(file_level)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)

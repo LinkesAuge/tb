@@ -219,12 +219,12 @@ class CaptureTab(QWidget):
             return
             
         # Get selected screen
-        screen = self.screen_model.get_screen(index)
-        if screen:
+        screen_info = self.screen_model.get_screen(index)
+        if screen_info:
             # Update capture manager
-            self.capture_manager.set_screen(screen)
+            self.capture_manager.set_screen(screen_info.screen)
             self.window_combo.setCurrentIndex(-1)
-            self.status_label.setText(f"Selected screen: {screen.name()}")
+            self.status_label.setText(f"Selected screen: {screen_info.name}")
     
     def _on_window_selected(self, index: int) -> None:
         """

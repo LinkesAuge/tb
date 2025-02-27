@@ -20,7 +20,7 @@ from typing import NoReturn, Optional
 import os
 
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QColor
 
 # Import core components
@@ -90,9 +90,28 @@ def main() -> None:
     6. Connects all necessary callbacks
     7. Starts the application event loop
     """
+    # Set up DPI awareness for high-DPI displays (must be done before QApplication)
+    try:
+        # Try to use the modern DPI awareness API (Windows 10+)
+        from ctypes import windll
+        windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
+        logger.info("Set DPI awareness to per-monitor mode")
+    except (ImportError, AttributeError):
+        try:
+            # Fall back to older API (Windows 8/8.1)
+            windll.user32.SetProcessDPIAware()
+            logger.info("Set DPI awareness using legacy API")
+        except (ImportError, AttributeError):
+            logger.warning("Could not set DPI awareness, high-DPI displays may have scaling issues")
+    
     # Create Qt application
     app = QApplication(sys.argv)
     app.setApplicationName("TB Scout")
+    
+    # Note: PyQt6 has high DPI support enabled by default, no need to set attributes
+    # In older versions, we would have needed:
+    # app.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+    # app.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
     
     # Set up global exception handling
     setup_exception_handling()
@@ -112,12 +131,36 @@ def main() -> None:
     window_manager = WindowManager(window_title)
     window_interface = window_manager  # Use window_manager as the interface
     
+    # Set config manager to window manager so it can use saved window title
+    window_manager.set_config_manager(config_manager)
+    
     # Create capture manager
     capture_manager = CaptureManager()
     capture_manager.set_window_interface(window_interface)
     
-    # Create template matcher
-    template_matcher = TemplateMatcher(window_manager)
+    # Get template settings from config
+    template_settings = config.get("templates", {})
+    # Add default values for required template settings if they're missing
+    if "confidence" not in template_settings:
+        template_settings["confidence"] = 0.8  # Default confidence level
+    if "target_frequency" not in template_settings:
+        template_settings["target_frequency"] = 1.0  # Default update frequency (1 Hz)
+    if "sound_enabled" not in template_settings:
+        template_settings["sound_enabled"] = False  # Default sound setting
+    
+    # Use a more reliable path for templates - directly from project root
+    templates_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "templates")
+    template_settings["templates_dir"] = templates_dir
+    logger.info(f"Setting templates directory to: {templates_dir}")
+    
+    # Create template matcher with settings
+    template_matcher = TemplateMatcher(
+        window_manager=window_manager,
+        confidence=template_settings["confidence"],
+        target_frequency=template_settings["target_frequency"],
+        sound_enabled=template_settings["sound_enabled"],
+        templates_dir=templates_dir  # Explicitly pass the templates directory
+    )
 
     # Create template search
     template_search = TemplateSearcher(template_matcher, window_manager, "templates")  # Explicitly pass the templates directory

@@ -1,0 +1,119 @@
+2025-02-27 01:36:14,866 - root - INFO - Logging initialized: console=INFO, file=DEBUG, log_dir=logs
+2025-02-27 01:36:14,883 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 01:36:14,885 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:14,886 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 01:36:14,886 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 01:36:14,981 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=329536, geometry=(-11, -11, 3851, 2099)
+2025-02-27 01:36:15,001 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 01:36:15,001 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 01:36:15,001 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 01:36:15,001 - scout.template_matcher - WARNING - Templates directory not found at D:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 01:36:15,002 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,002 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 01:36:15,003 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 01:36:15,003 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 01:36:15,003 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 01:36:15,003 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 01:36:15,003 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 01:36:15,005 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 01:36:15,005 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 01:36:15,005 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 01:36:15,005 - scout.overlay - INFO - Loaded 2 templates for template matching
+2025-02-27 01:36:15,006 - scout.overlay - DEBUG - Initialized overlay with rect_color=(0, 0, 255), font_color=(255, 255, 255), thickness=2, font_size=12, rect_scale=1.0
+2025-02-27 01:36:15,006 - scout.overlay - INFO - Creating overlay window at initialization
+2025-02-27 01:36:15,006 - scout.overlay - INFO - Creating overlay window
+2025-02-27 01:36:15,006 - scout.overlay - DEBUG - Creating overlay window at (-11, -11) with size 3862x2110
+2025-02-27 01:36:15,066 - scout.overlay - DEBUG - Created window with handle: 4525088
+2025-02-27 01:36:15,200 - scout.overlay - DEBUG - Window hidden
+2025-02-27 01:36:15,200 - scout.overlay - DEBUG - Window initially hidden as overlay is not active
+2025-02-27 01:36:15,200 - scout.overlay - DEBUG - Overlay window created with transparency settings
+2025-02-27 01:36:15,200 - scout.overlay - DEBUG - Window hidden
+2025-02-27 01:36:15,201 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,202 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 01:36:15,202 - scout.text_ocr - DEBUG - TextOCR initialized
+2025-02-27 01:36:15,202 - scout.automation.core - INFO - Initializing automation core
+2025-02-27 01:36:15,202 - scout.automation.core - INFO - Automation core initialized
+2025-02-27 01:36:15,204 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,204 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,204 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 01:36:15,204 - scout.world_scanner - DEBUG - WorldScanner initialized
+2025-02-27 01:36:15,205 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,363 - scout.screen_capture.screen_list_model - DEBUG - Populated screen list with 2 screens
+2025-02-27 01:36:15,363 - scout.screen_capture.screen_list_model - DEBUG - Initialized ScreenListModel with 2 screens
+2025-02-27 01:36:15,363 - scout.screen_capture.window_list_model - DEBUG - Populating window list model
+2025-02-27 01:36:15,365 - scout.screen_capture.window_list_model - DEBUG - Window list model populated with 13 windows
+2025-02-27 01:36:15,365 - scout.screen_capture.window_list_model - DEBUG - Initialized WindowListModel with 13 windows
+2025-02-27 01:36:15,370 - scout.overlay - DEBUG - Overlay opacity set to 0.7
+2025-02-27 01:36:15,372 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 01:36:15,372 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 01:36:15,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:16,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:16,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:17,435 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:17,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:18,441 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:18,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:19,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:19,943 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:20,432 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:20,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:21,429 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:21,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:22,431 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:22,932 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:23,137 - scout.screen_capture.window_list_model - DEBUG - Refreshing window list
+2025-02-27 01:36:23,137 - scout.screen_capture.window_list_model - DEBUG - Populating window list model
+2025-02-27 01:36:23,138 - scout.screen_capture.window_list_model - DEBUG - Window list model populated with 14 windows
+2025-02-27 01:36:23,434 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:23,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:24,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:24,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:25,432 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:25,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:26,437 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:26,940 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:27,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:27,943 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:28,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:28,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:29,429 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:29,944 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:30,297 - scout.screen_capture.capture_manager - DEBUG - Started continuous capture with interval 100ms
+2025-02-27 01:36:30,434 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:30,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:31,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:31,937 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:32,437 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:32,937 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:33,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:33,944 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:34,434 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:34,933 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:35,436 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:35,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:36,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:36,929 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:37,433 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:37,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:38,431 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:38,937 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:39,431 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:39,941 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:40,431 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:40,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:41,430 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:41,931 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:42,429 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:42,930 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 01:36:43,112 - scout.debug_window - DEBUG - Debug window closed by user
+2025-02-27 01:36:43,113 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 01:36:43,113 - scout.config_manager - DEBUG - Updated debug settings: {'enabled': False, 'save_screenshots': False, 'save_templates': False}
+2025-02-27 01:36:43,113 - scout.template_matcher - DEBUG - Debug mode disabled
+2025-02-27 01:36:43,113 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 01:36:43,114 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 01:36:43,114 - scout.config_manager - DEBUG - Configuration saved

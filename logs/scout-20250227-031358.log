@@ -1,0 +1,690 @@
+2025-02-27 03:13:58,629 - root - INFO - Logging initialized: console=DEBUG, file=DEBUG, log_dir=logs
+2025-02-27 03:13:58,646 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 03:13:58,646 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,648 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 03:13:58,648 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 03:13:58,722 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=329536, geometry=(-11, -11, 3851, 2099)
+2025-02-27 03:13:58,741 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:58,741 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:58,742 - scout.template_matcher - DEBUG - Looking for templates in: d:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 03:13:58,742 - scout.template_matcher - DEBUG - Found 2 template files: ['d:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\Crypt.png', 'd:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\crypt_small.png']
+2025-02-27 03:13:58,743 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:58,743 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:58,743 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:58,744 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,744 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:58,746 - scout.overlay - INFO - Using match persistence of 1 frames for more responsive updates
+2025-02-27 03:13:58,747 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:58,747 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:58,747 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 03:13:58,748 - scout.template_matcher - DEBUG - Found 2 template files: ['D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\Crypt.png', 'D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\crypt_small.png']
+2025-02-27 03:13:58,748 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:58,749 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:58,749 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:58,749 - scout.overlay - INFO - Using very lenient confidence threshold of 0.5 to find any possible templates
+2025-02-27 03:13:58,749 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:58,750 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 03:13:58,750 - scout.template_matcher - DEBUG - Found 2 template files: ['D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\Crypt.png', 'D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\crypt_small.png']
+2025-02-27 03:13:58,750 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:58,751 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:58,751 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:58,751 - scout.overlay - INFO - Loaded 2 templates for template matching
+2025-02-27 03:13:58,751 - scout.overlay - INFO - Templates loaded:
+2025-02-27 03:13:58,751 - scout.overlay - INFO -   - Crypt: Size=32x32
+2025-02-27 03:13:58,752 - scout.overlay - INFO -   - crypt_small: Size=33x32
+2025-02-27 03:13:58,752 - scout.overlay - DEBUG - Initialized overlay with rect_color=(0, 0, 255), font_color=(255, 255, 255), thickness=2, font_size=12, rect_scale=1.0
+2025-02-27 03:13:58,752 - scout.overlay - INFO - Creating overlay window at initialization
+2025-02-27 03:13:58,752 - scout.overlay - INFO - Creating overlay window
+2025-02-27 03:13:58,752 - scout.overlay - DEBUG - Creating overlay window at (-11, -11) with size 3862x2110
+2025-02-27 03:13:58,811 - scout.overlay - DEBUG - Created window with handle: 10816644
+2025-02-27 03:13:58,910 - scout.overlay - DEBUG - Window hidden
+2025-02-27 03:13:58,910 - scout.overlay - DEBUG - Window initially hidden as overlay is not active
+2025-02-27 03:13:58,910 - scout.overlay - DEBUG - Overlay window created with transparency settings
+2025-02-27 03:13:58,911 - scout.overlay - DEBUG - Window hidden
+2025-02-27 03:13:58,912 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,914 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:58,914 - scout.text_ocr - DEBUG - TextOCR initialized
+2025-02-27 03:13:58,914 - scout.automation.core - INFO - Initializing automation core
+2025-02-27 03:13:58,914 - scout.automation.core - INFO - Automation core initialized
+2025-02-27 03:13:58,916 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,917 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,917 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:58,918 - scout.world_scanner - DEBUG - WorldScanner initialized
+2025-02-27 03:13:58,918 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,988 - scout.screen_capture.screen_list_model - DEBUG - Populated screen list with 2 screens
+2025-02-27 03:13:58,989 - scout.screen_capture.screen_list_model - DEBUG - Initialized ScreenListModel with 2 screens
+2025-02-27 03:13:58,989 - scout.screen_capture.window_list_model - DEBUG - Populating window list model
+2025-02-27 03:13:58,990 - scout.screen_capture.window_list_model - DEBUG - Window list model populated with 13 windows
+2025-02-27 03:13:58,990 - scout.screen_capture.window_list_model - DEBUG - Initialized WindowListModel with 13 windows
+2025-02-27 03:13:58,994 - scout.overlay - DEBUG - Overlay opacity set to 0.7
+2025-02-27 03:13:58,996 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:58,997 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:59,553 - scout.overlay - DEBUG - Window moved to (-11, -11) with size 3862x2110, updating overlay
+2025-02-27 03:13:59,556 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 03:13:59,566 - scout.overlay - DEBUG - Template matching not active, skipping update
+2025-02-27 03:13:59,649 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:02,419 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3873, 2121)
+2025-02-27 03:14:02,419 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:02,419 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:02,420 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3873, 2121)
+2025-02-27 03:14:02,420 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:02,420 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3873x2121
+2025-02-27 03:14:02,420 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2582x1414
+2025-02-27 03:14:02,448 - scout.screen_capture.capture_manager - DEBUG - Captured image dimensions match expected: 3873x2121
+2025-02-27 03:14:02,449 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2121, 3873, 3)
+2025-02-27 03:14:06,569 - scout.world_scanner - INFO - Starting world scanning
+2025-02-27 03:14:06,569 - scout.world_scanner - INFO - Emitted initial scan results: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0}
+2025-02-27 03:14:06,569 - scout.world_scanner - DEBUG - Current overlay state: active=False, template_matching_active=False
+2025-02-27 03:14:06,569 - scout.overlay - INFO - Overlay activated
+2025-02-27 03:14:06,570 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:06,571 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:06,571 - scout.overlay - INFO - Saved overlay active state: True
+2025-02-27 03:14:06,571 - scout.world_scanner - INFO - Force-enabled overlay visibility for scanning
+2025-02-27 03:14:06,571 - scout.world_scanner - INFO - Forcing template_matching_active to True
+2025-02-27 03:14:06,571 - scout.overlay - DEBUG - Template matching already active
+2025-02-27 03:14:06,572 - scout.overlay - INFO - Template matching started
+2025-02-27 03:14:06,572 - scout.world_scanner - INFO - Forcing immediate overlay draw to show debug visuals
+2025-02-27 03:14:06,607 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:06,608 - scout.world_scanner - INFO - Started template matching for scanning
+2025-02-27 03:14:06,608 - scout.world_scanner - INFO - Created scan update timer
+2025-02-27 03:14:06,608 - scout.world_scanner - INFO - Started scan results update timer
+2025-02-27 03:14:07,610 - scout.window_manager - DEBUG - Creating new CaptureManager instance
+2025-02-27 03:14:07,671 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:07,671 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:07,672 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:07,672 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:07,672 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:07,672 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:07,673 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:07,673 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:07,673 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:07,700 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:07,732 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:07,732 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:07,734 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:07,734 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:07,734 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:07,735 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:07,735 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:07,735 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:07,762 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:07,793 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:07,794 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:07,797 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:07,797 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:07,803 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:07,804 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:07,805 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:07,805 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:07,805 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:07,845 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:07,846 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:07,846 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 1.0416085720062256, 'elapsed_time_str': '00:01', 'last_update': '03:14:07', 'coordinates_checked': 1}
+2025-02-27 03:14:07,847 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:08,601 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:08,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:08,602 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:08,602 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:08,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:08,602 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:08,603 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:08,603 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:08,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:08,630 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:08,662 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:08,664 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:08,666 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:08,666 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:08,667 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:08,667 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:08,667 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:08,667 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:08,708 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:08,743 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:08,744 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:08,747 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:08,747 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:08,748 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:08,749 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:08,749 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:08,750 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:08,750 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:08,789 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:08,790 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:08,790 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 2.031726598739624, 'elapsed_time_str': '00:02', 'last_update': '03:14:08', 'coordinates_checked': 2}
+2025-02-27 03:14:08,790 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:09,603 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:09,603 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:09,603 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:09,604 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:09,604 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:09,604 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:09,604 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:09,605 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:09,605 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:09,649 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:09,684 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:09,685 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:09,688 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:09,688 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:09,688 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:09,689 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:09,689 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:09,689 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:09,730 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:09,762 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:09,763 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:09,765 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:09,765 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:09,766 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:09,768 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:09,768 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:09,769 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:09,769 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:09,809 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:09,810 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:09,810 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 3.0337111949920654, 'elapsed_time_str': '00:03', 'last_update': '03:14:09', 'coordinates_checked': 3}
+2025-02-27 03:14:09,811 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:10,609 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:10,609 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:10,610 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:10,610 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:10,610 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:10,611 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:10,611 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:10,611 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:10,611 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:10,638 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:10,672 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:10,673 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:10,675 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:10,703 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:10,735 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:10,736 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:10,738 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:10,738 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:10,739 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:10,740 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:10,741 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:10,741 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:10,741 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:10,777 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:10,778 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:10,778 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 4.039987564086914, 'elapsed_time_str': '00:04', 'last_update': '03:14:10', 'coordinates_checked': 4}
+2025-02-27 03:14:10,779 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:11,600 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:11,600 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:11,600 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:11,601 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:11,601 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:11,601 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:11,601 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:11,602 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:11,602 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:11,629 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:11,662 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:11,663 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:11,665 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:11,665 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:11,666 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:11,666 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:11,667 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:11,667 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:11,707 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:11,739 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:11,740 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:11,742 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:11,742 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:11,743 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:11,744 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:11,744 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:11,745 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:11,745 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:11,781 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:11,782 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:11,783 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 5.031361818313599, 'elapsed_time_str': '00:05', 'last_update': '03:14:11', 'coordinates_checked': 5}
+2025-02-27 03:14:11,783 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:12,604 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:12,604 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:12,604 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:12,604 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:12,604 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:12,606 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:12,606 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:12,606 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:12,606 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:12,633 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:12,668 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:12,669 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:12,671 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:12,672 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:12,672 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:12,672 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:12,672 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:12,673 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:12,700 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:12,732 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:12,733 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:12,734 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:12,734 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:12,735 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:12,736 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:12,736 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:12,737 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:12,737 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:12,780 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:12,781 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:12,782 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 6.035580396652222, 'elapsed_time_str': '00:06', 'last_update': '03:14:12', 'coordinates_checked': 6}
+2025-02-27 03:14:12,782 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:12,784 - scout.overlay - INFO - Debug info disabled
+2025-02-27 03:14:12,825 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:13,610 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:13,610 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:13,610 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:13,611 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:13,611 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:13,611 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:13,611 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:13,612 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:13,612 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:13,640 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:13,673 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:13,675 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:13,676 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:13,676 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:13,676 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:13,677 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:13,677 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:13,677 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:13,704 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:13,735 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:13,736 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:13,738 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:13,738 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:13,739 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:13,740 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:13,741 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:13,741 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:13,741 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:13,779 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:13,780 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:13,781 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 7.041104316711426, 'elapsed_time_str': '00:07', 'last_update': '03:14:13', 'coordinates_checked': 7}
+2025-02-27 03:14:13,781 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:14,601 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:14,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:14,601 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:14,601 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:14,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:14,602 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:14,602 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:14,602 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:14,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:14,630 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:14,662 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:14,663 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:14,666 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:14,667 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:14,667 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:14,667 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:14,667 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:14,668 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:14,694 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:14,726 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:14,726 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:14,729 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:14,729 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:14,730 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:14,731 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:14,731 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:14,732 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:14,732 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:14,769 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:14,770 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:14,770 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 8.032190322875977, 'elapsed_time_str': '00:08', 'last_update': '03:14:14', 'coordinates_checked': 8}
+2025-02-27 03:14:14,771 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:15,601 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:15,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:15,602 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:15,602 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:15,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:15,603 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:15,603 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:15,603 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:15,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:15,644 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:15,679 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:15,680 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:15,682 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:15,682 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:15,683 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:15,683 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:15,683 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:15,683 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:15,725 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:15,755 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:15,757 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:15,759 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:15,759 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:15,760 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:15,761 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:15,761 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:15,761 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:15,762 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:15,798 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:15,800 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:15,800 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 9.032431364059448, 'elapsed_time_str': '00:09', 'last_update': '03:14:15', 'coordinates_checked': 9}
+2025-02-27 03:14:15,800 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:15,803 - scout.overlay - INFO - Debug visuals disabled
+2025-02-27 03:14:15,839 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:16,600 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:16,600 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:16,600 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:16,601 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:16,601 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:16,601 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:16,601 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:16,602 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:16,602 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:16,629 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:16,662 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:16,664 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:16,665 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:16,665 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:16,666 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:16,666 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:16,666 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:16,666 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:16,692 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:16,727 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:16,728 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:16,730 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:16,730 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:16,732 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:16,733 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:16,733 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:16,734 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:16,734 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:16,769 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:16,770 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:16,770 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 10.03114366531372, 'elapsed_time_str': '00:10', 'last_update': '03:14:16', 'coordinates_checked': 10}
+2025-02-27 03:14:16,770 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:17,604 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:17,604 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:17,604 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:17,605 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:17,633 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:17,664 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:17,666 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:17,668 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:17,669 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:17,669 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:17,669 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:17,669 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:17,670 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:17,695 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:17,728 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:17,729 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:17,732 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:17,732 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:17,733 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:17,734 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:17,734 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:17,734 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:17,735 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:18,115 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:18,116 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:18,116 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 11.034889698028564, 'elapsed_time_str': '00:11', 'last_update': '03:14:18', 'coordinates_checked': 11}
+2025-02-27 03:14:18,116 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:18,601 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:18,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:18,602 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:18,602 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:18,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:18,603 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:18,603 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:18,603 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:18,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:18,630 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:18,664 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:18,664 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:18,666 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:18,666 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:18,666 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:18,667 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:18,667 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:18,667 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:18,694 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:18,726 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:18,727 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:18,729 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:18,729 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:18,730 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:18,732 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:18,732 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:18,733 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:18,733 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:18,769 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:18,770 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:18,771 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 12.031660318374634, 'elapsed_time_str': '00:12', 'last_update': '03:14:18', 'coordinates_checked': 12}
+2025-02-27 03:14:18,771 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:19,600 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:19,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:19,601 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:19,601 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:19,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:19,602 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:19,602 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:19,602 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:19,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:19,630 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:19,665 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:19,666 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:19,668 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:19,668 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:19,668 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:19,668 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:19,669 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:19,669 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:19,696 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:19,729 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:19,730 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:19,731 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:19,731 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:19,732 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:19,734 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:19,734 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:19,734 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:19,735 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:19,772 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:19,773 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:19,773 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 13.031489133834839, 'elapsed_time_str': '00:13', 'last_update': '03:14:19', 'coordinates_checked': 13}
+2025-02-27 03:14:19,774 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:20,604 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:20,604 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:20,604 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:20,605 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:20,605 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:20,605 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:20,605 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:20,606 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:20,606 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:20,632 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:20,667 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:20,669 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:20,670 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:20,671 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:20,671 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:20,671 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:20,672 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:20,672 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:20,697 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:20,730 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:20,731 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:20,732 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:20,732 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:20,733 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:20,735 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:20,735 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:20,735 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:20,735 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:20,770 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:20,771 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:20,772 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 14.03538203239441, 'elapsed_time_str': '00:14', 'last_update': '03:14:20', 'coordinates_checked': 14}
+2025-02-27 03:14:20,772 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:21,603 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:21,603 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:21,603 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:21,604 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:21,604 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:21,604 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:21,604 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:21,605 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:21,605 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:21,631 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:21,661 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:21,662 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:21,663 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:21,663 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:21,663 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:21,664 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:21,664 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:21,664 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:21,692 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:21,723 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:21,725 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:21,727 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:21,727 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:21,728 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:21,729 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:21,730 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:21,730 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:21,730 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:21,767 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:21,768 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:21,768 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 15.034375429153442, 'elapsed_time_str': '00:15', 'last_update': '03:14:21', 'coordinates_checked': 15}
+2025-02-27 03:14:21,769 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:22,602 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:22,602 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:22,602 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:22,603 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:22,603 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:22,603 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:22,603 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:22,604 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:22,604 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:22,645 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:22,680 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:22,680 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:22,683 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:22,683 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:22,683 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:22,683 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:22,683 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:22,684 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:22,725 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:22,757 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:22,758 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:22,759 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:22,760 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:22,761 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:22,762 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:22,762 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:22,763 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:22,763 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:22,799 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:22,800 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:22,801 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 16.033401489257812, 'elapsed_time_str': '00:16', 'last_update': '03:14:22', 'coordinates_checked': 16}
+2025-02-27 03:14:22,801 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:23,601 - scout.window_manager - DEBUG - Attempting to capture window with handle: 329536
+2025-02-27 03:14:23,601 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 03:14:23,601 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:23,602 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:23,602 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:23,602 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:23,603 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:23,603 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:23,603 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:23,629 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:23,662 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:23,663 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:23,666 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:14:23,666 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:14:23,666 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3862, 2110)
+2025-02-27 03:14:23,667 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:14:23,667 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3862x2110
+2025-02-27 03:14:23,667 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2574x1406
+2025-02-27 03:14:23,693 - scout.screen_capture.capture_manager - WARNING - Dimensions still don't match after DPI adjustment: got 3861x2109, expected 3862x2110
+2025-02-27 03:14:23,722 - scout.screen_capture.capture_manager - DEBUG - Resized captured image to match expected dimensions: 3862x2110
+2025-02-27 03:14:23,723 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2110, 3862, 3)
+2025-02-27 03:14:23,724 - scout.window_manager - DEBUG - Screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 03:14:23,725 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 03:14:23,726 - scout.template_matcher - ERROR - Error searching for template Crypt: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:23,728 - scout.template_matcher - ERROR - Error searching for template crypt_small: OpenCV(4.11.0) D:\a\opencv-python\opencv-python\opencv\modules\imgproc\src\templmatch.cpp:1164: error: (-215:Assertion failed) (depth == CV_8U || depth == CV_32F) && type == _templ.type() && _img.dims() <= 2 in function 'cv::matchTemplate'
+
+2025-02-27 03:14:23,728 - scout.template_matcher - INFO - Found 0 template matches
+2025-02-27 03:14:23,728 - scout.world_scanner - DEBUG - Found 0 template matches in this scan update
+2025-02-27 03:14:23,729 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 0 matches
+2025-02-27 03:14:23,765 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:14:23,766 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 03:14:23,767 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 17.03206753730774, 'elapsed_time_str': '00:17', 'last_update': '03:14:23', 'coordinates_checked': 17}
+2025-02-27 03:14:23,767 - scout.world_scanner - DEBUG - Matches found: 0
+2025-02-27 03:14:23,791 - scout.world_scanner - INFO - Stopping world scanning
+2025-02-27 03:14:23,791 - scout.world_scanner - INFO - Stopped scan results update timer
+2025-02-27 03:14:23,792 - scout.world_scanner - INFO - Emitted final scan results: {'status': 'Stopped', 'start_time': 1740622446.5693715, 'start_time_str': '03:14:06', 'matches_found': 0, 'templates_checked': 0, 'elapsed_time': 17.03206753730774, 'elapsed_time_str': '00:17', 'last_update': '03:14:23', 'coordinates_checked': 17, 'end_time': '03:14:23'}
+2025-02-27 03:14:23,792 - scout.overlay - INFO - Stopping template matching
+2025-02-27 03:14:23,793 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:23,793 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:23,793 - scout.overlay - INFO - Saved template matching active state: False
+2025-02-27 03:14:23,795 - scout.overlay - DEBUG - Window hidden
+2025-02-27 03:14:23,795 - scout.overlay - DEBUG - Template matching stopped, window hidden
+2025-02-27 03:14:23,795 - scout.world_scanner - INFO - Stopped template matching
+2025-02-27 03:14:25,076 - scout.debug_window - DEBUG - Debug window closed by user
+2025-02-27 03:14:25,077 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:25,077 - scout.config_manager - DEBUG - Updated debug settings: {'enabled': False, 'save_screenshots': False, 'save_templates': False}
+2025-02-27 03:14:25,078 - scout.template_matcher - DEBUG - Debug mode disabled
+2025-02-27 03:14:25,078 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:25,079 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:14:25,079 - scout.config_manager - DEBUG - Configuration saved

@@ -9,11 +9,12 @@ from pathlib import Path
 import pytesseract
 from mss import mss
 import time
-from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtCore import QObject, pyqtSignal, QTimer
 from scout.template_matcher import TemplateMatcher
 from scout.config_manager import ConfigManager
 from scout.debug_window import DebugWindow
 from scout.window_manager import WindowManager
+from datetime import datetime
 
 # Set Tesseract executable path
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'  # Adjust path if needed
@@ -65,10 +66,12 @@ class WorldScanner(QObject):
     scanning_stopped = pyqtSignal()
     scan_results_updated = pyqtSignal(dict)
     
-    def __init__(self, window_manager: WindowManager):
+    def __init__(self, window_manager: WindowManager, template_matcher=None, overlay=None):
         """Initialize the world scanner."""
         super().__init__()  # Initialize QObject base class
         self.window_manager = window_manager
+        self.template_matcher = template_matcher
+        self.overlay = overlay
         self.config_manager = ConfigManager()
         self.current_pos = None
         self.start_pos = None
@@ -339,26 +342,177 @@ class WorldScanner(QObject):
     def start_scanning(self) -> None:
         """Start the scanning process."""
         if self.is_scanning:
+            logger.info("Scanning is already active - ignoring start request")
             return
             
         logger.info("Starting world scanning")
         self.is_scanning = True
-        self.scanning_started.emit()
         
-        # Logic for starting scanning would go here
-        # For now, this is just a stub to emit the signal
+        # Initialize scan results dictionary
+        self.scan_results = {
+            "status": "Active",
+            "start_time": time.time(),  # Store time as float for timestamp
+            "start_time_str": time.strftime("%H:%M:%S"),  # Store formatted time for display
+            "matches_found": 0,
+            "templates_checked": 0
+        }
+        
+        # Emit initial scan results
+        self.scan_results_updated.emit(self.scan_results)
+        logger.info(f"Emitted initial scan results: {self.scan_results}")
+        
+        # Start template matching if available
+        if self.template_matcher and self.overlay:
+            # Log the current overlay state
+            logger.debug(f"Current overlay state: active={self.overlay.active}, template_matching_active={self.overlay.template_matching_active}")
+            
+            # Make sure overlay is visible
+            self.overlay.set_visible(True)
+            logger.info("Force-enabled overlay visibility for scanning")
+            
+            # Ensure template_matching_active is True even if it was not set already
+            if hasattr(self.overlay, 'template_matching_active'):
+                if not self.overlay.template_matching_active:
+                    logger.info("Forcing template_matching_active to True")
+                    self.overlay.template_matching_active = True
+                    
+            # Start template matching
+            self.overlay.start_template_matching()
+            
+            # Force an immediate draw of the overlay
+            if hasattr(self.overlay, '_draw_overlay'):
+                logger.info("Forcing immediate overlay draw to show debug visuals")
+                self.overlay._draw_overlay()
+                
+            logger.info("Started template matching for scanning")
+            
+            # Set up timer to periodically update scan results
+            if not hasattr(self, 'scan_update_timer'):
+                # Use QTimer for periodic updates
+                self.scan_update_timer = QTimer()
+                self.scan_update_timer.timeout.connect(self._update_scan_results)
+                logger.info("Created scan update timer")
+            
+            # Start the timer to update results every second
+            self.scan_update_timer.start(1000)  # 1 second interval
+            logger.info("Started scan results update timer")
+            
+        else:
+            if not self.template_matcher:
+                logger.warning("No template matcher available for scanning")
+            if not self.overlay:
+                logger.warning("No overlay available for scanning")
+        
+        # Emit signal that scanning has started
+        self.scanning_started.emit()
+            
+        # Additional logic for starting scanning would go here
         
     def stop_scanning(self) -> None:
         """Stop the scanning process."""
         if not self.is_scanning:
+            logger.info("Scanning is not active - ignoring stop request") 
             return
             
         logger.info("Stopping world scanning")
         self.is_scanning = False
-        self.scanning_stopped.emit()
         
-        # Logic for stopping scanning would go here
-        # For now, this is just a stub to emit the signal
+        # Stop scan update timer if it exists and is active
+        if hasattr(self, 'scan_update_timer') and self.scan_update_timer.isActive():
+            self.scan_update_timer.stop()
+            logger.info("Stopped scan results update timer")
+        
+        # Update and emit final scan results
+        if hasattr(self, 'scan_results'):
+            self.scan_results["status"] = "Stopped"
+            self.scan_results["end_time"] = time.strftime("%H:%M:%S")
+            self.scan_results_updated.emit(self.scan_results)
+            logger.info(f"Emitted final scan results: {self.scan_results}")
+        
+        # Stop template matching if available
+        if self.template_matcher and self.overlay:
+            # Stop template matching
+            self.overlay.stop_template_matching()
+            logger.info("Stopped template matching")
+        
+        # Emit signal that scanning has stopped
+        self.scanning_stopped.emit()
+            
+        # Additional logic for stopping scanning would go here
+
+    def _update_scan_results(self) -> None:
+        """Update and emit the scan results."""
+        try:
+            if not self.template_matcher or not self.overlay:
+                logger.warning("Template matcher or overlay not available")
+                return
+                
+            if not self.is_scanning:
+                logger.debug("Not scanning, skipping update_scan_results")
+                return
+                
+            # Get the current time
+            current_time = time.time()
+            
+            # Get matches from template matcher and update overlay
+            try:
+                # Force template matcher to find matches now
+                if hasattr(self.template_matcher, 'find_all_templates'):
+                    current_screenshot = self.window_manager.capture_screenshot()
+                    if current_screenshot is not None:
+                        # This will update the template matcher's internal cache
+                        matches = self.template_matcher.find_all_templates(current_screenshot)
+                        logger.debug(f"Found {len(matches)} template matches in this scan update")
+                        
+                        # Make sure overlay has the matches
+                        if hasattr(self.overlay, 'cached_matches'):
+                            # Clear previous matches first (to avoid accumulation)
+                            self.overlay.cached_matches = []
+                            # Add new matches
+                            self.overlay.cached_matches.extend(matches)
+                            logger.debug(f"Updated overlay's cached_matches with {len(matches)} matches")
+                            
+                            # Force redraw of overlay
+                            if hasattr(self.overlay, '_draw_overlay'):
+                                self.overlay._draw_overlay()
+                                logger.debug("Forced overlay to redraw with new matches")
+                        else:
+                            logger.warning("Overlay has no cached_matches attribute")
+                    else:
+                        logger.warning("Could not capture screenshot for template matching")
+                else:
+                    logger.warning("Template matcher has no find_all_templates method")
+            except Exception as e:
+                logger.error(f"Error updating template matches: {e}", exc_info=True)
+            
+            # Calculate elapsed time as float
+            start_timestamp = self.scan_results.get("start_time", current_time)
+            elapsed_seconds = current_time - start_timestamp
+            
+            # Format elapsed time as string
+            elapsed_minutes = int(elapsed_seconds // 60)
+            elapsed_seconds_remainder = int(elapsed_seconds % 60)
+            elapsed_time_str = f"{elapsed_minutes:02d}:{elapsed_seconds_remainder:02d}"
+            
+            # Update scan results
+            self.scan_results.update({
+                "status": "Active" if self.is_scanning else "Stopped",
+                "elapsed_time": elapsed_seconds,
+                "elapsed_time_str": elapsed_time_str,
+                "last_update": datetime.now().strftime("%H:%M:%S"),
+                "coordinates_checked": self.scan_results.get("coordinates_checked", 0) + 1,
+                "matches_found": len(self.overlay.cached_matches) if hasattr(self.overlay, 'cached_matches') else 0
+            })
+            
+            # Log scan results
+            logger.debug(f"Scan results updated: {self.scan_results}")
+            logger.debug(f"Matches found: {self.scan_results.get('matches_found', 0)}")
+            
+            # Emit the updated scan results
+            self.scan_results_updated.emit(self.scan_results)
+            
+        except Exception as e:
+            logger.error(f"Error in _update_scan_results: {e}", exc_info=True)
 
 def test_coordinate_reading():
     """Test function to check coordinate reading."""

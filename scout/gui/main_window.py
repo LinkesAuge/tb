@@ -115,7 +115,9 @@ class MainWindow(QMainWindow):
             self.window_manager
         )
         self.world_scanner = WorldScanner(
-            window_manager=self.window_manager
+            window_manager=self.window_manager,
+            template_matcher=self.template_matcher,
+            overlay=self.overlay
         )
         self.game_actions = GameActions(
             window_manager=self.window_manager

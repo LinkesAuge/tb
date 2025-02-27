@@ -1,0 +1,285 @@
+2025-02-27 02:33:36,688 - template_debug - INFO - ==================================================
+2025-02-27 02:33:36,688 - template_debug - INFO - STARTING EXTREMELY THOROUGH TEMPLATE MATCHING DEBUG
+2025-02-27 02:33:36,688 - template_debug - INFO - ==================================================
+2025-02-27 02:34:16,228 - template_debug - INFO - Selected window: Total Battle
+2025-02-27 02:34:16,228 - template_debug - INFO - Using window: Total Battle (handle: 329536)
+2025-02-27 02:34:16,229 - template_debug - INFO - Window dimensions: 3862x2110 at (-11, -11)
+2025-02-27 02:34:16,229 - template_debug - INFO - Templates directory: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 02:34:16,229 - template_debug - INFO - Found 2 template files: ['Crypt.png', 'crypt_small.png']
+2025-02-27 02:34:16,230 - template_debug - INFO - Template Crypt.png: 32x32 pixels
+2025-02-27 02:34:16,230 - template_debug - INFO - Template crypt_small.png: 33x32 pixels
+2025-02-27 02:34:16,230 - template_debug - INFO - Capturing window screenshot...
+2025-02-27 02:34:16,331 - template_debug - INFO - Captured image with dimensions: 3862x2110
+2025-02-27 02:34:16,559 - template_debug - INFO - Saved debug image to debug_images\captured_window_023416.png
+2025-02-27 02:34:16,560 - template_debug - INFO - Saved window capture to debug_images\captured_window_023416.png
+2025-02-27 02:34:52,892 - template_debug - INFO - 
+Testing with threshold: 0.8
+2025-02-27 02:34:52,893 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:53,158 - template_debug - INFO - Found 4 matches for Crypt at threshold 0.8
+2025-02-27 02:34:53,263 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:53,263 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:53,263 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:53,264 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:53,497 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.8_023453.png
+2025-02-27 02:34:53,498 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.8_023453.png
+2025-02-27 02:34:53,498 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:53,769 - template_debug - INFO - Found 1 matches for crypt_small at threshold 0.8
+2025-02-27 02:34:53,770 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:54,004 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.8_023453.png
+2025-02-27 02:34:54,005 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.8_023453.png
+2025-02-27 02:34:54,005 - template_debug - INFO - 
+Testing with threshold: 0.7
+2025-02-27 02:34:54,005 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:54,271 - template_debug - INFO - Found 7 matches for Crypt at threshold 0.7
+2025-02-27 02:34:54,272 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:54,272 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:54,272 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:54,273 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:54,273 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:54,505 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.7_023454.png
+2025-02-27 02:34:54,506 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.7_023454.png
+2025-02-27 02:34:54,506 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:54,774 - template_debug - INFO - Found 32 matches for crypt_small at threshold 0.7
+2025-02-27 02:34:54,775 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:54,775 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:34:54,776 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:34:54,776 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:34:54,776 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:34:55,001 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.7_023454.png
+2025-02-27 02:34:55,002 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.7_023454.png
+2025-02-27 02:34:55,002 - template_debug - INFO - 
+Testing with threshold: 0.6
+2025-02-27 02:34:55,002 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:55,275 - template_debug - INFO - Found 67 matches for Crypt at threshold 0.6
+2025-02-27 02:34:55,275 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:55,276 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:55,276 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:55,276 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:55,276 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:55,501 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.6_023455.png
+2025-02-27 02:34:55,501 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.6_023455.png
+2025-02-27 02:34:55,502 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:55,774 - template_debug - INFO - Found 1194 matches for crypt_small at threshold 0.6
+2025-02-27 02:34:55,775 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:55,776 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:34:55,776 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:34:55,776 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:34:55,776 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:34:56,008 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.6_023455.png
+2025-02-27 02:34:56,009 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.6_023455.png
+2025-02-27 02:34:56,009 - template_debug - INFO - 
+Testing with threshold: 0.5
+2025-02-27 02:34:56,009 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:56,277 - template_debug - INFO - Found 4259 matches for Crypt at threshold 0.5
+2025-02-27 02:34:56,279 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:56,279 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:56,280 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:56,280 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:56,280 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:56,503 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.5_023456.png
+2025-02-27 02:34:56,504 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.5_023456.png
+2025-02-27 02:34:56,504 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:56,781 - template_debug - INFO - Found 5337 matches for crypt_small at threshold 0.5
+2025-02-27 02:34:56,783 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:56,783 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:34:56,784 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:34:56,784 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:34:56,784 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:34:57,012 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.5_023456.png
+2025-02-27 02:34:57,013 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.5_023456.png
+2025-02-27 02:34:57,013 - template_debug - INFO - 
+Testing with threshold: 0.4
+2025-02-27 02:34:57,013 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:57,286 - template_debug - INFO - Found 42852 matches for Crypt at threshold 0.4
+2025-02-27 02:34:57,300 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:57,301 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:57,301 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:57,301 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:57,301 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:57,526 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.4_023457.png
+2025-02-27 02:34:57,526 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.4_023457.png
+2025-02-27 02:34:57,526 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:57,795 - template_debug - INFO - Found 36465 matches for crypt_small at threshold 0.4
+2025-02-27 02:34:57,806 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:57,806 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:34:57,807 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:34:57,807 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:34:57,807 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:34:58,034 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.4_023457.png
+2025-02-27 02:34:58,035 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.4_023457.png
+2025-02-27 02:34:58,035 - template_debug - INFO - 
+Testing with threshold: 0.3
+2025-02-27 02:34:58,035 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:58,311 - template_debug - INFO - Found 226909 matches for Crypt at threshold 0.3
+2025-02-27 02:34:58,380 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:58,380 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:58,380 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:58,380 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:58,380 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:58,606 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.3_023458.png
+2025-02-27 02:34:58,607 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.3_023458.png
+2025-02-27 02:34:58,607 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:34:58,874 - template_debug - INFO - Found 202708 matches for crypt_small at threshold 0.3
+2025-02-27 02:34:58,934 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:34:58,934 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:34:58,934 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:34:58,934 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:34:58,935 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:34:59,171 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.3_023458.png
+2025-02-27 02:34:59,172 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.3_023458.png
+2025-02-27 02:34:59,172 - template_debug - INFO - 
+Testing with threshold: 0.2
+2025-02-27 02:34:59,173 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:34:59,464 - template_debug - INFO - Found 767968 matches for Crypt at threshold 0.2
+2025-02-27 02:34:59,699 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:34:59,699 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:34:59,699 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:34:59,700 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:34:59,700 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:34:59,928 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.2_023459.png
+2025-02-27 02:34:59,928 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.2_023459.png
+2025-02-27 02:34:59,929 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:35:00,206 - template_debug - INFO - Found 724128 matches for crypt_small at threshold 0.2
+2025-02-27 02:35:00,427 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:35:00,427 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:35:00,427 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:35:00,428 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:35:00,428 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:35:00,651 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.2_023500.png
+2025-02-27 02:35:00,651 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.2_023500.png
+2025-02-27 02:35:00,652 - template_debug - INFO - 
+Testing with threshold: 0.1
+2025-02-27 02:35:00,652 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:35:00,930 - template_debug - INFO - Found 1984170 matches for Crypt at threshold 0.1
+2025-02-27 02:35:01,538 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:35:01,538 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:35:01,538 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:35:01,539 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:35:01,539 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:35:01,770 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.1_023501.png
+2025-02-27 02:35:01,771 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.1_023501.png
+2025-02-27 02:35:01,771 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:35:02,047 - template_debug - INFO - Found 1970972 matches for crypt_small at threshold 0.1
+2025-02-27 02:35:02,645 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:35:02,645 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:35:02,645 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:35:02,645 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:35:02,646 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:35:02,877 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.1_023502.png
+2025-02-27 02:35:02,878 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.1_023502.png
+2025-02-27 02:35:02,878 - template_debug - INFO - 
+Testing with threshold: 0.05
+2025-02-27 02:35:02,878 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:35:03,164 - template_debug - INFO - Found 2897329 matches for Crypt at threshold 0.05
+2025-02-27 02:35:04,032 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:35:04,033 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:35:04,033 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:35:04,033 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:35:04,033 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:35:04,262 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.05_023504.png
+2025-02-27 02:35:04,263 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.05_023504.png
+2025-02-27 02:35:04,263 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:35:04,549 - template_debug - INFO - Found 2922161 matches for crypt_small at threshold 0.05
+2025-02-27 02:35:05,434 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:35:05,435 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:35:05,435 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:35:05,435 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:35:05,435 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:35:05,664 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.05_023505.png
+2025-02-27 02:35:05,665 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.05_023505.png
+2025-02-27 02:35:05,665 - template_debug - INFO - 
+Testing with threshold: 0.01
+2025-02-27 02:35:05,665 - template_debug - INFO - Testing template: Crypt
+2025-02-27 02:35:05,951 - template_debug - INFO - Found 3806410 matches for Crypt at threshold 0.01
+2025-02-27 02:35:07,113 - template_debug - INFO - Match: ('Crypt', 2147, 918, 32, 32, 0.9409310221672058)
+2025-02-27 02:35:07,113 - template_debug - INFO - Match: ('Crypt', 2147, 919, 32, 32, 0.9220783710479736)
+2025-02-27 02:35:07,113 - template_debug - INFO - Match: ('Crypt', 2146, 918, 32, 32, 0.848710298538208)
+2025-02-27 02:35:07,113 - template_debug - INFO - Match: ('Crypt', 2146, 919, 32, 32, 0.8029507994651794)
+2025-02-27 02:35:07,114 - template_debug - INFO - Match: ('Crypt', 2148, 919, 32, 32, 0.7349272966384888)
+2025-02-27 02:35:07,342 - template_debug - INFO - Saved debug image to debug_images\Crypt_thresh0.01_023507.png
+2025-02-27 02:35:07,343 - template_debug - INFO - Saved match visualization to debug_images\Crypt_thresh0.01_023507.png
+2025-02-27 02:35:07,343 - template_debug - INFO - Testing template: crypt_small
+2025-02-27 02:35:07,642 - template_debug - INFO - Found 3812407 matches for crypt_small at threshold 0.01
+2025-02-27 02:35:08,819 - template_debug - INFO - Match: ('crypt_small', 2144, 928, 33, 32, 0.8005139231681824)
+2025-02-27 02:35:08,819 - template_debug - INFO - Match: ('crypt_small', 2144, 929, 33, 32, 0.7674857378005981)
+2025-02-27 02:35:08,819 - template_debug - INFO - Match: ('crypt_small', 2145, 928, 33, 32, 0.764318585395813)
+2025-02-27 02:35:08,819 - template_debug - INFO - Match: ('crypt_small', 2145, 929, 33, 32, 0.7418689727783203)
+2025-02-27 02:35:08,819 - template_debug - INFO - Match: ('crypt_small', 3829, 691, 33, 32, 0.7235288023948669)
+2025-02-27 02:35:09,050 - template_debug - INFO - Saved debug image to debug_images\crypt_small_thresh0.01_023508.png
+2025-02-27 02:35:09,051 - template_debug - INFO - Saved match visualization to debug_images\crypt_small_thresh0.01_023508.png
+2025-02-27 02:35:09,051 - template_debug - INFO - 
+Testing with different scaling factors
+2025-02-27 02:35:09,051 - template_debug - INFO - Testing with scale factor: 0.5
+2025-02-27 02:35:09,052 - template_debug - INFO - Resized image to 1931x1055
+2025-02-27 02:35:09,052 - template_debug - INFO - Testing template Crypt with scale 0.5
+2025-02-27 02:35:09,115 - template_debug - INFO - Direct OpenCV match: min=-0.6295, max=0.5680
+2025-02-27 02:35:09,116 - template_debug - INFO - Best match at: (1787, 979) with confidence 0.5680
+2025-02-27 02:35:09,183 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale0.5_023509.png
+2025-02-27 02:35:09,183 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale0.5_023509.png
+2025-02-27 02:35:09,183 - template_debug - INFO - Testing template crypt_small with scale 0.5
+2025-02-27 02:35:09,249 - template_debug - INFO - Direct OpenCV match: min=-0.5638, max=0.5653
+2025-02-27 02:35:09,249 - template_debug - INFO - Best match at: (1785, 981) with confidence 0.5653
+2025-02-27 02:35:09,310 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale0.5_023509.png
+2025-02-27 02:35:09,310 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale0.5_023509.png
+2025-02-27 02:35:09,311 - template_debug - INFO - Testing with scale factor: 0.75
+2025-02-27 02:35:09,313 - template_debug - INFO - Resized image to 2896x1582
+2025-02-27 02:35:09,313 - template_debug - INFO - Testing template Crypt with scale 0.75
+2025-02-27 02:35:09,453 - template_debug - INFO - Direct OpenCV match: min=-0.6433, max=0.6565
+2025-02-27 02:35:09,454 - template_debug - INFO - Best match at: (1605, 687) with confidence 0.6565
+2025-02-27 02:35:09,581 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale0.75_023509.png
+2025-02-27 02:35:09,582 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale0.75_023509.png
+2025-02-27 02:35:09,582 - template_debug - INFO - Testing template crypt_small with scale 0.75
+2025-02-27 02:35:09,722 - template_debug - INFO - Direct OpenCV match: min=-0.6506, max=0.6109
+2025-02-27 02:35:09,722 - template_debug - INFO - Best match at: (2687, 1479) with confidence 0.6109
+2025-02-27 02:35:09,853 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale0.75_023509.png
+2025-02-27 02:35:09,854 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale0.75_023509.png
+2025-02-27 02:35:09,854 - template_debug - INFO - Testing with scale factor: 1.0
+2025-02-27 02:35:09,855 - template_debug - INFO - Testing template Crypt with scale 1.0
+2025-02-27 02:35:10,121 - template_debug - INFO - Direct OpenCV match: min=-0.6568, max=0.9409
+2025-02-27 02:35:10,122 - template_debug - INFO - Best match at: (2147, 918) with confidence 0.9409
+2025-02-27 02:35:10,350 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale1.0_023510.png
+2025-02-27 02:35:10,351 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale1.0_023510.png
+2025-02-27 02:35:10,351 - template_debug - INFO - Testing template crypt_small with scale 1.0
+2025-02-27 02:35:10,612 - template_debug - INFO - Direct OpenCV match: min=-0.6437, max=0.8005
+2025-02-27 02:35:10,612 - template_debug - INFO - Best match at: (2144, 928) with confidence 0.8005
+2025-02-27 02:35:10,833 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale1.0_023510.png
+2025-02-27 02:35:10,834 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale1.0_023510.png
+2025-02-27 02:35:10,834 - template_debug - INFO - Testing with scale factor: 1.25
+2025-02-27 02:35:10,837 - template_debug - INFO - Resized image to 4827x2637
+2025-02-27 02:35:10,837 - template_debug - INFO - Testing template Crypt with scale 1.25
+2025-02-27 02:35:11,231 - template_debug - INFO - Direct OpenCV match: min=-0.7117, max=0.7361
+2025-02-27 02:35:11,231 - template_debug - INFO - Best match at: (2688, 1148) with confidence 0.7361
+2025-02-27 02:35:11,596 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale1.25_023511.png
+2025-02-27 02:35:11,597 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale1.25_023511.png
+2025-02-27 02:35:11,598 - template_debug - INFO - Testing template crypt_small with scale 1.25
+2025-02-27 02:35:11,999 - template_debug - INFO - Direct OpenCV match: min=-0.6556, max=0.8626
+2025-02-27 02:35:11,999 - template_debug - INFO - Best match at: (2684, 1163) with confidence 0.8626
+2025-02-27 02:35:12,354 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale1.25_023512.png
+2025-02-27 02:35:12,356 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale1.25_023512.png
+2025-02-27 02:35:12,356 - template_debug - INFO - Testing with scale factor: 1.5
+2025-02-27 02:35:12,361 - template_debug - INFO - Resized image to 5793x3165
+2025-02-27 02:35:12,361 - template_debug - INFO - Testing template Crypt with scale 1.5
+2025-02-27 02:35:12,924 - template_debug - INFO - Direct OpenCV match: min=-0.7093, max=0.7435
+2025-02-27 02:35:12,925 - template_debug - INFO - Best match at: (5758, 731) with confidence 0.7435
+2025-02-27 02:35:13,432 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale1.5_023512.png
+2025-02-27 02:35:13,434 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale1.5_023512.png
+2025-02-27 02:35:13,435 - template_debug - INFO - Testing template crypt_small with scale 1.5
+2025-02-27 02:35:14,058 - template_debug - INFO - Direct OpenCV match: min=-0.6859, max=0.7290
+2025-02-27 02:35:14,059 - template_debug - INFO - Best match at: (5755, 740) with confidence 0.7290
+2025-02-27 02:35:14,578 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale1.5_023514.png
+2025-02-27 02:35:14,579 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale1.5_023514.png
+2025-02-27 02:35:14,580 - template_debug - INFO - Testing with scale factor: 2.0
+2025-02-27 02:35:14,588 - template_debug - INFO - Resized image to 7724x4220
+2025-02-27 02:35:14,588 - template_debug - INFO - Testing template Crypt with scale 2.0
+2025-02-27 02:35:15,666 - template_debug - INFO - Direct OpenCV match: min=-0.6904, max=0.7442
+2025-02-27 02:35:15,666 - template_debug - INFO - Best match at: (7683, 1286) with confidence 0.7442
+2025-02-27 02:35:16,534 - template_debug - INFO - Saved debug image to debug_images\Crypt_direct_scale2.0_023515.png
+2025-02-27 02:35:16,538 - template_debug - INFO - Saved direct match visualization to debug_images\Crypt_direct_scale2.0_023515.png
+2025-02-27 02:35:16,538 - template_debug - INFO - Testing template crypt_small with scale 2.0
+2025-02-27 02:35:17,619 - template_debug - INFO - Direct OpenCV match: min=-0.7004, max=0.7289
+2025-02-27 02:35:17,619 - template_debug - INFO - Best match at: (7680, 990) with confidence 0.7289
+2025-02-27 02:35:18,492 - template_debug - INFO - Saved debug image to debug_images\crypt_small_direct_scale2.0_023517.png
+2025-02-27 02:35:18,495 - template_debug - INFO - Saved direct match visualization to debug_images\crypt_small_direct_scale2.0_023517.png
+2025-02-27 02:35:18,495 - template_debug - INFO - ==================================================
+2025-02-27 02:35:18,496 - template_debug - INFO - TEMPLATE MATCHING DEBUG COMPLETE
+2025-02-27 02:35:18,496 - template_debug - INFO - ==================================================

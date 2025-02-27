@@ -1,0 +1,82 @@
+2025-02-27 03:13:35,818 - root - INFO - Logging initialized: console=DEBUG, file=DEBUG, log_dir=logs
+2025-02-27 03:13:35,834 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 03:13:35,835 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:35,836 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 03:13:35,836 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 03:13:35,912 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=329536, geometry=(-11, -11, 3851, 2099)
+2025-02-27 03:13:35,931 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:35,932 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:35,932 - scout.template_matcher - DEBUG - Looking for templates in: d:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 03:13:35,933 - scout.template_matcher - DEBUG - Found 2 template files: ['d:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\Crypt.png', 'd:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\crypt_small.png']
+2025-02-27 03:13:35,933 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:35,934 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:35,934 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:35,935 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:35,936 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:35,937 - scout.overlay - INFO - Using match persistence of 1 frames for more responsive updates
+2025-02-27 03:13:35,938 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 03:13:35,938 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:35,938 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 03:13:35,939 - scout.template_matcher - DEBUG - Found 2 template files: ['D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\Crypt.png', 'D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\crypt_small.png']
+2025-02-27 03:13:35,939 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:35,940 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:35,940 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:35,940 - scout.overlay - INFO - Using very lenient confidence threshold of 0.5 to find any possible templates
+2025-02-27 03:13:35,940 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 03:13:35,940 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 03:13:35,941 - scout.template_matcher - DEBUG - Found 2 template files: ['D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\Crypt.png', 'D:\\OneDrive\\AI\\Projekte\\Scout\\tb\\scout\\templates\\crypt_small.png']
+2025-02-27 03:13:35,941 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 03:13:35,942 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 03:13:35,942 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 03:13:35,942 - scout.overlay - INFO - Loaded 2 templates for template matching
+2025-02-27 03:13:35,942 - scout.overlay - INFO - Templates loaded:
+2025-02-27 03:13:35,943 - scout.overlay - INFO -   - Crypt: Size=32x32
+2025-02-27 03:13:35,943 - scout.overlay - INFO -   - crypt_small: Size=33x32
+2025-02-27 03:13:35,943 - scout.overlay - DEBUG - Initialized overlay with rect_color=(0, 0, 255), font_color=(255, 255, 255), thickness=2, font_size=12, rect_scale=1.0
+2025-02-27 03:13:35,943 - scout.overlay - INFO - Creating overlay window at initialization
+2025-02-27 03:13:35,944 - scout.overlay - INFO - Creating overlay window
+2025-02-27 03:13:35,944 - scout.overlay - DEBUG - Creating overlay window at (-11, -11) with size 3862x2110
+2025-02-27 03:13:36,006 - scout.overlay - DEBUG - Created window with handle: 5113656
+2025-02-27 03:13:36,104 - scout.overlay - DEBUG - Window hidden
+2025-02-27 03:13:36,104 - scout.overlay - DEBUG - Window initially hidden as overlay is not active
+2025-02-27 03:13:36,104 - scout.overlay - DEBUG - Overlay window created with transparency settings
+2025-02-27 03:13:36,105 - scout.overlay - DEBUG - Window hidden
+2025-02-27 03:13:36,106 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:36,106 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:36,107 - scout.text_ocr - DEBUG - TextOCR initialized
+2025-02-27 03:13:36,107 - scout.automation.core - INFO - Initializing automation core
+2025-02-27 03:13:36,107 - scout.automation.core - INFO - Automation core initialized
+2025-02-27 03:13:36,108 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:36,109 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:36,109 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:36,110 - scout.world_scanner - DEBUG - WorldScanner initialized
+2025-02-27 03:13:36,110 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:36,193 - scout.screen_capture.screen_list_model - DEBUG - Populated screen list with 2 screens
+2025-02-27 03:13:36,194 - scout.screen_capture.screen_list_model - DEBUG - Initialized ScreenListModel with 2 screens
+2025-02-27 03:13:36,194 - scout.screen_capture.window_list_model - DEBUG - Populating window list model
+2025-02-27 03:13:36,196 - scout.screen_capture.window_list_model - DEBUG - Window list model populated with 13 windows
+2025-02-27 03:13:36,196 - scout.screen_capture.window_list_model - DEBUG - Initialized WindowListModel with 13 windows
+2025-02-27 03:13:36,202 - scout.overlay - DEBUG - Overlay opacity set to 0.7
+2025-02-27 03:13:36,204 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 03:13:36,204 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 03:13:36,758 - scout.overlay - DEBUG - Window moved to (-11, -11) with size 3862x2110, updating overlay
+2025-02-27 03:13:36,759 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 03:13:36,770 - scout.overlay - DEBUG - Template matching not active, skipping update
+2025-02-27 03:13:36,844 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 03:13:42,930 - scout.screen_capture.capture_manager - DEBUG - Converted tuple to QRect: PyQt6.QtCore.QRect(-11, -11, 3873, 2121)
+2025-02-27 03:13:42,930 - scout.screen_capture.capture_manager - DEBUG - Capture window called - window_interface: False, window_handle: 329536, window_geometry: True
+2025-02-27 03:13:42,930 - scout.screen_capture.capture_manager - DEBUG - No valid window interface available, falling back to direct capture
+2025-02-27 03:13:42,930 - scout.screen_capture.capture_manager - DEBUG - Capturing window with handle 329536 and geometry: PyQt6.QtCore.QRect(-11, -11, 3873, 2121)
+2025-02-27 03:13:42,931 - scout.screen_capture.capture_manager - DEBUG - Screen DPI scaling factor: 1.5
+2025-02-27 03:13:42,931 - scout.screen_capture.capture_manager - DEBUG - Using QRect geometry dimensions: 3873x2121
+2025-02-27 03:13:42,931 - scout.screen_capture.capture_manager - DEBUG - Adjusted capture dimensions for DPI scaling: 2582x1414
+2025-02-27 03:13:42,974 - scout.screen_capture.capture_manager - DEBUG - Captured image dimensions match expected: 3873x2121
+2025-02-27 03:13:42,974 - scout.screen_capture.capture_manager - DEBUG - Successfully captured window: (2121, 3873, 3)
+2025-02-27 03:13:52,932 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:13:56,492 - scout.debug_window - DEBUG - Debug window closed by user
+2025-02-27 03:13:56,492 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:13:56,493 - scout.config_manager - DEBUG - Updated debug settings: {'enabled': False, 'save_screenshots': False, 'save_templates': False}
+2025-02-27 03:13:56,493 - scout.template_matcher - DEBUG - Debug mode disabled
+2025-02-27 03:13:56,494 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:13:56,494 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 03:13:56,494 - scout.config_manager - DEBUG - Configuration saved
