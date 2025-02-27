@@ -38,3 +38,30 @@ The bug fixes have been extensive, focusing on:
 7. Callback function requirements in action handlers
 
 All these issues have been documented in the bugfixing.mdc file with details on the root causes and solutions. The application should now start without any immediate errors, though further testing is needed to ensure all functionality works correctly.
+
+Significant Update: Modified the WorldScanner to use a Screenshot-Based Approach Instead of Coordinate-Based Scanning
+
+Description of changes:
+1. Completely redesigned the WorldScanner class to eliminate coordinate-based navigation
+2. Changed the class to focus solely on screenshot capture and template matching
+3. Removed all methods related to coordinate detection and movement (get_current_position, move_to_position, generate_spiral_pattern, scan_world_until_match)
+4. Implemented a simplified approach that just takes screenshots at regular intervals
+5. Added a screenshots_taken counter to track the number of screenshots processed
+6. Added a set_scan_interval method to adjust the scanning frequency
+7. Removed the "coordinates_checked" parameter from scan results, as it's no longer relevant
+
+Updated the ScanningTab class UI to match this new functionality:
+1. Changed "Scan Type" dropdown to "Scan Mode" with simplified options
+2. Limited the scan interval range to 1-10 seconds (was 1-60)
+3. Connected the interval spinner to the new set_scan_interval method
+4. Reorganized the UI with dedicated sections for scan options and debug tools
+5. Improved the scan results display to show the most important information first
+
+The scan process now works as follows:
+1. User starts scanning with the "Start Scanning" button
+2. At regular intervals (defined by the scan interval setting), a screenshot is captured
+3. Template matching is performed on the entire screenshot
+4. Results are displayed on the overlay
+5. Scan results are updated with metrics like matches found and screenshots taken
+
+This is a much simpler and more straightforward approach that eliminates the complexity of coordinate detection and navigation, focusing instead on what's directly visible on the screen.

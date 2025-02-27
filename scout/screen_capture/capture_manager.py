@@ -249,35 +249,134 @@ class CaptureManager(QObject):
             self.error_occurred.emit(f"Failed to capture screenshot: {str(e)}")
             return None
             
-    def capture_window(self, window_handle: Optional[int] = None) -> Optional[np.ndarray]:
+    def capture_window_with_force(self, window_handle: int, window_geometry: Optional[QRect] = None, 
+                            force_update: bool = True) -> Optional[np.ndarray]:
         """
-        Capture a single screenshot from the specified window.
+        Capture a window with the option to force an update (bypass caching).
         
         Args:
-            window_handle: Optional handle to the window to capture. If None, uses the current window.
-        
+            window_handle: The handle of the window to capture
+            window_geometry: The geometry of the window (x, y, width, height)
+            force_update: If True, force a new capture ignoring any cached data
+            
         Returns:
-            The captured frame as a numpy array, or None if capture failed
+            The captured window as a NumPy array, or None if capture failed
         """
-        try:
-            # If a window handle is provided, temporarily set it as the current window
-            original_handle = self._current_window_handle
-            if window_handle is not None:
-                self._current_window_handle = window_handle
+        # Log parameters
+        logger.debug(f"Capture window with force called - window_handle: {window_handle}, "
+                    f"window_geometry: {window_geometry is not None}, force_update: {force_update}")
+        
+        # Clear cached image if forcing update
+        if force_update and hasattr(self, '_cached_image'):
+            self._cached_image = None
+            logger.debug("Forced update - cleared cached image")
             
-            # Perform the window capture
-            self._capture_window()
+        # Get current time to check freshness
+        current_time = time.time()
+        last_time = getattr(self, '_last_capture_time', 0)
+        
+        # If force_update or enough time has passed, capture a new screenshot
+        if force_update or current_time - last_time > 0.5:  # 500ms minimum between captures
+            # Delegate to the core capture method
+            result = self._capture_window(window_handle, window_geometry)
             
-            # Restore the original window handle if needed
-            if window_handle is not None and original_handle != window_handle:
-                self._current_window_handle = original_handle
-                
-            return self._last_frame
-        except Exception as e:
-            logger.error(f"Error capturing window: {str(e)}")
-            self.error_occurred.emit(f"Failed to capture window: {str(e)}")
+            # Update last capture time
+            self._last_capture_time = current_time
+            
+            if result is not None:
+                # Cache the result
+                self._cached_image = result
+                logger.debug(f"Captured and cached fresh image at {time.strftime('%H:%M:%S.%f')}")
+            else:
+                logger.warning("Force capture failed")
+            
+            return result
+        else:
+            # Use cached image if available
+            if hasattr(self, '_cached_image') and self._cached_image is not None:
+                logger.debug(f"Returning cached image from {time.strftime('%H:%M:%S.%f', time.localtime(last_time))}")
+                return self._cached_image
+            else:
+                # If no cached image, try to capture a new one
+                return self._capture_window(window_handle, window_geometry)
+    
+    def capture_window(self, window_handle: Optional[int] = None,
+                      window_geometry: Optional[QRect] = None) -> Optional[np.ndarray]:
+        """
+        Capture a specific window.
+        
+        Args:
+            window_handle: The handle of the window to capture. 
+                           If None, uses the stored window handle.
+            window_geometry: The geometry of the window (x, y, width, height). 
+                             If None, uses the stored geometry.
+            
+        Returns:
+            The captured window as a NumPy array, or None if capture failed
+        """
+        # Use stored values if parameters are not provided
+        if window_handle is None:
+            window_handle = self._current_window_handle
+            
+        if window_geometry is None:
+            window_geometry = self._current_window_geometry
+            
+        # Log parameters
+        logger.debug(f"Capture window called - window_interface: {self._window_interface is not None}, "
+                    f"window_handle: {window_handle}, window_geometry: {window_geometry is not None}")
+                    
+        # Check if we have required information
+        if window_handle is None:
+            logger.error("No window handle provided or stored")
             return None
             
+        # Get current time to check freshness
+        current_time = time.time()
+        last_time = getattr(self, '_last_capture_time', 0)
+        
+        # If enough time has passed (250ms), capture a new screenshot
+        if current_time - last_time > 0.25:
+            # Store the handle and geometry for future use
+            self._current_window_handle = window_handle
+            if window_geometry is not None:
+                self._current_window_geometry = window_geometry
+                
+            # Try to capture using the window interface if available
+            if self._window_interface is not None:
+                # Not implemented yet
+                logger.debug("Window interface capture not implemented yet")
+                pass
+                
+            # Fall back to direct capture
+            logger.debug("No valid window interface available, falling back to direct capture")
+            result = self._capture_window()
+            
+            # Update last capture time
+            self._last_capture_time = current_time
+            
+            if result is not None:
+                # Cache the result
+                self._last_frame = result
+            
+            return result
+        else:
+            # Use cached image if available and recent
+            if self._last_frame is not None:
+                logger.debug(f"Returning cached image from {time.strftime('%H:%M:%S.%f', time.localtime(last_time))}")
+                return self._last_frame
+            else:
+                # If no cached image, try to capture a new one
+                result = self._capture_window()
+                
+                # Update last capture time
+                self._last_capture_time = current_time
+                
+                if result is not None:
+                    # Cache the result
+                    self._last_frame = result
+                
+                return result
+    
     def take_screenshot(self) -> Optional[np.ndarray]:
         """
         Alias for capture_screenshot() for compatibility.

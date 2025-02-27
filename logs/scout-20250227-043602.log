@@ -1,0 +1,245 @@
+2025-02-27 04:36:02,392 - root - INFO - Logging initialized: console=DEBUG, file=DEBUG, log_dir=logs
+2025-02-27 04:36:02,407 - scout.error_handling - INFO - Global exception handling set up
+2025-02-27 04:36:02,407 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,408 - scout.window_manager - INFO - Found window: 'Total Battle' (handle: 329536)
+2025-02-27 04:36:02,409 - scout.window_manager - INFO - Found window: Total Battle (handle: 329536)
+2025-02-27 04:36:02,409 - scout.window_manager - INFO - Config manager set in window manager: True
+2025-02-27 04:36:02,409 - scout.window_manager - INFO - Loaded saved window title from config: None
+2025-02-27 04:36:02,472 - scout.screen_capture.capture_manager - INFO - Set window interface: handle=329536, geometry=(-11, -11, 3851, 2099)
+2025-02-27 04:36:02,489 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 04:36:02,490 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 04:36:02,490 - scout.template_matcher - DEBUG - Looking for templates in: d:\OneDrive\AI\Projekte\Scout\tb\templates
+2025-02-27 04:36:02,491 - scout.template_matcher - DEBUG - Found 2 template files: ['d:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\Crypt.png', 'd:\\OneDrive\\AI\\Projekte\\Scout\\tb\\templates\\crypt_small.png']
+2025-02-27 04:36:02,491 - scout.template_matcher - DEBUG - Converted template to grayscale: Crypt
+2025-02-27 04:36:02,491 - scout.template_matcher - DEBUG - Successfully loaded template: Crypt (32x32)
+2025-02-27 04:36:02,492 - scout.template_matcher - DEBUG - Converted template to grayscale: crypt_small
+2025-02-27 04:36:02,492 - scout.template_matcher - DEBUG - Successfully loaded template: crypt_small (33x32)
+2025-02-27 04:36:02,492 - scout.template_matcher - INFO - Loaded 2 templates: ['Crypt', 'crypt_small']
+2025-02-27 04:36:02,493 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,494 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 04:36:02,494 - scout.overlay - INFO - Using match persistence of 1 frames for more responsive updates
+2025-02-27 04:36:02,495 - scout.sound_manager - DEBUG - Loaded sound: D:\OneDrive\AI\Projekte\Scout\tb\scout\sounds\alarm.wav with volume 0.50
+2025-02-27 04:36:02,495 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 04:36:02,495 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 04:36:02,496 - scout.template_matcher - DEBUG - Found 0 template files: []
+2025-02-27 04:36:02,496 - scout.template_matcher - ERROR - No .png template files found!
+2025-02-27 04:36:02,497 - scout.template_matcher - DEBUG - All files in templates directory: []
+2025-02-27 04:36:02,497 - scout.template_matcher - DEBUG - Directory contents using os.listdir: []
+2025-02-27 04:36:02,497 - scout.overlay - INFO - Using confidence threshold of 0.8 for template matching
+2025-02-27 04:36:02,497 - scout.template_matcher - DEBUG - Cleared existing templates
+2025-02-27 04:36:02,498 - scout.template_matcher - DEBUG - Looking for templates in: D:\OneDrive\AI\Projekte\Scout\tb\scout\templates
+2025-02-27 04:36:02,498 - scout.template_matcher - DEBUG - Found 0 template files: []
+2025-02-27 04:36:02,498 - scout.template_matcher - ERROR - No .png template files found!
+2025-02-27 04:36:02,498 - scout.template_matcher - DEBUG - All files in templates directory: []
+2025-02-27 04:36:02,499 - scout.template_matcher - DEBUG - Directory contents using os.listdir: []
+2025-02-27 04:36:02,499 - scout.overlay - INFO - Loaded 0 templates for template matching
+2025-02-27 04:36:02,499 - scout.overlay - DEBUG - Initialized overlay with rect_color=(0, 0, 255), font_color=(255, 255, 255), thickness=2, font_size=12, rect_scale=1.0
+2025-02-27 04:36:02,499 - scout.overlay - INFO - Creating overlay window at initialization
+2025-02-27 04:36:02,500 - scout.overlay - INFO - Creating overlay window
+2025-02-27 04:36:02,500 - scout.overlay - DEBUG - Creating overlay window at (-11, -11) with size 3862x2110
+2025-02-27 04:36:02,556 - scout.overlay - DEBUG - Created window with handle: 331802
+2025-02-27 04:36:02,656 - scout.overlay - DEBUG - Window hidden
+2025-02-27 04:36:02,657 - scout.overlay - DEBUG - Window initially hidden as overlay is not active
+2025-02-27 04:36:02,657 - scout.overlay - DEBUG - Overlay window created with transparency settings
+2025-02-27 04:36:02,658 - scout.overlay - DEBUG - Window hidden
+2025-02-27 04:36:02,659 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,660 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 04:36:02,660 - scout.text_ocr - DEBUG - TextOCR initialized
+2025-02-27 04:36:02,660 - scout.automation.core - INFO - Initializing automation core
+2025-02-27 04:36:02,661 - scout.automation.core - INFO - Automation core initialized
+2025-02-27 04:36:02,662 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,663 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,663 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 04:36:02,663 - scout.world_scanner - DEBUG - WorldScanner initialized
+2025-02-27 04:36:02,664 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,670 - scout.template_matcher - DEBUG - Debug mode enabled
+2025-02-27 04:36:02,736 - scout.screen_capture.screen_list_model - DEBUG - Populated screen list with 2 screens
+2025-02-27 04:36:02,737 - scout.screen_capture.screen_list_model - DEBUG - Initialized ScreenListModel with 2 screens
+2025-02-27 04:36:02,737 - scout.screen_capture.window_list_model - DEBUG - Populating window list model
+2025-02-27 04:36:02,738 - scout.screen_capture.window_list_model - DEBUG - Window list model populated with 12 windows
+2025-02-27 04:36:02,738 - scout.screen_capture.window_list_model - DEBUG - Initialized WindowListModel with 12 windows
+2025-02-27 04:36:02,741 - scout.overlay - DEBUG - Overlay opacity set to 0.7
+2025-02-27 04:36:02,743 - scout.config_manager - DEBUG - Configuration loaded successfully
+2025-02-27 04:36:02,743 - scout.debug_window - DEBUG - Debug window initialized
+2025-02-27 04:36:03,304 - scout.overlay - DEBUG - Window moved to (-11, -11) with size 3862x2110, updating overlay
+2025-02-27 04:36:03,306 - scout.overlay - DEBUG - Updated window position to (-11, -11) with size 3862x2110
+2025-02-27 04:36:03,442 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:12,266 - scout.template_matcher - DEBUG - Debug mode enabled
+2025-02-27 04:36:12,266 - scout.world_scanner - INFO - Starting screen scanning
+2025-02-27 04:36:12,267 - scout.world_scanner - INFO - Emitted initial scan results: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 0, 'templates_checked': 0, 'screenshots_taken': 0}
+2025-02-27 04:36:12,267 - scout.world_scanner - DEBUG - Current overlay state: active=False, template_matching_active=False
+2025-02-27 04:36:12,267 - scout.overlay - INFO - Overlay activated
+2025-02-27 04:36:12,268 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:12,268 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:12,268 - scout.overlay - INFO - Saved overlay active state: True
+2025-02-27 04:36:12,268 - scout.world_scanner - INFO - Force-enabled overlay visibility for scanning
+2025-02-27 04:36:12,270 - scout.world_scanner - INFO - Forcing template_matching_active to True
+2025-02-27 04:36:12,270 - scout.overlay - DEBUG - Template matching already active
+2025-02-27 04:36:12,270 - scout.overlay - INFO - Template matching started
+2025-02-27 04:36:12,270 - scout.world_scanner - INFO - Forcing immediate overlay draw to show debug visuals
+2025-02-27 04:36:12,317 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:12,319 - scout.world_scanner - INFO - Started template matching for scanning
+2025-02-27 04:36:12,320 - scout.world_scanner - INFO - Created scan update timer
+2025-02-27 04:36:12,320 - scout.world_scanner - INFO - Started scan results update timer
+2025-02-27 04:36:13,333 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:13,333 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:13,333 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:13,370 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:13,372 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:13,372 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:13,373 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:13,373 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:13,507 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:13,509 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:13,509 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:13,510 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:13,649 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:13,649 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:13,649 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:13,649 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:13,652 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:13,652 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:13,685 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:13,685 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:13,691 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:13,692 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:13,693 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 1, 'elapsed_time': 1.0657553672790527, 'elapsed_time_str': '00:01', 'last_update': '04:36:13'}
+2025-02-27 04:36:13,693 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:14,319 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:14,319 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:14,319 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:14,351 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:14,352 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:14,352 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:14,353 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:14,353 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:14,483 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:14,484 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:14,484 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:14,484 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:14,618 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:14,619 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:14,619 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:14,619 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:14,622 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:14,622 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:14,649 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:14,649 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:14,658 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:14,660 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:14,660 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 2, 'elapsed_time': 2.0523791313171387, 'elapsed_time_str': '00:02', 'last_update': '04:36:14'}
+2025-02-27 04:36:14,660 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:15,325 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:15,325 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:15,325 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:15,369 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:15,370 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:15,370 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:15,371 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:15,371 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:15,498 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:15,499 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:15,499 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:15,499 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:15,639 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:15,639 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:15,639 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:15,639 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:15,642 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:15,642 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:15,671 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:15,671 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:15,679 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:15,680 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:15,680 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 3, 'elapsed_time': 3.0577759742736816, 'elapsed_time_str': '00:03', 'last_update': '04:36:15'}
+2025-02-27 04:36:15,680 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:16,328 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:16,329 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:16,329 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:16,385 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:16,386 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:16,386 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:16,387 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:16,387 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:16,519 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:16,519 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:16,519 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:16,519 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:16,644 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:16,644 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:16,644 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:16,645 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:16,647 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:16,647 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:16,677 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:16,677 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:16,684 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:16,685 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:16,686 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 4, 'elapsed_time': 4.061436891555786, 'elapsed_time_str': '00:04', 'last_update': '04:36:16'}
+2025-02-27 04:36:16,686 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:17,319 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:17,319 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:17,320 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:17,369 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:17,370 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:17,371 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:17,371 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:17,372 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:17,498 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:17,498 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:17,498 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:17,498 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:17,628 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:17,628 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:17,629 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:17,629 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:17,631 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:17,631 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:17,668 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:17,669 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:17,676 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:17,677 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:17,677 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 5, 'elapsed_time': 5.051899194717407, 'elapsed_time_str': '00:05', 'last_update': '04:36:17'}
+2025-02-27 04:36:17,678 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:18,325 - scout.window_manager - DEBUG - Screenshot cache and capture time reset
+2025-02-27 04:36:18,325 - scout.window_manager - DEBUG - Window dimensions: (-11, -11, 3851, 2099) -> 3862x2110
+2025-02-27 04:36:18,325 - scout.window_manager - DEBUG - Using fallback screenshot capture method
+2025-02-27 04:36:18,353 - scout.window_manager - DEBUG - Fallback screenshot captured successfully: (2110, 3862, 3)
+2025-02-27 04:36:18,354 - scout.template_matcher - DEBUG - Finding all templates in image of size (2110, 3862, 3)
+2025-02-27 04:36:18,355 - scout.template_matcher - DEBUG - Using confidence threshold: 0.8
+2025-02-27 04:36:18,355 - scout.template_matcher - DEBUG - Converted image to grayscale for template matching
+2025-02-27 04:36:18,356 - scout.template_matcher - DEBUG - Running template matching for Crypt with shape (32, 32)
+2025-02-27 04:36:18,480 - scout.template_matcher - DEBUG - Found 2 raw matches for template: Crypt
+2025-02-27 04:36:18,480 - scout.template_matcher - DEBUG -   Match 1: Position=(1977, 1293), Confidence=0.9498
+2025-02-27 04:36:18,480 - scout.template_matcher - DEBUG - Added 1 matches for Crypt
+2025-02-27 04:36:18,481 - scout.template_matcher - DEBUG - Running template matching for crypt_small with shape (32, 33)
+2025-02-27 04:36:18,616 - scout.template_matcher - DEBUG - Found 0 raw matches for template: crypt_small
+2025-02-27 04:36:18,617 - scout.template_matcher - INFO - Found 1 template matches
+2025-02-27 04:36:18,617 - scout.template_matcher - DEBUG - Match confidence stats - Min: 0.9498, Avg: 0.9498, Max: 0.9498
+2025-02-27 04:36:18,617 - scout.template_matcher - DEBUG - Match 1: ('Crypt', 1977, 1293, 32, 32, 0.949791669845581)
+2025-02-27 04:36:18,619 - scout.world_scanner - DEBUG - Found 1 template matches in this scan update
+2025-02-27 04:36:18,619 - scout.world_scanner - DEBUG - Updated overlay's cached_matches with 1 matches
+2025-02-27 04:36:18,649 - scout.overlay - DEBUG - Drawing 1 template matches
+2025-02-27 04:36:18,649 - scout.overlay - DEBUG - Match confidence breakdown - High: 1, Medium: 0, Low: 0
+2025-02-27 04:36:18,656 - scout.overlay - DEBUG - Overlay drawing completed successfully
+2025-02-27 04:36:18,657 - scout.world_scanner - DEBUG - Forced overlay to redraw with new matches
+2025-02-27 04:36:18,657 - scout.world_scanner - DEBUG - Scan results updated: {'status': 'Active', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 6, 'elapsed_time': 6.058274030685425, 'elapsed_time_str': '00:06', 'last_update': '04:36:18'}
+2025-02-27 04:36:18,658 - scout.world_scanner - DEBUG - Matches found: 1
+2025-02-27 04:36:18,660 - scout.world_scanner - INFO - Stopping scanning
+2025-02-27 04:36:18,660 - scout.world_scanner - INFO - Stopped scan results update timer
+2025-02-27 04:36:18,661 - scout.world_scanner - INFO - Emitted final scan results: {'status': 'Stopped', 'start_time': 1740627372.2674935, 'start_time_str': '04:36:12', 'matches_found': 1, 'templates_checked': 2, 'screenshots_taken': 6, 'elapsed_time': 6.058274030685425, 'elapsed_time_str': '00:06', 'last_update': '04:36:18', 'end_time': '04:36:18'}
+2025-02-27 04:36:18,661 - scout.overlay - INFO - Stopping template matching
+2025-02-27 04:36:18,661 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:18,662 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:18,662 - scout.overlay - INFO - Saved template matching active state: False
+2025-02-27 04:36:18,663 - scout.overlay - DEBUG - Window hidden
+2025-02-27 04:36:18,664 - scout.overlay - DEBUG - Template matching stopped, window hidden
+2025-02-27 04:36:18,664 - scout.world_scanner - INFO - Stopped template matching
+2025-02-27 04:36:18,664 - scout.template_matcher - DEBUG - Debug mode disabled
+2025-02-27 04:36:19,077 - scout.debug_window - DEBUG - Debug window closed by user
+2025-02-27 04:36:19,078 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:19,078 - scout.config_manager - DEBUG - Updated debug settings: {'enabled': False, 'save_screenshots': False, 'save_templates': False}
+2025-02-27 04:36:19,078 - scout.template_matcher - DEBUG - Debug mode disabled
+2025-02-27 04:36:19,079 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:19,079 - scout.config_manager - DEBUG - Configuration saved
+2025-02-27 04:36:19,080 - scout.config_manager - DEBUG - Configuration saved

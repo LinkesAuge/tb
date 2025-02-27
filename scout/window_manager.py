@@ -16,6 +16,9 @@ import win32con
 import win32api
 import win32process
 from PyQt6.QtCore import QObject, pyqtSignal, QRect, QPoint, QSize, QTimer
+import win32ui
+from ctypes import windll
+import cv2
 
 from scout.error_handling import handle_errors
 from scout.window_interface import WindowInterface, WindowInfo
@@ -263,58 +266,148 @@ class WindowManager(QObject):
         
         return (0, 0, 0, 0)
     
-    def capture_screenshot(self) -> Optional[np.ndarray]:
+    def clear_screenshot_cache(self) -> None:
         """
-        Capture a screenshot of the window.
-        
-        Returns:
-            NumPy array containing the screenshot image, or None if failed
+        Clear any cached screenshots to ensure fresh captures.
+        This should be called when the application needs to guarantee a fresh screenshot.
         """
-        if self.capture_manager is None:
-            logger.debug("Creating new CaptureManager instance")
-            from scout.screen_capture.capture_manager import CaptureManager
-            self.capture_manager = CaptureManager()
+        if hasattr(self, '_last_screenshot'):
+            self._last_screenshot = None
+            logger.debug("Screenshot cache cleared")
         
-        if self.handle:
-            logger.debug(f"Attempting to capture window with handle: {self.handle}")
+        # Clear any other cached images or data
+        if hasattr(self, '_last_capture_time'):
+            self._last_capture_time = 0.0
             
-            # Get window dimensions for logging and capture
-            rect = self.get_window_rect()
-            if rect:
-                left, top, right, bottom = rect
-                width = right - left
-                height = bottom - top
-                logger.debug(f"Window dimensions: ({left}, {top}, {right}, {bottom}) -> {width}x{height}")
-                
-                try:
-                    # Explicitly set window and geometry before capture
-                    self.capture_manager.set_window(self.handle, rect)
-                    
-                    # Now use the capture manager to get the screenshot
-                    result = self.capture_manager.capture_window(self.handle)
-                    if result is not None:
-                        logger.debug(f"Screenshot captured successfully: {result.shape}")
-                        
-                        # Check if the image dimensions are abnormally different from window size
-                        # This can happen with high-DPI displays
-                        if result.shape[0] != height or result.shape[1] != width:
-                            logger.warning(f"Captured image dimensions ({result.shape[1]}x{result.shape[0]}) differ from window size ({width}x{height})")
-                            
-                            # This warning is helpful for debugging but we don't need to resize here since
-                            # the resize happens in the CaptureManager._capture_window method now
-                            
-                        return result
-                    else:
-                        logger.warning("capture_window returned None")
-                    return result
-                except Exception as e:
-                    logger.error(f"Error capturing screenshot: {e}")
-            else:
-                logger.warning("Could not get window dimensions")
-        else:
-            logger.warning("Cannot capture screenshot: No window handle available")
+        logger.debug("Screenshot cache and capture time reset")
+
+    def capture_screenshot(self, force_update: bool = False) -> Optional[np.ndarray]:
+        """
+        Capture a screenshot of the current window.
         
-        return None
+        Args:
+            force_update: If True, ignore any cached screenshots and force a new capture
+            
+        Returns:
+            Screenshot as numpy array, or None if capture failed
+        """
+        # If we're forcing an update, clear any cached screenshot
+        if force_update and hasattr(self, '_last_screenshot'):
+            self._last_screenshot = None
+            logger.debug("Forced fresh screenshot capture")
+        
+        try:
+            # Make sure we have a valid window
+            if not self.handle:
+                if not self.find_window():
+                    logger.warning("Cannot capture screenshot - no window handle")
+                    return None
+            
+            # Check if window is still valid
+            if not win32gui.IsWindow(self.handle):
+                logger.warning("Window handle is no longer valid, attempting to find window again")
+                if not self.find_window():
+                    logger.warning("Failed to find window, cannot capture screenshot")
+                    return None
+            
+            # Get window dimensions
+            try:
+                rect = win32gui.GetWindowRect(self.handle)
+                x, y, right, bottom = rect
+                width = right - x
+                height = bottom - y
+                
+                # Log window dimensions for debugging
+                logger.debug(f"Window dimensions: {rect} -> {width}x{height}")
+                
+                # Validate window dimensions
+                if width <= 0 or height <= 0:
+                    logger.warning(f"Invalid window dimensions: {width}x{height}")
+                    return None
+                    
+                # Check if dimensions have changed since last capture
+                if hasattr(self, '_last_dimensions') and self._last_dimensions != (width, height):
+                    logger.debug(f"Window dimensions changed from {self._last_dimensions} to {width}x{height}")
+                    # Force a fresh capture when dimensions change
+                    force_update = True
+                    
+                # Store current dimensions for future comparison
+                self._last_dimensions = (width, height)
+                
+            except Exception as e:
+                logger.error(f"Error getting window dimensions: {e}")
+                return None
+            
+            # Use CaputreManager for the actual screenshot
+            if hasattr(self, 'capture_manager') and self.capture_manager:
+                # Convert tuple to QRect for capture manager
+                rect = QRect(x, y, width, height)
+                self.window_rect = rect  # Update stored rect
+                
+                # Get screenshot with force_update parameter
+                if hasattr(self.capture_manager, 'capture_window_with_force'):
+                    # Use the force_update version if available
+                    screenshot = self.capture_manager.capture_window_with_force(
+                        self.handle, rect, force_update
+                    )
+                else:
+                    # Fall back to regular method
+                    screenshot = self.capture_manager.capture_window(
+                        self.handle, rect
+                    )
+                    
+                if screenshot is not None:
+                    logger.debug(f"Screenshot captured successfully: {screenshot.shape}")
+                    return screenshot
+                else:
+                    logger.warning("Failed to capture screenshot with capture manager")
+            
+            # Fallback to direct capturing if capture manager failed or is not available
+            logger.debug("Using fallback screenshot capture method")
+            
+            # Get device context
+            hwnd_dc = win32gui.GetWindowDC(self.handle)
+            mfc_dc = win32ui.CreateDCFromHandle(hwnd_dc)
+            save_dc = mfc_dc.CreateCompatibleDC()
+            
+            # Create bitmap
+            save_bitmap = win32ui.CreateBitmap()
+            save_bitmap.CreateCompatibleBitmap(mfc_dc, width, height)
+            save_dc.SelectObject(save_bitmap)
+            
+            # Copy screen to bitmap
+            result = windll.user32.PrintWindow(self.handle, save_dc.GetSafeHdc(), 0)
+            
+            if result == 0:
+                logger.warning("PrintWindow failed in fallback capture method")
+                # Clean up
+                win32gui.DeleteObject(save_bitmap.GetHandle())
+                save_dc.DeleteDC()
+                mfc_dc.DeleteDC()
+                win32gui.ReleaseDC(self.handle, hwnd_dc)
+                return None
+            
+            # Convert bitmap to numpy array
+            bmpinfo = save_bitmap.GetInfo()
+            bmpstr = save_bitmap.GetBitmapBits(True)
+            img = np.frombuffer(bmpstr, dtype='uint8')
+            img.shape = (height, width, 4)  # RGBA
+            
+            # Clean up
+            win32gui.DeleteObject(save_bitmap.GetHandle())
+            save_dc.DeleteDC()
+            mfc_dc.DeleteDC()
+            win32gui.ReleaseDC(self.handle, hwnd_dc)
+            
+            # Convert to BGR format
+            img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
+            
+            logger.debug(f"Fallback screenshot captured successfully: {img.shape}")
+            return img
+            
+        except Exception as e:
+            logger.error(f"Error capturing screenshot: {e}", exc_info=True)
+            return None
     
     def list_windows(self) -> List[WindowInfo]:
         """

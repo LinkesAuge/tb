@@ -42,23 +42,22 @@ class WorldPosition:
     
 class WorldScanner(QObject):
     """
-    Automated system for exploring and scanning the game world.
+    Screen capturing and template matching system.
     
-    This class provides systematic exploration of the game world by:
-    1. Reading current coordinates using OCR (Optical Character Recognition)
-    2. Moving to new positions by simulating coordinate input
-    3. Generating efficient search patterns for exploration
-    4. Working with pattern matching to find specific game elements
+    This class provides continuous scanning of the game window by:
+    1. Taking screenshots at regular intervals
+    2. Performing template matching on the entire screenshot
+    3. Updating the overlay with match results
+    4. Tracking performance metrics
     
-    The scanner uses a spiral search pattern to methodically cover an area
-    around the starting position, ensuring thorough exploration while
-    minimizing travel distance.
+    This design focuses on real-time template matching without any navigation
+    or coordinate-based movement, simply analyzing what's visible on screen.
     
     Key Features:
-    - Coordinate detection using Tesseract OCR
-    - Automated navigation between positions
-    - Spiral search pattern generation
-    - Integration with pattern matching for target detection
+    - Continuous screenshot capture
+    - Full-screen template matching
+    - Overlay integration for visual feedback
+    - Performance tracking
     """
     
     # Add signals for scanning status
@@ -73,20 +72,13 @@ class WorldScanner(QObject):
         self.template_matcher = template_matcher
         self.overlay = overlay
         self.config_manager = ConfigManager()
-        self.current_pos = None
-        self.start_pos = None
-        self.scan_step = 50
-        self.move_delay = 1.0
-        self.visited_positions: List[WorldPosition] = []
-        self.minimap_left = 0
-        self.minimap_top = 0
-        self.minimap_width = 0
-        self.minimap_height = 0
-        self.dpi_scale = 1.0
         
         # Add scanning state
         self.is_scanning = False
         self.scan_results = {}
+        
+        # Configure scanning options
+        self.scan_interval = 1.0  # Default scan interval (seconds)
         
         # Create debug window
         self.debug_window = DebugWindow()
@@ -96,256 +88,22 @@ class WorldScanner(QObject):
         
         logger.debug("WorldScanner initialized")
         
-    def get_current_position(self) -> Optional[WorldPosition]:
-        """
-        Get the current position from the minimap coordinates.
-        
-        Returns:
-            WorldPosition object if coordinates are found, None otherwise
-        """
-        try:
-            # Calculate coordinate regions (scaled for DPI)
-            coord_height = int(20 * self.dpi_scale)  # Height for coordinate regions
-            coord_spacing = int(5 * self.dpi_scale)  # Space between regions
-            
-            # Define regions for each coordinate type
-            coordinate_regions = {
-                'x': {
-                    'left': self.minimap_left,
-                    'top': self.minimap_top + self.minimap_height + coord_spacing,
-                    'width': int(50 * self.dpi_scale),
-                    'height': coord_height
-                },
-                'y': {
-                    'left': self.minimap_left + int(60 * self.dpi_scale),
-                    'top': self.minimap_top + self.minimap_height + coord_spacing,
-                    'width': int(50 * self.dpi_scale),
-                    'height': coord_height
-                },
-                'k': {
-                    'left': self.minimap_left + int(120 * self.dpi_scale),
-                    'top': self.minimap_top + self.minimap_height + coord_spacing,
-                    'width': int(30 * self.dpi_scale),
-                    'height': coord_height
-                }
-            }
-            
-            # Add visual debug for coordinate regions
-            with mss() as sct:
-                # Take screenshot of entire minimap area plus coordinates
-                context_region = {
-                    'left': self.minimap_left,
-                    'top': self.minimap_top,
-                    'width': self.minimap_width,
-                    'height': self.minimap_height + int(30 * self.dpi_scale)  # Add scaled space for coordinates below
-                }
-                context_shot = np.array(sct.grab(context_region))
-                
-                # Draw rectangles around coordinate regions
-                for coord_type, region in coordinate_regions.items():
-                    # Calculate relative positions to context region
-                    x1 = region['left'] - context_region['left']
-                    y1 = region['top'] - context_region['top']
-                    x2 = x1 + region['width']
-                    y2 = y1 + region['height']
-                    
-                    # Only draw if within bounds
-                    if (0 <= x1 < context_shot.shape[1] and 
-                        0 <= y1 < context_shot.shape[0] and 
-                        0 <= x2 < context_shot.shape[1] and 
-                        0 <= y2 < context_shot.shape[0]):
-                        cv2.rectangle(context_shot, (x1, y1), (x2, y2), (0, 255, 0), 1)
-                        cv2.putText(context_shot, coord_type, (x1, y1-5), 
-                                  cv2.FONT_HERSHEY_SIMPLEX, 0.5 * self.dpi_scale, (0, 255, 0), 1)
-                
-                # Update debug window with context image
-                self.debug_window.update_image(
-                    "Coordinate Regions",
-                    context_shot,
-                    metadata={
-                        "dpi_scale": self.dpi_scale,
-                        "minimap_size": f"{self.minimap_width}x{self.minimap_height}"
-                    },
-                    save=True
-                )
-                
-                # Process each coordinate region
-                coordinates = {}
-                for coord_type, region in coordinate_regions.items():
-                    # Capture and process image
-                    screenshot = np.array(sct.grab(region))
-                    gray = cv2.cvtColor(screenshot, cv2.COLOR_BGR2GRAY)
-                    gray = cv2.convertScaleAbs(gray, alpha=2.0, beta=0)
-                    blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-                    thresh = cv2.adaptiveThreshold(
-                        blurred, 255,
-                        cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                        cv2.THRESH_BINARY,
-                        11, 2
-                    )
-                    
-                    # Try OCR
-                    text = pytesseract.image_to_string(
-                        thresh,
-                        config='--psm 7 --oem 3 -c tessedit_char_whitelist=0123456789'
-                    )
-                    
-                    # Clean text and get value
-                    try:
-                        value = int(''.join(filter(str.isdigit, text.strip())))
-                        coordinates[coord_type] = value
-                    except ValueError:
-                        coordinates[coord_type] = 0
-                        logger.warning(f"Failed to parse {coord_type} coordinate")
-                    
-                    # Update debug window with processed image
-                    self.debug_window.update_image(
-                        f"Coordinate {coord_type}",
-                        thresh,
-                        metadata={
-                            "raw_text": text.strip(),
-                            "value": coordinates[coord_type]
-                        },
-                        save=True
-                    )
-                
-                if all(coord in coordinates for coord in ['x', 'y', 'k']):
-                    position = WorldPosition(
-                        x=coordinates['x'],
-                        y=coordinates['y'],
-                        k=coordinates['k']
-                    )
-                    logger.info(f"Successfully detected position: X={position.x}, Y={position.y}, K={position.k}")
-                    return position
-                
-                return None
-                
-        except Exception as e:
-            logger.error(f"Error getting current position: {e}", exc_info=True)
-            return None
-            
-    def move_to_position(self, target: WorldPosition) -> bool:
-        """
-        Move camera to specific coordinates.
-        
-        Args:
-            target: Target position to move to
-            
-        Returns:
-            bool: True if move successful
-        """
-        try:
-            logger.info(f"Moving to position: X={target.x}, Y={target.y}, K={target.k}")
-            
-            # Get input field coordinates from config
-            config = ConfigManager()
-            input_settings = config.get_scanner_settings()
-            input_x = input_settings.get('input_field_x', 0)
-            input_y = input_settings.get('input_field_y', 0)
-            
-            # Click on coordinate input field
-            logger.debug(f"Clicking input field at ({input_x}, {input_y})")
-            pyautogui.click(x=input_x, y=input_y)
-            sleep(0.2)  # Small delay to ensure click registered
-            
-            # Clear existing text
-            pyautogui.hotkey('ctrl', 'a')
-            pyautogui.press('backspace')
-            
-            # Type coordinates
-            coord_text = f"{target.x},{target.y}"
-            logger.debug(f"Entering coordinates: {coord_text}")
-            pyautogui.write(coord_text)
-            pyautogui.press('enter')
-            
-            # Wait for movement and verify position
-            sleep(self.move_delay)
-            current_pos = self.get_current_position()
-            
-            if current_pos:
-                success = (current_pos.x == target.x and 
-                          current_pos.y == target.y and 
-                          current_pos.k == target.k)
-                if success:
-                    logger.info("Successfully moved to target position")
-                else:
-                    logger.warning(
-                        f"Position mismatch - Target: ({target.x}, {target.y}, {target.k}), "
-                        f"Current: ({current_pos.x}, {current_pos.y}, {current_pos.k})"
-                    )
-                return success
-            else:
-                logger.error("Failed to verify position after movement")
-                return False
-            
-        except Exception as e:
-            logger.error(f"Error moving to position: {e}", exc_info=True)
-            return False
-            
-    def generate_spiral_pattern(self, max_distance: int) -> List[WorldPosition]:
-        """
-        Generate spiral search pattern starting from current position.
-        This ensures methodical coverage of the map.
-        """
-        positions = []
-        x, y = 0, 0
-        dx, dy = self.scan_step, 0
-        steps = 1
-        
-        while abs(x) <= max_distance and abs(y) <= max_distance:
-            if -1 <= x <= 999 and -1 <= y <= 999:  # Check world boundaries
-                new_pos = WorldPosition(
-                    x=self.start_pos.x + x,
-                    y=self.start_pos.y + y,
-                    k=self.start_pos.k
-                )
-                positions.append(new_pos)
-            
-            x, y = x + dx, y + dy
-            
-            if steps % 2 == 0:
-                dx, dy = -dy, dx  # Turn 90 degrees
-                steps = 0
-            steps += 1
-            
-        return positions
-        
-    def scan_world_until_match(self, template_matcher: 'TemplateMatcher',
-                             max_attempts: int = 10) -> Optional[Tuple[int, int]]:
-        """
-        Scan the world until a template match is found.
-        
-        Args:
-            template_matcher: TemplateMatcher instance to detect matches
-            max_attempts: Maximum number of scan attempts
-            
-        Returns:
-            Tuple of (x, y) coordinates if match found, None otherwise
-        """
-        attempts = 0
-        while attempts < max_attempts:
-            # Take screenshot
-            screenshot = self.window_manager.capture_screenshot()
-            if screenshot is None:
-                continue
-                
-            # Look for matches
-            matches = template_matcher.find_matches()
-            if matches:
-                match = matches[0]  # Take first match
-                return (match.bounds[0], match.bounds[1])
-                
-            attempts += 1
-            
-        return None
-
     def start_scanning(self) -> None:
-        """Start the scanning process."""
+        """
+        Start the scanning process.
+        
+        This method:
+        1. Sets up the scanning state
+        2. Initializes the scan results dictionary
+        3. Makes the overlay visible
+        4. Starts template matching
+        5. Sets up timers for periodic updates
+        """
         if self.is_scanning:
             logger.info("Scanning is already active - ignoring start request")
             return
             
-        logger.info("Starting world scanning")
+        logger.info("Starting screen scanning")
         self.is_scanning = True
         
         # Initialize scan results dictionary
@@ -354,7 +112,8 @@ class WorldScanner(QObject):
             "start_time": time.time(),  # Store time as float for timestamp
             "start_time_str": time.strftime("%H:%M:%S"),  # Store formatted time for display
             "matches_found": 0,
-            "templates_checked": 0
+            "templates_checked": 0,
+            "screenshots_taken": 0
         }
         
         # Emit initial scan results
@@ -405,16 +164,22 @@ class WorldScanner(QObject):
         
         # Emit signal that scanning has started
         self.scanning_started.emit()
-            
-        # Additional logic for starting scanning would go here
         
     def stop_scanning(self) -> None:
-        """Stop the scanning process."""
+        """
+        Stop the scanning process.
+        
+        This method:
+        1. Updates the scanning state
+        2. Stops timers
+        3. Updates final scan results
+        4. Stops template matching
+        """
         if not self.is_scanning:
             logger.info("Scanning is not active - ignoring stop request") 
             return
             
-        logger.info("Stopping world scanning")
+        logger.info("Stopping scanning")
         self.is_scanning = False
         
         # Stop scan update timer if it exists and is active
@@ -438,10 +203,17 @@ class WorldScanner(QObject):
         # Emit signal that scanning has stopped
         self.scanning_stopped.emit()
             
-        # Additional logic for stopping scanning would go here
-
     def _update_scan_results(self) -> None:
-        """Update and emit the scan results."""
+        """
+        Update and emit the scan results.
+        
+        This method:
+        1. Takes a new screenshot
+        2. Performs template matching
+        3. Updates the overlay with match results
+        4. Updates scan metrics
+        5. Emits updated scan results
+        """
         try:
             if not self.template_matcher or not self.overlay:
                 logger.warning("Template matcher or overlay not available")
@@ -454,36 +226,45 @@ class WorldScanner(QObject):
             # Get the current time
             current_time = time.time()
             
-            # Get matches from template matcher and update overlay
-            try:
-                # Force template matcher to find matches now
+            # Get a fresh screenshot
+            force_update = True  # Always get a fresh screenshot
+            if hasattr(self.window_manager, 'clear_screenshot_cache'):
+                self.window_manager.clear_screenshot_cache()
+            current_screenshot = self.window_manager.capture_screenshot(force_update=force_update)
+            
+            # Track the screenshot count
+            self.scan_results["screenshots_taken"] = self.scan_results.get("screenshots_taken", 0) + 1
+            
+            # Process screenshot if available
+            if current_screenshot is not None:
+                # Get matches from template matcher 
                 if hasattr(self.template_matcher, 'find_all_templates'):
-                    current_screenshot = self.window_manager.capture_screenshot()
-                    if current_screenshot is not None:
-                        # This will update the template matcher's internal cache
-                        matches = self.template_matcher.find_all_templates(current_screenshot)
-                        logger.debug(f"Found {len(matches)} template matches in this scan update")
+                    # This will update the template matcher's internal cache
+                    matches = self.template_matcher.find_all_templates(current_screenshot)
+                    logger.debug(f"Found {len(matches)} template matches in this scan update")
+                    
+                    # Track the number of templates checked
+                    template_count = len(self.template_matcher.templates) if hasattr(self.template_matcher, 'templates') else 0
+                    self.scan_results["templates_checked"] = template_count
+                    
+                    # Make sure overlay has the matches
+                    if hasattr(self.overlay, 'cached_matches'):
+                        # Clear previous matches first (to avoid accumulation)
+                        self.overlay.cached_matches = []
+                        # Add new matches
+                        self.overlay.cached_matches.extend(matches)
+                        logger.debug(f"Updated overlay's cached_matches with {len(matches)} matches")
                         
-                        # Make sure overlay has the matches
-                        if hasattr(self.overlay, 'cached_matches'):
-                            # Clear previous matches first (to avoid accumulation)
-                            self.overlay.cached_matches = []
-                            # Add new matches
-                            self.overlay.cached_matches.extend(matches)
-                            logger.debug(f"Updated overlay's cached_matches with {len(matches)} matches")
-                            
-                            # Force redraw of overlay
-                            if hasattr(self.overlay, '_draw_overlay'):
-                                self.overlay._draw_overlay()
-                                logger.debug("Forced overlay to redraw with new matches")
-                        else:
-                            logger.warning("Overlay has no cached_matches attribute")
+                        # Force redraw of overlay
+                        if hasattr(self.overlay, '_draw_overlay'):
+                            self.overlay._draw_overlay()
+                            logger.debug("Forced overlay to redraw with new matches")
                     else:
-                        logger.warning("Could not capture screenshot for template matching")
+                        logger.warning("Overlay has no cached_matches attribute")
                 else:
                     logger.warning("Template matcher has no find_all_templates method")
-            except Exception as e:
-                logger.error(f"Error updating template matches: {e}", exc_info=True)
+            else:
+                logger.warning("Could not capture screenshot for template matching")
             
             # Calculate elapsed time as float
             start_timestamp = self.scan_results.get("start_time", current_time)
@@ -500,7 +281,6 @@ class WorldScanner(QObject):
                 "elapsed_time": elapsed_seconds,
                 "elapsed_time_str": elapsed_time_str,
                 "last_update": datetime.now().strftime("%H:%M:%S"),
-                "coordinates_checked": self.scan_results.get("coordinates_checked", 0) + 1,
                 "matches_found": len(self.overlay.cached_matches) if hasattr(self.overlay, 'cached_matches') else 0
             })
             
@@ -513,6 +293,21 @@ class WorldScanner(QObject):
             
         except Exception as e:
             logger.error(f"Error in _update_scan_results: {e}", exc_info=True)
+
+    def set_scan_interval(self, interval_seconds: float) -> None:
+        """
+        Set the scanning interval.
+        
+        Args:
+            interval_seconds: Time between scans in seconds
+        """
+        self.scan_interval = max(0.1, min(10.0, interval_seconds))  # Clamp between 0.1 and 10 seconds
+        
+        # Update timer if active
+        if hasattr(self, 'scan_update_timer') and self.scan_update_timer.isActive():
+            interval_ms = int(self.scan_interval * 1000)
+            self.scan_update_timer.setInterval(interval_ms)
+            logger.info(f"Updated scan interval to {self.scan_interval:.1f} seconds")
 
 def test_coordinate_reading():
     """Test function to check coordinate reading."""

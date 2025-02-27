@@ -429,125 +429,150 @@ class TemplateMatcher:
         
     def find_all_templates(self, image: np.ndarray) -> List[Tuple[str, int, int, int, int, float]]:
         """
-        Find all templates in an image and return their positions.
+        Find all template matches in an image.
         
         Args:
-            image: Image to search in
+            image: Image to search in (numpy array)
             
         Returns:
-            List of tuples (template_name, x, y, width, height, confidence)
+            List of matches as tuples (template_name, x, y, width, height, confidence)
         """
         if image is None:
-            logger.warning("Cannot search for templates in a None image")
+            logger.warning("Cannot find templates: Image is None")
             return []
             
         logger.debug(f"Finding all templates in image of size {image.shape}")
+        logger.debug(f"Using confidence threshold: {self.confidence_threshold}")
         
-        result_matches = []
+        # Initialize list for matches
+        matches = []
         
-        # Convert image to grayscale before template matching loop
-        gray_image = image
+        # Convert image to grayscale if it's color
         if len(image.shape) == 3:
             gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-            logger.debug(f"Converted image to grayscale for template matching")
-        
-        # Perform template matching for each template
+            logger.debug("Converted image to grayscale for template matching")
+        else:
+            gray_image = image
+            
+        # Tracking stats for logging
+        total_raw_matches = 0
+        highest_confidence = 0.0
+        lowest_confidence = 1.0
+        confidence_sum = 0.0
+        match_count = 0
+
+        # Process each template
         for template_name, template in self.templates.items():
+            # Skip templates that are larger than the image
+            if template.shape[0] > gray_image.shape[0] or template.shape[1] > gray_image.shape[1]:
+                logger.debug(f"Template {template_name} is larger than image, skipping")
+                continue
+                
+            logger.debug(f"Running template matching for {template_name} with shape {template.shape}")
+            
+            # Try to convert template to grayscale if it's color and the image is grayscale
+            if len(template.shape) == 3 and len(gray_image.shape) == 2:
+                template = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+            
+            # Apply template matching
             try:
-                # Skip template if image is too small
-                if template.shape[0] > gray_image.shape[0] or template.shape[1] > gray_image.shape[1]:
-                    logger.warning(f"Template {template_name} ({template.shape}) is larger than image ({gray_image.shape}), skipping")
-                    continue
-                
-                # Ensure template and image have the same number of channels
-                template_for_matching = template
-                if len(template.shape) != len(gray_image.shape):
-                    logger.warning(f"Template {template_name} has {len(template.shape)} dimensions but image has {len(gray_image.shape)}. Converting template.")
-                    if len(template.shape) == 3 and len(gray_image.shape) == 2:
-                        template_for_matching = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
-                    elif len(template.shape) == 2 and len(gray_image.shape) == 3:
-                        template_for_matching = cv2.cvtColor(template, cv2.COLOR_GRAY2BGR)
-                
-                # Perform template matching using properly formatted images
-                logger.debug(f"Running template matching for {template_name} with shape {template_for_matching.shape}")
-                result = cv2.matchTemplate(gray_image, template_for_matching, self.method)
-                
-                # Get locations where the match exceeds the threshold
-                locations = np.where(result >= self.confidence_threshold)
-                
-                # Count how many matches found
-                match_count = len(locations[0]) if locations and len(locations) > 0 else 0
-                logger.debug(f"Found {match_count} raw matches for template: {template_name}")
-                
-                # Skip further processing if no matches
-                if match_count == 0:
-                    continue
-                
-                # Prune matches to avoid clutter (keep only top 100)
-                if match_count > 100:
-                    # Get all matches and their confidences
-                    matches_with_confidence = []
-                    for y, x in zip(*locations):
-                        confidence = result[y, x]
-                        matches_with_confidence.append((y, x, confidence))
-                    
-                    # Sort by confidence (highest first) and take top 100
-                    matches_with_confidence.sort(key=lambda m: m[2], reverse=True)
-                    matches_with_confidence = matches_with_confidence[:100]
-                    
-                    # Extract back into separate arrays
-                    ys = [m[0] for m in matches_with_confidence]
-                    xs = [m[1] for m in matches_with_confidence]
-                    locations = (np.array(ys), np.array(xs))
-                    match_count = len(locations[0])
-                    logger.debug(f"Pruned to top {match_count} matches by confidence")
-                
+                result = cv2.matchTemplate(gray_image, template, self.method)
+            except Exception as e:
+                logger.error(f"Error matching template {template_name}: {e}")
+                continue
+            
+            # Find matches above threshold
+            locations = np.where(result >= self.confidence_threshold)
+            raw_match_count = len(locations[0]) if len(locations[0]) > 0 else 0
+            total_raw_matches += raw_match_count
+            
+            logger.debug(f"Found {raw_match_count} raw matches for template: {template_name}")
+            
+            # Extract matches with non-max suppression
+            template_matches = []
+            
+            y_points, x_points = locations
+            
+            if len(y_points) > 0:
                 # Get template dimensions
-                template_height, template_width = template.shape[:2]
+                h, w = template.shape[:2]
                 
-                # Convert matches to result format and filter out duplicates
-                for y, x in zip(*locations):
-                    confidence = float(result[y, x])
-                    
-                    # Extra verification for confidence
-                    if confidence < self.confidence_threshold:
+                # Collect all matches with confidence values
+                match_data = []
+                for i in range(len(y_points)):
+                    x, y = x_points[i], y_points[i]
+                    confidence = result[y, x]
+                    match_data.append((x, y, confidence))
+                
+                # Sort by confidence (highest first)
+                match_data.sort(key=lambda x: x[2], reverse=True)
+                
+                # Apply non-max suppression
+                suppressed = set()
+                
+                # Add the matches that survive non-max suppression
+                template_match_count = 0
+                
+                for i, (x, y, confidence) in enumerate(match_data):
+                    if i in suppressed:
                         continue
                         
-                    # Validate match position and ensure it doesn't overlap with existing matches
-                    valid_match = True
+                    # Suppress overlapping matches with lower confidence
+                    for j in range(i + 1, len(match_data)):
+                        if j in suppressed:
+                            continue
+                            
+                        x2, y2, _ = match_data[j]
+                        
+                        # Check if matches overlap significantly
+                        overlap = self._rectangles_overlap(
+                            (x, y, w, h),
+                            (x2, y2, w, h)
+                        )
+                        
+                        if overlap:
+                            suppressed.add(j)
                     
-                    # Check for overlapping matches
-                    match_rect = (int(x), int(y), template_width, template_height)
+                    # Add the match to our results
+                    template_matches.append((template_name, int(x), int(y), w, h, float(confidence)))
+                    template_match_count += 1
                     
-                    # Check if this match overlaps with any existing match in result_matches
-                    for existing_match in result_matches:
-                        if self._rectangles_overlap(
-                            match_rect,
-                            (existing_match[1], existing_match[2], existing_match[3], existing_match[4])
-                        ):
-                            # If existing match has higher confidence, skip this one
-                            if existing_match[5] >= confidence:
-                                valid_match = False
-                                break
-                            # Otherwise, we'll keep this match and remove the existing one
-                            else:
-                                result_matches.remove(existing_match)
+                    # Track confidence stats
+                    highest_confidence = max(highest_confidence, confidence)
+                    lowest_confidence = min(lowest_confidence, confidence)
+                    confidence_sum += confidence
+                    match_count += 1
                     
-                    if valid_match:
-                        result_matches.append((template_name, int(x), int(y), template_width, template_height, confidence))
-                
-            except Exception as e:
-                logger.error(f"Error searching for template {template_name}: {e}")
+                    # Debug logging for individual high-confidence matches
+                    if confidence > 0.85:
+                        logger.debug(f"  Match {template_match_count}: Position=({x}, {y}), Confidence={confidence:.4f}")
+                    
+                logger.debug(f"Added {template_match_count} matches for {template_name}")
+            
+            # Extend the list of all matches
+            matches.extend(template_matches)
         
         # Sort matches by confidence (highest first)
-        logger.info(f"Found {len(result_matches)} template matches")
+        matches.sort(key=lambda m: m[5], reverse=True)
         
-        # Log the top matches for debugging
-        result_matches.sort(key=lambda m: m[5], reverse=True)
-        for i, match in enumerate(result_matches[:3]):
-            logger.debug(f"Match {i+1}: {match}")
+        # Limit to top 100 matches to prevent performance issues
+        if len(matches) > 100:
+            logger.warning(f"Limiting from {len(matches)} to top 100 matches to prevent performance issues")
+            matches = matches[:100]
+        
+        # Log summary of matches
+        if matches:
+            avg_confidence = confidence_sum / match_count if match_count > 0 else 0
+            logger.info(f"Found {len(matches)} template matches")
+            logger.debug(f"Match confidence stats - Min: {lowest_confidence:.4f}, Avg: {avg_confidence:.4f}, Max: {highest_confidence:.4f}")
             
-        return result_matches
+            # Log the top match for debugging
+            if matches:
+                logger.debug(f"Match 1: {matches[0]}")
+        else:
+            logger.info("No template matches found")
+        
+        return matches
         
     def start_template_matching(self) -> None:
         """Start continuous template matching."""

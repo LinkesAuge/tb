@@ -8,10 +8,11 @@ It contains controls for scanning the game world and displaying results.
 from typing import Optional
 import logging
 import time
+from pathlib import Path
 
 from PyQt6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QCheckBox,
-    QGroupBox, QLabel, QComboBox, QSlider, QSpinBox, QLineEdit
+    QGroupBox, QLabel, QComboBox, QSlider, QSpinBox, QLineEdit, QFileDialog, QMessageBox
 )
 from PyQt6.QtCore import Qt, pyqtSignal, pyqtSlot, QTimer
 
@@ -69,6 +70,11 @@ class ScanningTab(QWidget):
         # Connect signals
         self._connect_signals()
         
+        # Enable debug mode by default
+        if hasattr(self.template_matcher, 'set_debug_mode'):
+            self.template_matcher.set_debug_mode(True)
+            logger.info("Debug mode enabled by default in template matcher")
+        
         logger.debug("Scanning tab initialized")
     
     def _setup_ui(self) -> None:
@@ -103,11 +109,11 @@ class ScanningTab(QWidget):
         options_group = QGroupBox("Scan Options")
         options_layout = QVBoxLayout(options_group)
         
-        # Add scan type selection
+        # Simplified scan type selection - removed coordinate-based options
         scan_type_layout = QHBoxLayout()
-        scan_type_label = QLabel("Scan Type:")
+        scan_type_label = QLabel("Scan Mode:")
         self.scan_type_combo = QComboBox()
-        self.scan_type_combo.addItems(["Full Scan", "Quick Scan", "Resource Scan", "Enemy Scan"])
+        self.scan_type_combo.addItems(["Full Window Scan", "Template Test Mode"])
         scan_type_layout.addWidget(scan_type_label)
         scan_type_layout.addWidget(self.scan_type_combo)
         options_layout.addLayout(scan_type_layout)
@@ -116,8 +122,9 @@ class ScanningTab(QWidget):
         interval_layout = QHBoxLayout()
         interval_label = QLabel("Scan Interval (s):")
         self.interval_spin = QSpinBox()
-        self.interval_spin.setRange(1, 60)
-        self.interval_spin.setValue(5)
+        self.interval_spin.setRange(1, 10)
+        self.interval_spin.setValue(1)
+        self.interval_spin.valueChanged.connect(self._update_scan_interval)
         interval_layout.addWidget(interval_label)
         interval_layout.addWidget(self.interval_spin)
         options_layout.addLayout(interval_layout)
@@ -135,17 +142,35 @@ class ScanningTab(QWidget):
         confidence_layout.addWidget(self.confidence_value_label)
         options_layout.addLayout(confidence_layout)
         
+        # Add options group to main layout
+        main_layout.addWidget(options_group)
+        
+        # Add debug controls
+        debug_group = QGroupBox("Debug Tools")
+        debug_layout = QVBoxLayout(debug_group)
+        
+        # Add debug mode toggle
+        debug_mode_layout = QHBoxLayout()
+        self.debug_mode_checkbox = QCheckBox("Enable Debug Mode")
+        self.debug_mode_checkbox.setChecked(True)
+        self.debug_mode_checkbox.stateChanged.connect(self._toggle_debug_mode)
+        debug_mode_layout.addWidget(self.debug_mode_checkbox)
+        
+        # Add explanation label
+        debug_mode_explanation = QLabel("Debug mode enables test templates and additional logging")
+        debug_mode_layout.addWidget(debug_mode_explanation)
+        debug_mode_layout.addStretch()
+        debug_layout.addLayout(debug_mode_layout)
+        
         # Add debug button for testing
-        debug_layout = QHBoxLayout()
-        debug_label = QLabel("Debug:")
+        debug_btn_layout = QHBoxLayout()
         self.debug_btn = QPushButton("Create Test Matches")
         self.debug_btn.clicked.connect(self._create_test_matches)
         self.test_templates_btn = QPushButton("Test All Templates")
         self.test_templates_btn.clicked.connect(self._test_all_templates)
-        debug_layout.addWidget(debug_label)
-        debug_layout.addWidget(self.debug_btn)
-        debug_layout.addWidget(self.test_templates_btn)
-        options_layout.addLayout(debug_layout)
+        debug_btn_layout.addWidget(self.debug_btn)
+        debug_btn_layout.addWidget(self.test_templates_btn)
+        debug_layout.addLayout(debug_btn_layout)
         
         # Add debug visuals toggle
         debug_visuals_layout = QHBoxLayout()
@@ -155,7 +180,7 @@ class ScanningTab(QWidget):
         self.debug_info_btn.clicked.connect(self._toggle_debug_info)
         debug_visuals_layout.addWidget(self.debug_visuals_btn)
         debug_visuals_layout.addWidget(self.debug_info_btn)
-        options_layout.addLayout(debug_visuals_layout)
+        debug_layout.addLayout(debug_visuals_layout)
         
         # Add template tester
         template_test_layout = QHBoxLayout()
@@ -169,16 +194,22 @@ class ScanningTab(QWidget):
         list_templates_btn = QPushButton("List Templates")
         list_templates_btn.clicked.connect(self._list_available_templates)
         
+        # Add template folder selection button
+        custom_templates_btn = QPushButton("Select Templates Folder")
+        custom_templates_btn.clicked.connect(self._select_templates_folder)
+        custom_templates_btn.setToolTip("Select a folder containing custom template images")
+        
         template_test_layout.addWidget(template_test_label)
         template_test_layout.addWidget(self.template_input)
         template_test_layout.addWidget(self.test_template_btn)
         template_test_layout.addWidget(list_templates_btn)
+        template_test_layout.addWidget(custom_templates_btn)
         
-        # Add this layout to the options_layout
-        options_layout.addLayout(template_test_layout)
+        # Add this layout to the debug layout
+        debug_layout.addLayout(template_test_layout)
         
-        # Add options group to main layout
-        main_layout.addWidget(options_group)
+        # Add debug group to main layout
+        main_layout.addWidget(debug_group)
         
         # Add results area
         results_group = QGroupBox("Scan Results")
@@ -210,11 +241,27 @@ class ScanningTab(QWidget):
             # Log the current state
             logger.debug(f"Toggle scanning called. Current state: is_scanning={was_scanning}")
             
+            # Update scan interval before starting
+            if not was_scanning:
+                self._update_scan_interval(self.interval_spin.value())
+                
+                # Enable debug mode in template matcher for scanning
+                if hasattr(self.template_matcher, 'set_debug_mode'):
+                    self.template_matcher.set_debug_mode(True)
+                    logger.info("Enabled debug mode in template matcher for scanning")
+                else:
+                    logger.warning("Template matcher doesn't have set_debug_mode method")
+            
             # Toggle the scanning state
             if was_scanning:
                 logger.debug("Stopping scanning...")
                 self.world_scanner.stop_scanning()
                 self.scan_button.setText("Start Scanning")
+                
+                # Disable debug mode when scanning stops
+                if hasattr(self.template_matcher, 'set_debug_mode'):
+                    self.template_matcher.set_debug_mode(False)
+                    logger.info("Disabled debug mode in template matcher")
             else:
                 logger.debug("Starting scanning...")
                 self.world_scanner.start_scanning()
@@ -258,20 +305,36 @@ class ScanningTab(QWidget):
             value: Slider value (50-100)
         """
         confidence = value / 100.0
-        self.template_matcher.set_confidence_threshold(confidence)
+        
+        # Update template matcher confidence
+        if hasattr(self.template_matcher, 'set_confidence_threshold'):
+            self.template_matcher.set_confidence_threshold(confidence)
+            logger.info(f"Updated template matcher confidence threshold to {confidence:.2f}")
+        
+        # Update the confidence label
         self.confidence_value_label.setText(f"{confidence:.2f}")
         
         # Force clearing the overlay cache to ensure only matches meeting the new threshold are shown
         if hasattr(self.overlay, 'clear'):
             self.overlay.clear()
-            logger.info(f"Cleared overlay after confidence threshold change to {confidence:.2f}")
+            logger.info(f"Cleared overlay cache after confidence threshold change to {confidence:.2f}")
+            
+        # Update configuration to save the setting
+        if hasattr(self, 'config_manager'):
+            self.config_manager.set("templates.confidence", str(confidence))
+            self.config_manager.save_config()
+            logger.debug(f"Saved confidence threshold {confidence:.2f} to configuration")
             
         # Force a new template scan to apply the new threshold immediately
         if hasattr(self.world_scanner, 'is_scanning') and self.world_scanner.is_scanning:
             # Force an immediate update if currently scanning
             if hasattr(self.overlay, '_update_template_matching'):
                 logger.info(f"Forcing template matching update with new threshold: {confidence:.2f}")
+                
+                # Force multiple updates to ensure the new confidence is applied
                 QTimer.singleShot(100, self.overlay._update_template_matching)
+                QTimer.singleShot(300, self.overlay._update_template_matching)
+                QTimer.singleShot(500, self.overlay._update_template_matching)
     
     @pyqtSlot()
     def _on_scanning_started(self) -> None:
@@ -294,8 +357,23 @@ class ScanningTab(QWidget):
         # Update results display
         if results:
             result_text = "Scan Results:\n"
+            
+            # First display the most important information
+            for key in ["status", "matches_found", "templates_checked", "screenshots_taken"]:
+                if key in results:
+                    result_text += f"- {key}: {results[key]}\n"
+            
+            # Then display timing information
+            for key in ["elapsed_time_str", "start_time_str", "last_update"]:
+                if key in results:
+                    result_text += f"- {key}: {results[key]}\n"
+            
+            # Display any remaining information
             for key, value in results.items():
-                result_text += f"- {key}: {value}\n"
+                if key not in ["status", "matches_found", "templates_checked", "screenshots_taken", 
+                              "elapsed_time_str", "start_time_str", "last_update"]:
+                    result_text += f"- {key}: {value}\n"
+                    
             self.results_label.setText(result_text)
         else:
             self.results_label.setText("No scan results")
@@ -518,3 +596,143 @@ class ScanningTab(QWidget):
                 logger.error("Overlay object does not have toggle_debug_info method")
         except Exception as e:
             logger.error(f"Error toggling debug info: {e}")
+
+    def _update_scan_interval(self, value: int) -> None:
+        """
+        Update scan interval.
+        
+        Args:
+            value: Interval in seconds
+        """
+        # Set the scan interval on the WorldScanner
+        if hasattr(self.world_scanner, 'set_scan_interval'):
+            self.world_scanner.set_scan_interval(float(value))
+            logger.info(f"Updated scan interval to {value} seconds")
+        else:
+            logger.warning("WorldScanner doesn't have a set_scan_interval method")
+
+    def _toggle_debug_mode(self, state: int) -> None:
+        """
+        Toggle debug mode in the template matcher.
+        
+        Args:
+            state: Checkbox state
+        """
+        try:
+            is_checked = state == Qt.CheckState.Checked.value
+            if not hasattr(self.template_matcher, 'set_debug_mode'):
+                logger.warning("Template matcher doesn't have set_debug_mode method")
+                return
+            
+            self.template_matcher.set_debug_mode(is_checked)
+            logger.info(f"Debug mode {'enabled' if is_checked else 'disabled'}")
+            
+            # If debug mode is enabled, clear the overlay and force an update
+            if is_checked and hasattr(self.overlay, 'clear'):
+                self.overlay.clear()
+                
+                # If we're scanning, force an immediate update
+                if hasattr(self.world_scanner, 'is_scanning') and self.world_scanner.is_scanning:
+                    # Force an immediate scan update
+                    if hasattr(self.world_scanner, '_update_scan_results'):
+                        self.world_scanner._update_scan_results()
+                        logger.info("Forced scan update after enabling debug mode")
+        except Exception as e:
+            logger.error(f"Error toggling debug mode: {e}", exc_info=True)
+
+    def _select_templates_folder(self) -> None:
+        """Open a folder dialog to select and load templates from a custom folder."""
+        try:
+            # Open folder selection dialog
+            folder_path = QFileDialog.getExistingDirectory(
+                self, "Select Templates Folder", "D:/OneDrive/AI/Projekte/Scout/tb",
+                QFileDialog.Option.ShowDirsOnly
+            )
+            
+            if not folder_path:
+                # User cancelled the dialog
+                return
+            
+            # Convert to Path object
+            folder_path = Path(folder_path)
+            
+            # Check if the folder exists
+            if not folder_path.exists() or not folder_path.is_dir():
+                QMessageBox.warning(
+                    self, "Invalid Folder",
+                    f"The selected path {folder_path} is not a valid directory."
+                )
+                return
+            
+            # Check if there are PNG files in the folder
+            png_files = list(folder_path.glob("*.png"))
+            if not png_files:
+                result = QMessageBox.question(
+                    self, "No Templates Found",
+                    f"No PNG files found in {folder_path}. Do you want to continue anyway?",
+                    QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+                )
+                if result == QMessageBox.StandardButton.No:
+                    return
+            
+            # Update template matcher's templates directory
+            if not hasattr(self.template_matcher, 'templates_dir'):
+                QMessageBox.warning(
+                    self, "Error",
+                    "Template matcher doesn't have a templates_dir attribute."
+                )
+                return
+            
+            # Store original directory for logging
+            original_dir = self.template_matcher.templates_dir
+            
+            # Update template matcher's directory and reload templates
+            self.template_matcher.templates_dir = folder_path
+            
+            # Try to reload templates from the new directory
+            original_count = len(self.template_matcher.templates) if hasattr(self.template_matcher, 'templates') else 0
+            self.template_matcher.reload_templates()
+            new_count = len(self.template_matcher.templates) if hasattr(self.template_matcher, 'templates') else 0
+            
+            # Report results
+            if new_count > 0:
+                QMessageBox.information(
+                    self, "Templates Loaded",
+                    f"Successfully loaded {new_count} templates from {folder_path}."
+                )
+                logger.info(f"Changed templates directory from {original_dir} to {folder_path} and loaded {new_count} templates")
+                
+                # Update the results label with template information
+                template_names = list(self.template_matcher.templates.keys())
+                template_names.sort()
+                result_text = f"Templates Loaded from {folder_path}:\n"
+                for name in template_names:
+                    template = self.template_matcher.templates[name]
+                    h, w = template.shape[:2]
+                    result_text += f"• {name} ({w}x{h})\n"
+                self.results_label.setText(result_text)
+                
+                # If scanning is active, force a redraw
+                if hasattr(self.world_scanner, 'is_scanning') and self.world_scanner.is_scanning:
+                    # Force a fresh scan
+                    logger.info("Forcing scan update after template reload")
+                    if hasattr(self.world_scanner, '_update_scan_results'):
+                        self.world_scanner._update_scan_results()
+            else:
+                # If no templates were loaded, go back to the original directory
+                self.template_matcher.templates_dir = original_dir
+                self.template_matcher.reload_templates()
+                
+                QMessageBox.warning(
+                    self, "No Templates Loaded",
+                    f"Failed to load any templates from {folder_path}. Reverted to original templates."
+                )
+                logger.warning(f"Failed to load templates from {folder_path}, reverted to {original_dir}")
+            
+        except Exception as e:
+            error_msg = f"Error selecting templates folder: {str(e)}"
+            logger.error(error_msg, exc_info=True)
+            QMessageBox.critical(
+                self, "Error",
+                error_msg
+            )

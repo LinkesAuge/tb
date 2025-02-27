@@ -125,43 +125,33 @@ class Overlay(QWidget):
         # Create template matcher and make it accessible
         self.template_matcher = TemplateMatcher(
             window_manager=self.window_manager,
-            confidence=min(template_settings.get("confidence", 0.8), 0.5),  # Even lower confidence threshold for testing
+            confidence=template_settings.get("confidence", 0.8),  # Use the actual confidence from settings
             target_frequency=template_settings["target_frequency"],
             sound_enabled=template_settings["sound_enabled"]
         )
         
-        logger.info(f"Using very lenient confidence threshold of {self.template_matcher.confidence_threshold} to find any possible templates")
+        logger.info(f"Using confidence threshold of {self.template_matcher.confidence_threshold} for template matching")
         
         # Ensure templates are loaded
         self.template_matcher.reload_templates()
         template_count = len(self.template_matcher.templates)
         logger.info(f"Loaded {template_count} templates for template matching")
         
-        # Log detailed template information for debugging
-        if template_count > 0:
-            logger.info("Templates loaded:")
+        # Filter out test templates unless in debug mode
+        if not self.debug_mode and hasattr(self.template_matcher, 'templates'):
+            test_templates = ['Crypt', 'crypt_small']  # List of test template names to exclude
+            filtered_templates = {}
+            
             for name, template in self.template_matcher.templates.items():
-                logger.info(f"  - {name}: Size={template.shape[1]}x{template.shape[0]}")
-        else:
-            logger.warning("No templates found! Template matching will not work without templates")
-            # Log template directory information
-            try:
-                templates_dir = self.template_matcher.templates_dir
-                logger.warning(f"Template directory path: {templates_dir.absolute()}")
-                
-                # Check if directory exists
-                if not templates_dir.exists():
-                    logger.error(f"Template directory does not exist: {templates_dir.absolute()}")
+                if name not in test_templates:
+                    filtered_templates[name] = template
                 else:
-                    # List all files in directory
-                    files = list(templates_dir.glob("*"))
-                    logger.warning(f"Files in template directory: {[f.name for f in files]}")
+                    logger.debug(f"Filtered out test template: {name}")
                     
-                    # List PNG files specifically
-                    png_files = list(templates_dir.glob("*.png"))
-                    logger.warning(f"PNG files in template directory: {[f.name for f in png_files]}")
-            except Exception as e:
-                logger.error(f"Error checking template directory: {e}")
+            # Only update if filtering actually removed templates
+            if len(filtered_templates) < len(self.template_matcher.templates):
+                logger.info(f"Filtered out {len(self.template_matcher.templates) - len(filtered_templates)} test templates")
+                self.template_matcher.templates = filtered_templates
 
         logger.debug(f"Initialized overlay with rect_color={self.rect_color}, "
                     f"font_color={self.font_color}, "
@@ -211,7 +201,11 @@ class Overlay(QWidget):
         try:
             # Create initial transparent overlay
             overlay = np.zeros((height, width, 3), dtype=np.uint8)
-            overlay[:] = (255, 0, 255)  # Magenta background for transparency
+            overlay[:] = (255, 0, 255)  # Magenta background for transparency - use bright magenta to be distinct
+            
+            # Add a visible marker to debug if the overlay is showing
+            cv2.circle(overlay, (50, 50), 20, (0, 0, 255), -1)  # Red circle to verify overlay is visible
+            cv2.putText(overlay, "OVERLAY ACTIVE", (80, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
             
             # Create window with proper style - initially invisible
             window_style = cv2.WINDOW_NORMAL | cv2.WINDOW_FREERATIO
@@ -239,30 +233,24 @@ class Overlay(QWidget):
             ex_style |= (win32con.WS_EX_LAYERED | win32con.WS_EX_TRANSPARENT | win32con.WS_EX_TOOLWINDOW)
             win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, ex_style)
             
-            # Position window off-screen initially to prevent flash
+            # Position window far off screen initially to prevent flash
             win32gui.SetWindowPos(
                 hwnd, win32con.HWND_TOPMOST,
                 -10000, -10000, width, height,  # Position off-screen initially
                 win32con.SWP_NOACTIVATE
             )
             
-            # Apply transparency color key
+            # Apply transparency color key with higher alpha
             win32gui.SetLayeredWindowAttributes(
                 hwnd,
                 win32api.RGB(255, 0, 255),  # Magenta color key
-                0,  # Alpha (0 = fully transparent for non-magenta pixels)
-                win32con.LWA_COLORKEY
+                150,  # Alpha - make it slightly visible for debugging (0-255)
+                win32con.LWA_COLORKEY | win32con.LWA_ALPHA  # Use both colorkey and alpha
             )
             
             # Now show the content with transparency 
             cv2.imshow(self.window_name, overlay)
-            try:
-                cv2.waitKey(1)
-            except (cv2.error, Exception) as e:
-                # This can happen in certain environments, but we can safely ignore it
-                # as long as the window is displayed correctly
-                logger.debug(f"Ignored OpenCV waitKey error: {str(e)}")
-                # Continue with the drawing process despite the error
+            cv2.waitKey(1)
             
             # Wait a tiny bit for window to initialize transparency
             time.sleep(0.05)
@@ -280,7 +268,7 @@ class Overlay(QWidget):
                 logger.debug("Window initially hidden as overlay is not active")
             else:
                 # Make sure transparency settings are applied
-                self._draw_empty_overlay()
+                self._draw_overlay()
                 logger.debug("Window initially shown with transparency")
             
             logger.debug("Overlay window created with transparency settings")
@@ -360,36 +348,49 @@ class Overlay(QWidget):
                 logger.debug(f"Window moved to ({x}, {y}) with size {width}x{height}, updating overlay")
                 # Track movement time for faster updates
                 self.last_movement_time = time.time()
-                
-                # Adjust position check timer to run more frequently during movement
-                if hasattr(self, 'position_check_timer') and self.position_check_timer.isActive():
-                    # Speed up checks when window is moving (every 50ms)
-                    self.position_check_timer.setInterval(50)
-                
-            # Calculate time since last movement
-            since_last_movement = time.time() - self.last_movement_time
             
             # Update window position, size and ensure it's topmost
             win32gui.SetWindowPos(
                 self.window_hwnd, win32con.HWND_TOPMOST,
                 x, y, width, height,
-                win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE
+                win32con.SWP_SHOWWINDOW | win32con.SWP_NOACTIVATE  # IMPORTANT: SWP_NOACTIVATE prevents stealing focus
             )
             
-            # After 2 seconds without movement, slow down the position checks again
-            if since_last_movement > 2.0 and hasattr(self, 'position_check_timer') and self.position_check_timer.interval() < 200:
-                self.position_check_timer.setInterval(200)
+            # Calculate time since last movement
+            since_last_movement = time.time() - self.last_movement_time
+            
+            # Adjust position check timer frequency only if it's been moving recently
+            if hasattr(self, 'position_check_timer') and self.position_check_timer.isActive():
+                if since_last_movement < 0.5:  # Only if moved in the last half second
+                    # Speed up checks when window is moving (every 200ms) - reduced from 50ms
+                    current_interval = self.position_check_timer.interval()
+                    if current_interval > 200:
+                        self.position_check_timer.setInterval(200)
+                elif since_last_movement > 2.0:
+                    # After 2 seconds without movement, slow down position checks (1 second)
+                    current_interval = self.position_check_timer.interval()
+                    if current_interval < 1000:
+                        self.position_check_timer.setInterval(1000)
             
             if window_moved:
                 logger.debug(f"Updated window position to ({x}, {y}) with size {width}x{height}")
                 
-                # Force a template matching update when window moves
-                if since_last_movement < 2.0:  # If moved within last 2 seconds
-                    # Trigger an immediate update to keep matches current when moving
-                    QTimer.singleShot(10, self._update_template_matching)
+                # Force a redraw when window moves, but REMOVE the multiple scheduled updates
+                # that might be causing input disruption
+                QTimer.singleShot(100, self._draw_overlay)
                 
-                # Force a redraw when window moves
-                QTimer.singleShot(50, self._draw_overlay)
+                # Clear cached matches if window moves significantly
+                if hasattr(self, 'last_significant_pos'):
+                    last_x, last_y, _, _ = self.last_significant_pos
+                    # If moved more than 20 pixels, consider it significant - increased from 10
+                    if abs(x - last_x) > 20 or abs(y - last_y) > 20:
+                        logger.debug("Significant window movement detected, clearing match cache")
+                        if hasattr(self, 'cached_matches'):
+                            self.cached_matches = []
+                        self.last_significant_pos = (x, y, width, height)
+                else:
+                    self.last_significant_pos = (x, y, width, height)
+                
         except Exception as e:
             logger.error(f"Error updating window position: {e}")
 
@@ -481,18 +482,22 @@ class Overlay(QWidget):
                 self.template_matching_timer = QTimer()
                 self.template_matching_timer.timeout.connect(self._update_template_matching)
             
-            # Create a separate position check timer that runs more frequently
+            # Create a separate position check timer that runs LESS frequently to avoid disrupting input
             if not hasattr(self, 'position_check_timer') or self.position_check_timer is None:
                 logger.debug("Creating position check timer")
                 self.position_check_timer = QTimer()
                 self.position_check_timer.timeout.connect(self._update_window_position)
-                # Check position 5 times per second
-                self.position_check_timer.start(200)
-                logger.info("Position check timer started with interval 200ms")
+                # Check position less frequently - once per second is enough for normal use
+                self.position_check_timer.start(1000)
+                logger.info("Position check timer started with reduced interval of 1000ms to prevent input disruption")
+            else:
+                # If timer exists, make sure it has a reasonable interval
+                self.position_check_timer.setInterval(1000)
             
             # Calculate timer interval for template matching
-            interval_ms = int(1000 / self.update_rate)
-            logger.info(f"Setting template matching timer interval to {interval_ms}ms")
+            # Use a minimum interval of 500ms to avoid excessive updates
+            interval_ms = max(500, int(1000 / self.update_rate))
+            logger.info(f"Setting template matching timer interval to {interval_ms}ms (reduced frequency to prevent input issues)")
             
             # Start timer
             self.template_matching_timer.start(interval_ms)
@@ -613,33 +618,38 @@ class Overlay(QWidget):
             return
             
         try:
+            # Start with empty matches list
+            self.cached_matches = []
+            
             # Get current time and check if we're in a movement state
             current_time = time.time()
             is_moving = (current_time - self.last_movement_time) < 1.0
             
-            # Get screenshot
-            screenshot = self.window_manager.capture_screenshot()
+            # Always get a completely fresh screenshot - clear any caches first
+            if hasattr(self.window_manager, 'clear_screenshot_cache'):
+                self.window_manager.clear_screenshot_cache()
+                
+            # Get fresh screenshot
+            screenshot = self.window_manager.capture_screenshot(force_update=True)
             
             if screenshot is None:
                 logger.warning("Failed to capture screenshot for template matching")
                 return
                 
-            # Log screenshot capture success
-            logger.debug(f"Captured screenshot for template matching: {screenshot.shape}")
+            # Log screenshot capture success with timestamp to verify freshness
+            logger.debug(f"Captured fresh screenshot for template matching at {time.strftime('%H:%M:%S.%f')}: {screenshot.shape}")
             
             # Find matches using template matcher
             if hasattr(self.template_matcher, 'find_all_templates'):
-                # Clear previous matches
-                self.cached_matches = []
-                
-                # When moving, we use a higher confidence threshold to only 
-                # show high-confidence matches for better performance
+                # When moving, we can use a higher confidence threshold for performance
+                # but only if not in debug mode
                 original_threshold = None
                 if is_moving and not self.debug_mode:
                     original_threshold = self.template_matcher.confidence_threshold
                     # Use higher threshold during movement to only show strong matches
-                    self.template_matcher.set_confidence_threshold(0.85)
-                    logger.debug("Using higher confidence threshold during movement")
+                    adjusted_threshold = min(0.85, original_threshold + 0.05)  # No more than 0.05 higher than original
+                    self.template_matcher.set_confidence_threshold(adjusted_threshold)
+                    logger.debug(f"Using higher confidence threshold during movement: {adjusted_threshold:.2f} (original: {original_threshold:.2f})")
                 
                 # Find new matches
                 matches = self.template_matcher.find_all_templates(screenshot)
@@ -647,15 +657,42 @@ class Overlay(QWidget):
                 # Restore original threshold if it was changed
                 if original_threshold is not None:
                     self.template_matcher.set_confidence_threshold(original_threshold)
+                    logger.debug(f"Restored original confidence threshold: {original_threshold:.2f}")
                 
-                # Update cached matches
-                self.cached_matches.extend(matches)
-                
-                # Log number of matches found
-                logger.debug(f"Template matcher found {len(matches)} matches")
-                if len(matches) > 0:
-                    logger.debug(f"First match: {matches[0]}")
+                # Update cached matches 
+                if matches:
+                    logger.debug(f"Found {len(matches)} valid matches")
                     
+                    # Filter matches by confidence one more time to be safe
+                    filtered_matches = []
+                    for match in matches:
+                        name, x, y, w, h, conf = match
+                        
+                        # Skip test templates in normal mode
+                        if not self.debug_mode and name in ['Crypt', 'crypt_small']:
+                            logger.debug(f"Filtering out test template match: {name} with confidence {conf:.2f}")
+                            continue
+                            
+                        # Double-check confidence meets threshold
+                        if conf < self.template_matcher.confidence_threshold:
+                            logger.debug(f"Filtering out match below threshold: {name} with confidence {conf:.2f}")
+                            continue
+                            
+                        filtered_matches.append(match)
+                        
+                    self.cached_matches = filtered_matches
+                    logger.debug(f"After filtering, kept {len(filtered_matches)} matches")
+                else:
+                    logger.debug("No matches found in this update")
+                
+                # If we're in debug mode, log detailed match info
+                if self.debug_mode and self.cached_matches:
+                    match_info = []
+                    for i, match in enumerate(self.cached_matches[:3]):  # Log first 3 matches
+                        name, x, y, w, h, conf = match
+                        match_info.append(f"{name} at ({x},{y}) conf={conf:.2f}")
+                    logger.debug(f"Match details: {', '.join(match_info)}")
+                
                 # Update the overlay display
                 self._draw_overlay()
                 
@@ -667,6 +704,8 @@ class Overlay(QWidget):
                 
         except Exception as e:
             logger.error(f"Error in template matching update: {e}", exc_info=True)
+            # Clear matches on error
+            self.cached_matches = []
 
     def _draw_overlay(self) -> None:
         """Draw the overlay with all registered elements."""
@@ -689,6 +728,10 @@ class Overlay(QWidget):
             # Create a transparent overlay
             overlay_image = np.zeros((height, width, 3), dtype=np.uint8)
             overlay_image[:] = (255, 0, 255)  # Magenta for transparency
+            
+            # Always draw a testing circle in the corner to verify overlay is working
+            cv2.circle(overlay_image, (50, 50), 20, (0, 0, 255), -1)  # Red circle
+            cv2.putText(overlay_image, "OVERLAY ACTIVE", (80, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
             
             # Draw template matches if available
             draw_count = 0
@@ -733,35 +776,33 @@ class Overlay(QWidget):
                             logger.warning(f"Coordinates outside window: ({x}, {y}) for {template_name}")
                             continue
                         
-                        # Choose color based on confidence
-                        # Always show high confidence matches, but only show lower confidence in debug mode
+                        # Choose color based on confidence - using much brighter colors for visibility
                         if confidence >= 0.8:
                             rect_color = (0, 255, 0)  # Green for high confidence
                             high_conf_count += 1
-                        elif confidence >= 0.7 and self.debug_visuals:
+                        elif confidence >= 0.7:
                             rect_color = (0, 255, 255)  # Yellow for medium confidence
                             med_conf_count += 1
-                        elif confidence >= 0.5 and self.debug_visuals:
+                        elif confidence >= 0.5 or self.debug_visuals:
                             rect_color = (0, 0, 255)  # Red for low confidence
                             low_conf_count += 1
                         else:
                             # Skip drawing if confidence is too low and not in debug mode
                             continue
                         
-                        # Always draw high confidence matches
                         # Draw rectangle with thicker lines for better visibility
-                        thickness = 2 if confidence >= 0.8 else 1
+                        thickness = 3 if confidence >= 0.8 else 2  # Thicker lines for visibility
                         cv2.rectangle(overlay_image, (x, y), (x + width, y + height), rect_color, thickness)
                         
-                        # Draw text label if debug visuals enabled or high confidence
-                        if self.debug_visuals or confidence >= 0.8:
+                        # Draw text label
+                        if self.debug_visuals or confidence >= 0.7:
                             # Prepare text
                             text = f"{template_name} ({confidence:.2f})"
                             
                             # Calculate text size and position
                             font = cv2.FONT_HERSHEY_SIMPLEX
-                            font_scale = 0.5
-                            text_thickness = 1
+                            font_scale = 0.6  # Slightly larger font
+                            text_thickness = 2  # Thicker text for visibility
                             (text_width, text_height), _ = cv2.getTextSize(text, font, font_scale, text_thickness)
                             
                             # Draw background for text
@@ -790,6 +831,12 @@ class Overlay(QWidget):
                 # Show current time
                 time_text = f"Time: {time.strftime('%H:%M:%S')}"
                 cv2.putText(overlay_image, time_text, (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 1)
+                
+                # Draw red rectangles at each corner for debugging
+                cv2.rectangle(overlay_image, (0, 0), (20, 20), (0, 0, 255), 1)
+                cv2.rectangle(overlay_image, (width-20, 0), (width, 20), (0, 0, 255), 1)
+                cv2.rectangle(overlay_image, (0, height-20), (20, height), (0, 0, 255), 1)
+                cv2.rectangle(overlay_image, (width-20, height-20), (width, height), (0, 0, 255), 1)
             
             # Draw debug info if enabled
             if self.show_debug_info:
@@ -816,15 +863,15 @@ class Overlay(QWidget):
                     self.window_hwnd,
                     win32con.HWND_TOPMOST,
                     0, 0, 0, 0,
-                    win32con.SWP_NOMOVE | win32con.SWP_NOSIZE
+                    win32con.SWP_NOMOVE | win32con.SWP_NOSIZE | win32con.SWP_NOACTIVATE
                 )
                 
-            # Set transparency (magenta color key)
+            # Set transparency with higher alpha for debugging
             win32gui.SetLayeredWindowAttributes(
                 self.window_hwnd,
                 win32api.RGB(255, 0, 255),  # Magenta
-                0,  # Alpha
-                win32con.LWA_COLORKEY
+                180,  # Alpha (0-255), higher value makes non-magenta pixels more visible
+                win32con.LWA_COLORKEY | win32con.LWA_ALPHA
             )
             
             logger.debug(f"Overlay drawing completed successfully")
